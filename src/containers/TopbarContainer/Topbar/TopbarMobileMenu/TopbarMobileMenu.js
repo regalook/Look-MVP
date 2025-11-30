@@ -159,6 +159,15 @@ const TopbarMobileMenu = props => {
     </NamedLink>
   ) : null;
 
+  const manageRentedListingsLinkMaybe = showCreateListingsLink ? (
+    <NamedLink
+      className={classNames(css.navigationLink, currentPageClass('ManageRentedListingsPage'))}
+      name="ManageRentedListingsPage"
+    >
+      <FormattedMessage id="TopbarMobileMenu.yourRentedListingsLink" />
+    </NamedLink>
+  ) : null;
+
   return (
     <div className={css.root}>
       <AvatarLarge className={css.avatar} user={currentUser} />
@@ -180,6 +189,7 @@ const TopbarMobileMenu = props => {
             {notificationCountBadge}
           </NamedLink>
           {manageListingsLinkMaybe}
+          {manageRentedListingsLinkMaybe}
           <NamedLink
             className={classNames(css.navigationLink, currentPageClass('ProfileSettingsPage'))}
             name="ProfileSettingsPage"

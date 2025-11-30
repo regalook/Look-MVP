@@ -1,8 +1,7 @@
-import React from 'react';
 import loadable from '@loadable/component';
 
-import getPageDataLoadingAPI from '../containers/pageDataLoadingAPI';
 import NotFoundPage from '../containers/NotFoundPage/NotFoundPage';
+import getPageDataLoadingAPI from '../containers/pageDataLoadingAPI';
 import PreviewResolverPage from '../containers/PreviewResolverPage/PreviewResolverPage';
 
 // routeConfiguration needs to initialize containers first
@@ -24,6 +23,7 @@ const LandingPage = loadable(() => import(/* webpackChunkName: "LandingPage" */ 
 const ListingPageCoverPhoto = loadable(() => import(/* webpackChunkName: "ListingPageCoverPhoto" */ /* webpackPrefetch: true */ '../containers/ListingPage/ListingPageCoverPhoto'));
 const ListingPageCarousel = loadable(() => import(/* webpackChunkName: "ListingPageCarousel" */ /* webpackPrefetch: true */ '../containers/ListingPage/ListingPageCarousel'));
 const ManageListingsPage = loadable(() => import(/* webpackChunkName: "ManageListingsPage" */ '../containers/ManageListingsPage/ManageListingsPage'));
+const ManageRentedListingsPage = loadable(() => import(/* webpackChunkName: "ManageRentedListingsPage" */ '../containers/ManageRentedListingsPage/ManageRentedListingsPage'));
 const PasswordChangePage = loadable(() => import(/* webpackChunkName: "PasswordChangePage" */ '../containers/PasswordChangePage/PasswordChangePage'));
 const PasswordRecoveryPage = loadable(() => import(/* webpackChunkName: "PasswordRecoveryPage" */ '../containers/PasswordRecoveryPage/PasswordRecoveryPage'));
 const PasswordResetPage = loadable(() => import(/* webpackChunkName: "PasswordResetPage" */ '../containers/PasswordResetPage/PasswordResetPage'));
@@ -289,6 +289,14 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       authPage: 'LoginPage',
       component: ManageListingsPage,
       loadData: pageDataLoadingAPI.ManageListingsPage.loadData,
+    },
+    {
+      path: '/rented',
+      name: 'ManageRentedListingsPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: ManageRentedListingsPage,
+      loadData: pageDataLoadingAPI.ManageRentedListingsPage.loadData,
     },
     {
       path: '/account',
