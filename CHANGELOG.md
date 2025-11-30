@@ -14,8 +14,77 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2025-XX-XX
 
+- [add] Add accessibility improvements (Modals, filters, etc.).
+  [#716](https://github.com/sharetribe/web-template/pull/716)
+- [change] Upgrade Sharetribe SDK to 1.22.0.
+  [#715](https://github.com/sharetribe/web-template/pull/715)
+- [fix] ListingPageCoverPhoto: fix payoutDetailsWarning message.
+  [#714](https://github.com/sharetribe/web-template/pull/714)
+- [fix] AuthenticationPage: fix a bug with long words in the title on mobile layout.
+  [#711](https://github.com/sharetribe/web-template/pull/711)
+- [add] Add currently available translations for DE, ES, FR.
+  [#710](https://github.com/sharetribe/web-template/pull/710)
+
+## [v10.3.0] 2025-11-20
+
+- [add] Add currently available translations for DE, ES, FR.
+  [#708](https://github.com/sharetribe/web-template/pull/708)
+- [add] Add support for Console-configured private custom user fields
+  [#700](https://github.com/sharetribe/web-template/pull/700)
+- [change] make crossorigin attributes have an explicit default value.
+  [#703](https://github.com/sharetribe/web-template/pull/703)
+- [fix] LocationAutocompleteInputImpl: do not select current location automatically if it is the
+  only prediction. [#704](https://github.com/sharetribe/web-template/pull/704)
+- [add] Add currently available translations for DE, ES, FR.
+  [#706](https://github.com/sharetribe/web-template/pull/706)
+
+[v10.3.0]: https://github.com/sharetribe/web-template/compare/v10.2.0...v10.3.0
+
+## [v10.2.0] 2025-11-19
+
+- [add] Added ability to delete user account in a new account settings page.
+  [#660](https://github.com/sharetribe/web-template/pull/660/)
+- [change] SignupForm: check that the password is not copy-pasted to other fields.
+  [#702](https://github.com/sharetribe/web-template/pull/702)
+- [fix] ManageListingsPage.duck.js: fix a bug with pagination links not being rendered.
+  [#701](https://github.com/sharetribe/web-template/pull/701)
+- [add] Additional accesibility improvements to text and icon colors in search CTA.
+  [#696](https://github.com/sharetribe/web-template/pull/696)
+- [add] Improve template accessibility further
+
+  - Improved contrast for various colors throughout the Template
+  - Increased area around clickable elements
+  - Updated various component roles
+
+  [#691](https://github.com/sharetribe/web-template/pull/691)
+
+  [v10.2.0]: https://github.com/sharetribe/web-template/compare/v10.1.2...v10.2.0
+
+## [v10.1.2] 2025-11-10
+
+- [fix] ListingPage.duck.js: fix a bug with time slots fetching. This affects bookable listings with
+  hour or fixed durations. [#697](https://github.com/sharetribe/web-template/pull/697)
+- [add] Add currently available translations for DE, ES, FR.
+  [#695](https://github.com/sharetribe/web-template/pull/695)
+
+  [v10.1.2]: https://github.com/sharetribe/web-template/compare/v10.1.1...v10.1.2
+
+## [v10.1.1] 2025-11-06
+
+- [fix] RequestQuotePage: pass authorDisplayName to RequestQuoteForm.
+  [#693](https://github.com/sharetribe/web-template/pull/693)
+
+  [v10.1.1]: https://github.com/sharetribe/web-template/compare/v10.1.0...v10.1.1
+
+## [v10.1.0] 2025-11-06
+
+- [add] Add support for regular negotiation flow where provider creates listings representing offers
+  (e.g. projects) and customer can request for a quote.
+  [#685](https://github.com/sharetribe/web-template/pull/685)
 - [fix] Add line break to TopbarMobileMenu.signupOrLogin translation
   [#690](https://github.com/sharetribe/web-template/pull/690)
+
+  [v10.1.0]: https://github.com/sharetribe/web-template/compare/v10.0.0...v10.1.0
 
 ## [v10.0.0] 2025-11-04
 

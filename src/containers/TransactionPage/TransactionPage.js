@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -27,6 +27,7 @@ import {
   getProcess,
   isBookingProcess,
   NEGOTIATION_PROCESS_NAME,
+  OFFER,
 } from '../../transactions/transaction';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -49,7 +50,12 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import { getStateData } from './TransactionPage.stateData';
-import ActionButtons from './ActionButtons/ActionButtons';
+import ActionButtons, {
+  ACTION_BUTTON_1_ID,
+  ACTION_BUTTON_2_ID,
+  ACTION_BUTTON_3_ID,
+} from './ActionButtons/ActionButtons';
+import RequestQuote from './RequestQuote/RequestQuote';
 import Offer from './Offer/Offer';
 import ActivityFeed from './ActivityFeed/ActivityFeed';
 import DisputeModal from './DisputeModal/DisputeModal';
@@ -68,6 +74,8 @@ import {
 } from './TransactionPage.duck';
 import css from './TransactionPage.module.css';
 import { getCurrentUserTypeRoles, hasPermissionToViewData } from '../../util/userHelpers.js';
+
+const MAX_MOBILE_SCREEN_WIDTH = 1023;
 
 // Submit dispute and close the review modal
 const onDisputeOrder = (
@@ -258,6 +266,11 @@ export const TransactionPageComponent = props => {
   const [changeRequestSubmitted, setChangeRequestSubmitted] = useState(false);
   const [isMakeCounterOfferModalOpen, setMakeCounterOfferModalOpen] = useState(false);
   const [counterOfferSubmitted, setCounterOfferSubmitted] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
@@ -551,6 +564,12 @@ export const TransactionPageComponent = props => {
   ) : (
     <UserDisplayName user={customer} intl={intl} />
   );
+  const onMakeOffer = handleNavigateToMakeOfferPage({
+    listing,
+    transaction,
+    history,
+    routes: routeConfiguration,
+  });
 
   const stateData = isDataAvailable
     ? getStateData(
@@ -567,6 +586,7 @@ export const TransactionPageComponent = props => {
           onOpenRequestChangesModal,
           onOpenMakeCounterOfferModal,
           onCheckoutRedirect: handleSubmitOrderRequest,
+          onMakeOfferFromRequest: onMakeOffer,
           intl,
         },
         process
@@ -620,14 +640,17 @@ export const TransactionPageComponent = props => {
     isBookingProcess(stateData.processName) &&
     process?.hasPassedState(process?.states?.ACCEPTED, transaction);
 
-  const onMakeOffer = handleNavigateToMakeOfferPage({
-    listing,
-    transaction,
-    history,
-    routes: routeConfiguration,
-  });
   const isNegotiationProcess = processName === NEGOTIATION_PROCESS_NAME;
+  const isRegularNegotiation =
+    isNegotiationProcess && transaction?.attributes?.protectedData?.unitType === OFFER;
 
+  const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
+  const isMobile =
+    mounted && hasMatchMedia
+      ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
+      : true;
+
+  const actionButtonContainer = isMobile ? 'mobile' : 'desktop';
   // TransactionPanel is presentational component
   // that currently handles showing everything inside layout's main view area.
   const panel = isDataAvailable ? (
@@ -653,8 +676,9 @@ export const TransactionPageComponent = props => {
       showBookingLocation={showBookingLocation}
       hasViewingRights={hasViewingRights}
       showListingImage={showListingImage}
-      actionButtons={
+      actionButtons={containerId => (
         <ActionButtons
+          containerId={containerId}
           showButtons={stateData.showActionButtons}
           primaryButtonProps={stateData?.primaryButtonProps}
           secondaryButtonProps={stateData?.secondaryButtonProps}
@@ -665,7 +689,7 @@ export const TransactionPageComponent = props => {
           {...getDataValidationResult(transaction, process)}
           timeZone={listing?.attributes?.availabilityPlan?.timezone || 'Etc/UTC'}
         />
-      }
+      )}
       activityFeed={
         <ActivityFeed
           messages={messages}
@@ -681,11 +705,20 @@ export const TransactionPageComponent = props => {
           fetchMessagesInProgress={fetchMessagesInProgress}
         />
       }
+      requestQuote={
+        <RequestQuote
+          transaction={transaction}
+          isNegotiationProcess={isNegotiationProcess}
+          transactionRole={transactionRole}
+          intl={intl}
+        />
+      }
       offer={
         <Offer
           transaction={transaction}
           isNegotiationProcess={isNegotiationProcess}
           transactionRole={transactionRole}
+          isRegularNegotiation={isRegularNegotiation}
           intl={intl}
         />
       }
@@ -746,18 +779,17 @@ export const TransactionPageComponent = props => {
     (process?.transitions?.CUSTOMER_MAKE_COUNTER_OFFER ||
       process?.transitions?.PROVIDER_MAKE_COUNTER_OFFER);
 
-  const pageHeading =
-    processName != null
-      ? intl.formatMessage(
-          {
-            id: `TransactionPage.${processName}.${transactionRole}.${stateData.processState}.title`,
-          },
-          {
-            customerName: customer?.attributes.profile.displayName,
-            providerName: provider?.attributes.profile.displayName,
-          }
-        )
-      : null;
+  const pageHeading = isDataAvailable
+    ? intl.formatMessage(
+        {
+          id: `TransactionPage.${processName}.${transactionRole}.${stateData.processState}.title`,
+        },
+        {
+          customerName: customer?.attributes.profile.displayName,
+          providerName: provider?.attributes.profile.displayName,
+        }
+      )
+    : null;
 
   return (
     <Page
@@ -772,6 +804,7 @@ export const TransactionPageComponent = props => {
         <ReviewModal
           id="ReviewOrderModal"
           isOpen={isReviewModalOpen}
+          focusElementId={`${actionButtonContainer}_${ACTION_BUTTON_1_ID}`}
           onCloseModal={() => setReviewModalOpen(false)}
           onManageDisableScrolling={onManageDisableScrolling}
           onSubmitReview={onSubmitReview}
@@ -785,6 +818,7 @@ export const TransactionPageComponent = props => {
           <DisputeModal
             id="DisputeOrderModal"
             isOpen={isDisputeModalOpen}
+            focusElementId={`${actionButtonContainer}_disputeOrderButton`}
             onCloseModal={() => setDisputeModalOpen(false)}
             onManageDisableScrolling={onManageDisableScrolling}
             onDisputeOrder={onDisputeOrder(
@@ -802,6 +836,7 @@ export const TransactionPageComponent = props => {
           <RequestChangesModal
             id="RequestChangesModal"
             isOpen={isRequestChangesModalOpen}
+            focusElementId={`${actionButtonContainer}_${ACTION_BUTTON_2_ID}`}
             onCloseModal={() => setRequestChangesModalOpen(false)}
             onManageDisableScrolling={onManageDisableScrolling}
             onChangeRequest={onChangeRequest(
@@ -823,6 +858,7 @@ export const TransactionPageComponent = props => {
             id="MakeCounterOfferModal"
             isOpen={isMakeCounterOfferModalOpen}
             onCloseModal={() => setMakeCounterOfferModalOpen(false)}
+            focusElementId={`${actionButtonContainer}_${ACTION_BUTTON_3_ID}`}
             onManageDisableScrolling={onManageDisableScrolling}
             onMakeCounterOffer={onMakeCounterOffer(
               transaction?.id,
