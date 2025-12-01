@@ -1,27 +1,26 @@
-import React from 'react';
-import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { compose } from 'redux';
 
 import { useConfiguration } from '../../context/configurationContext';
+import { pathByRouteName } from '../../context/localeContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
+import { ensureCurrentUser } from '../../util/data';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
-import { ensureCurrentUser } from '../../util/data';
 import {
-  showCreateListingLinkForUser,
-  showPaymentDetailsForUser,
   initialValuesForUserFields,
   pickUserFieldsData,
+  showCreateListingLinkForUser,
+  showPaymentDetailsForUser,
 } from '../../util/userHelpers';
-import { pathByRouteName } from '../../util/routes';
 
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
-import { H3, H4, Page, UserNav, LayoutSideNavigation } from '../../components';
+import { H3, H4, LayoutSideNavigation, Page, UserNav } from '../../components';
 
-import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import FooterContainer from '../FooterContainer/FooterContainer';
+import TopbarContainer from '../TopbarContainer/TopbarContainer';
 
 import DeleteAccountForm from './DeleteAccountForm/DeleteAccountForm';
 
@@ -216,11 +215,8 @@ const mapDispatchToProps = dispatch => ({
   onUpdateProfile: values => dispatch(updateProfile(values)),
 });
 
-const ManageAccountPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(ManageAccountPageComponent);
+const ManageAccountPage = compose(connect(mapStateToProps, mapDispatchToProps))(
+  ManageAccountPageComponent
+);
 
 export default ManageAccountPage;

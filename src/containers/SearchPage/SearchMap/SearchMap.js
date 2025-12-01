@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
-import { useHistory } from 'react-router-dom';
 import classNames from 'classnames';
+import { Component } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { useConfiguration } from '../../../context/configurationContext';
+import { createResourceLocatorString } from '../../../context/localeContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
-import { createResourceLocatorString } from '../../../util/routes';
-import { createSlug } from '../../../util/urlHelpers';
+import { getMapProviderApiAccess, obfuscatedCoordinates } from '../../../util/maps';
 import { propTypes } from '../../../util/types';
-import { obfuscatedCoordinates, getMapProviderApiAccess } from '../../../util/maps';
+import { createSlug } from '../../../util/urlHelpers';
 
-import { hasParentWithClassName } from './SearchMap.helpers.js';
-import * as searchMapMapbox from './SearchMapWithMapbox';
-import * as searchMapGoogleMaps from './SearchMapWithGoogleMaps';
 import ReusableMapContainer from './ReusableMapContainer';
+import { hasParentWithClassName } from './SearchMap.helpers.js';
 import css from './SearchMap.module.css';
+import * as searchMapGoogleMaps from './SearchMapWithGoogleMaps';
+import * as searchMapMapbox from './SearchMapWithMapbox';
 
 const REUSABLE_MAP_HIDDEN_HANDLE = 'reusableMapHidden';
 

@@ -1,43 +1,42 @@
-import React, { useState } from 'react';
-import { compose } from 'redux';
+import { useState } from 'react';
+import { useIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { useIntl } from 'react-intl';
+import { compose } from 'redux';
 
 // Import contexts and util modules
-import { types as sdkTypes } from '../../util/sdkLoader.js';
 import { useConfiguration } from '../../context/configurationContext.js';
+import { pathByRouteName } from '../../context/localeContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext.js';
+import {
+  NEGOTIATION_PROCESS_NAME,
+  REQUEST,
+  resolveLatestProcessName,
+} from '../../transactions/transaction.js';
+import { displayPrice, requireListingImage } from '../../util/configHelpers.js';
 import { userDisplayNameAsString } from '../../util/data.js';
 import { isErrorNoPermissionForInitiateTransactions } from '../../util/errors.js';
+import { types as sdkTypes } from '../../util/sdkLoader.js';
 import {
   NO_ACCESS_PAGE_INITIATE_TRANSACTIONS,
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
   parse,
 } from '../../util/urlHelpers.js';
 import { hasPermissionToInitiateTransactions, isUserAuthorized } from '../../util/userHelpers.js';
-import { displayPrice } from '../../util/configHelpers.js';
-import { pathByRouteName } from '../../util/routes.js';
-import {
-  NEGOTIATION_PROCESS_NAME,
-  REQUEST,
-  resolveLatestProcessName,
-} from '../../transactions/transaction.js';
-import { requireListingImage } from '../../util/configHelpers.js';
 
 // Import global thunk functions
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck.js';
 import { isScrollingDisabled } from '../../ducks/ui.duck.js';
 
 // Import shared components
-import { H3, ErrorMessage, NamedRedirect, Page, TopbarSimplified } from '../../components/index.js';
+import { ErrorMessage, H3, NamedRedirect, Page, TopbarSimplified } from '../../components/index.js';
 
 // Import modules from this directory
-import HeadingDetails from './HeadingDetails.js';
 import DetailsSideCard from './DetailsSideCard/DetailsSideCard.js';
-import MobileListingImage from './MobileListingImage/MobileListingImage.js';
+import HeadingDetails from './HeadingDetails.js';
 import LocationDetails from './LocationDetails/LocationDetails.js';
 import MakeOfferForm from './MakeOfferForm/MakeOfferForm.js';
+import MobileListingImage from './MobileListingImage/MobileListingImage.js';
 
 import { makeOffer } from './MakeOfferPage.duck.js';
 
@@ -367,11 +366,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch(makeOffer(params, processAlias, transactionId, isPrivileged)),
 });
 
-const MakeOfferPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(EnhancedMakeOfferPage);
+const MakeOfferPage = compose(connect(mapStateToProps, mapDispatchToProps))(EnhancedMakeOfferPage);
 
 export default MakeOfferPage;

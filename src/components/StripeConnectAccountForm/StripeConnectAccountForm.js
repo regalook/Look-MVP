@@ -1,17 +1,17 @@
-import React, { useEffect } from 'react';
-import { Field, Form as FinalForm } from 'react-final-form';
-import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
+import arrayMutators from 'final-form-arrays';
+import { useEffect } from 'react';
+import { Field, Form as FinalForm } from 'react-final-form';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { FormattedMessage, useIntl } from '../../util/reactIntl';
+import { createResourceLocatorString } from '../../context/localeContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
-import { createResourceLocatorString } from '../../util/routes';
 import { isStripeError } from '../../util/errors';
-import * as validators from '../../util/validators';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
+import * as validators from '../../util/validators';
 
-import { H4, Button, ExternalLink, FieldSelect, FieldRadioButton, Form } from '../../components';
+import { Button, ExternalLink, FieldRadioButton, FieldSelect, Form, H4 } from '../../components';
 
 import css from './StripeConnectAccountForm.module.css';
 

@@ -1,5 +1,10 @@
 import { createContext, useContext } from 'react';
 
+import {
+  createResourceLocatorString as originalCreateResourceLocatorString,
+  pathByRouteName as originalPathByRouteName,
+} from '../util/routes';
+
 // Supported locales configuration
 export const SUPPORTED_LOCALES = ['en', 'es'];
 export const DEFAULT_LOCALE = 'en';
@@ -117,4 +122,56 @@ export const addLocaleToPath = (pathname, locale) => {
   }
 
   return `/${locale}${pathname}`;
+};
+
+/**
+ * Get current locale from window location
+ * @returns {string} - Current locale code
+ */
+const getCurrentLocale = () => {
+  if (typeof window !== 'undefined') {
+    return getLocaleFromPath(window.location.pathname) || DEFAULT_LOCALE;
+  }
+  return DEFAULT_LOCALE;
+};
+
+/**
+ * Locale-aware pathByRouteName - automatically includes current locale
+ * @param {string} name - Route name
+ * @param {Array} routes - Route configuration
+ * @param {Object} params - Path parameters (locale will be auto-injected if needed)
+ * @returns {string} - Generated path with locale
+ */
+export const pathByRouteName = (name, routes, params = {}) => {
+  const currentLocale = getCurrentLocale();
+
+  // Check if route requires locale
+  const route = routes?.find(r => r.name === name);
+  const routeHasLocale = route?.path?.includes(':locale');
+
+  const paramsWithLocale =
+    routeHasLocale && !params?.locale ? { locale: currentLocale, ...params } : params;
+
+  return originalPathByRouteName(name, routes, paramsWithLocale);
+};
+
+/**
+ * Locale-aware createResourceLocatorString - automatically includes current locale
+ * @param {string} name - Route name
+ * @param {Array} routes - Route configuration
+ * @param {Object} params - Path parameters (locale will be auto-injected if needed)
+ * @param {Object} searchParams - Query string parameters
+ * @returns {string} - Generated URL with locale
+ */
+export const createResourceLocatorString = (name, routes, params = {}, searchParams = {}) => {
+  const currentLocale = getCurrentLocale();
+
+  // Check if route requires locale
+  const route = routes?.find(r => r.name === name);
+  const routeHasLocale = route?.path?.includes(':locale');
+
+  const paramsWithLocale =
+    routeHasLocale && !params?.locale ? { locale: currentLocale, ...params } : params;
+
+  return originalCreateResourceLocatorString(name, routes, paramsWithLocale, searchParams);
 };

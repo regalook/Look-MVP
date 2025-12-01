@@ -1,51 +1,52 @@
+import classNames from 'classnames';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import classNames from 'classnames';
 
 import { useConfiguration } from '../../../context/configurationContext';
+import { createResourceLocatorString } from '../../../context/localeContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
-import { FormattedMessage, useIntl } from '../../../util/reactIntl';
+import { isBookingProcessAlias, isPurchaseProcessAlias } from '../../../transactions/transaction';
 import {
   displayPrice,
   isPriceVariationsEnabled,
   requireListingImage,
 } from '../../../util/configHelpers';
+import { formatMoney } from '../../../util/currency';
+import { ensureOwnListing } from '../../../util/data';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
+import { findRouteByRouteName } from '../../../util/routes';
 import {
-  LISTING_STATE_PENDING_APPROVAL,
   LISTING_STATE_CLOSED,
   LISTING_STATE_DRAFT,
+  LISTING_STATE_PENDING_APPROVAL,
   propTypes,
   STOCK_MULTIPLE_ITEMS,
 } from '../../../util/types';
-import { formatMoney } from '../../../util/currency';
-import { ensureOwnListing } from '../../../util/data';
 import {
-  LISTING_PAGE_PENDING_APPROVAL_VARIANT,
+  createSlug,
   LISTING_PAGE_DRAFT_VARIANT,
   LISTING_PAGE_PARAM_TYPE_DRAFT,
   LISTING_PAGE_PARAM_TYPE_EDIT,
-  createSlug,
+  LISTING_PAGE_PENDING_APPROVAL_VARIANT,
 } from '../../../util/urlHelpers';
-import { createResourceLocatorString, findRouteByRouteName } from '../../../util/routes';
-import { isBookingProcessAlias, isPurchaseProcessAlias } from '../../../transactions/transaction';
 
 import {
   AspectRatioWrapper,
+  IconSpinner,
   InlineTextButton,
+  ListingCardThumbnail,
   Menu,
-  MenuLabel,
   MenuContent,
   MenuItem,
+  MenuLabel,
   NamedLink,
-  IconSpinner,
   PrimaryButtonInline,
   ResponsiveImage,
-  ListingCardThumbnail,
 } from '../../../components';
 
+import css from './ManageListingCard.module.css';
 import MenuIcon from './MenuIcon';
 import Overlay from './Overlay';
-import css from './ManageListingCard.module.css';
 
 // Menu content needs the same padding
 const MENU_CONTENT_OFFSET = -12;

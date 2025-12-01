@@ -1,21 +1,22 @@
 import intersection from 'lodash/intersection';
 
-import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from '../../util/types';
-import { createResourceLocatorString, matchPathname } from '../../util/routes';
+import { createResourceLocatorString } from '../../context/localeContext';
 import {
-  isAnyFilterActive,
-  parseSelectFilterOptions,
-  constructQueryParamName,
-} from '../../util/search';
-import { createSlug, parse, stringify } from '../../util/urlHelpers';
-import {
+  addTime,
   getStartOf,
   parseDateFromISO8601,
-  subtractTime,
-  addTime,
   stringifyDateToISO8601,
+  subtractTime,
 } from '../../util/dates';
 import { isFieldForCategory, isFieldForListingType } from '../../util/fieldHelpers';
+import { matchPathname } from '../../util/routes';
+import {
+  constructQueryParamName,
+  isAnyFilterActive,
+  parseSelectFilterOptions,
+} from '../../util/search';
+import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from '../../util/types';
+import { createSlug, parse, stringify } from '../../util/urlHelpers';
 
 const validURLParamForCategoryData = (prefix, categories, level, params) => {
   const levelKey = constructQueryParamName(`${prefix}${level}`, 'public');

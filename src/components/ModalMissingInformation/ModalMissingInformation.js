@@ -1,12 +1,11 @@
 import classNames from 'classnames';
 import { Component } from 'react';
 
-import { DEFAULT_LOCALE, getLocaleFromPath } from '../../context/localeContext';
+import { pathByRouteName } from '../../context/localeContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
 import { ensureCurrentUser } from '../../util/data';
 import { FormattedMessage } from '../../util/reactIntl';
-import { pathByRouteName } from '../../util/routes';
 import { isUserAuthorized } from '../../util/userHelpers';
 
 import { Modal } from '../../components';
@@ -54,15 +53,11 @@ class ModalMissingInformation extends Component {
     newLocation
   ) {
     const routes = this.props.routeConfiguration;
-    const currentLocale = getLocaleFromPath(newLocation.pathname) || DEFAULT_LOCALE;
 
-    // Generate whitelisted paths with locale parameter
+    // Generate whitelisted paths - locale is auto-injected by pathByRouteName
     const whitelistedPaths = MISSING_INFORMATION_MODAL_WHITELIST.map(page => {
-      const route = routes?.find(r => r.name === page);
-      const routeHasLocale = route?.path?.includes(':locale');
-      const params = routeHasLocale ? { locale: currentLocale } : {};
       try {
-        return pathByRouteName(page, routes, params);
+        return pathByRouteName(page, routes);
       } catch (e) {
         // If route generation fails, return empty string to avoid crash
         return '';

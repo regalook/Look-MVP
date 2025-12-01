@@ -1,62 +1,62 @@
-import React, { Component, useEffect } from 'react';
 import classNames from 'classnames';
+import { Component, useEffect } from 'react';
 
 // Import configs and util modules
 import { useConfiguration } from '../../../context/configurationContext';
+import { createResourceLocatorString } from '../../../context/localeContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
-import { FormattedMessage, intlShape, useIntl } from '../../../util/reactIntl';
+import { INQUIRY_PROCESS_NAME, resolveLatestProcessName } from '../../../transactions/transaction';
 import {
   displayDeliveryPickup,
   displayDeliveryShipping,
   displayLocation,
   displayPrice,
-  requirePayoutDetails,
   requireListingImage,
+  requirePayoutDetails,
 } from '../../../util/configHelpers';
-import {
-  LISTING_PAGE_PARAM_TYPE_DRAFT,
-  LISTING_PAGE_PARAM_TYPE_NEW,
-} from '../../../util/urlHelpers';
-import { createResourceLocatorString } from '../../../util/routes';
-import {
-  SCHEMA_TYPE_ENUM,
-  SCHEMA_TYPE_MULTI_ENUM,
-  SCHEMA_TYPE_TEXT,
-  SCHEMA_TYPE_LONG,
-  SCHEMA_TYPE_BOOLEAN,
-  SCHEMA_TYPE_YOUTUBE,
-  propTypes,
-} from '../../../util/types';
+import { ensureCurrentUser, ensureListing } from '../../../util/data';
 import {
   isFieldForCategory,
   isFieldForListingType,
   pickCategoryFields,
 } from '../../../util/fieldHelpers';
-import { ensureCurrentUser, ensureListing } from '../../../util/data';
-import { INQUIRY_PROCESS_NAME, resolveLatestProcessName } from '../../../transactions/transaction';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
+import {
+  SCHEMA_TYPE_BOOLEAN,
+  SCHEMA_TYPE_ENUM,
+  SCHEMA_TYPE_LONG,
+  SCHEMA_TYPE_MULTI_ENUM,
+  SCHEMA_TYPE_TEXT,
+  SCHEMA_TYPE_YOUTUBE,
+  propTypes,
+} from '../../../util/types';
+import {
+  LISTING_PAGE_PARAM_TYPE_DRAFT,
+  LISTING_PAGE_PARAM_TYPE_NEW,
+} from '../../../util/urlHelpers';
 
 // Import shared components
 import {
   Heading,
   Modal,
   NamedRedirect,
-  Tabs,
-  StripeConnectAccountStatusBox,
   StripeConnectAccountForm,
+  StripeConnectAccountStatusBox,
+  Tabs,
 } from '../../../components';
 
 // Import modules from this directory
+import css from './EditListingWizard.module.css';
 import EditListingWizardTab, {
+  AVAILABILITY,
+  DELIVERY,
   DETAILS,
+  LOCATION,
+  PHOTOS,
   PRICING,
   PRICING_AND_STOCK,
-  DELIVERY,
-  LOCATION,
-  AVAILABILITY,
-  PHOTOS,
   STYLE,
 } from './EditListingWizardTab';
-import css from './EditListingWizard.module.css';
 
 // This is the initial tab on editlisting wizard.
 // When listing type is known, other tabs are checked from _tabsForListingType_ function.

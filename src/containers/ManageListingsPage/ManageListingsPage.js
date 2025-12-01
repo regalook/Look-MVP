@@ -1,41 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'redux';
-import { connect } from 'react-redux';
 
-import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { useConfiguration } from '../../context/configurationContext';
-import { FormattedMessage, useIntl } from '../../util/reactIntl';
-import { pathByRouteName } from '../../util/routes';
-import { hasPermissionToPostListings, showCreateListingLinkForUser } from '../../util/userHelpers';
-import { NO_ACCESS_PAGE_POST_LISTINGS } from '../../util/urlHelpers';
-import { propTypes } from '../../util/types';
-import { isErrorNoPermissionToPostListings } from '../../util/errors';
+import { pathByRouteName } from '../../context/localeContext';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
+import { isErrorNoPermissionToPostListings } from '../../util/errors';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
+import { propTypes } from '../../util/types';
+import { NO_ACCESS_PAGE_POST_LISTINGS } from '../../util/urlHelpers';
+import { hasPermissionToPostListings, showCreateListingLinkForUser } from '../../util/userHelpers';
 
 import {
   H3,
+  LayoutSingleColumn,
+  NamedLink,
   Page,
   PaginationLinks,
   UserNav,
-  LayoutSingleColumn,
-  NamedLink,
-  Modal,
 } from '../../components';
 
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import ManageListingCard from './ManageListingCard/ManageListingCard';
 
+import DiscardDraftModal from './DiscardDraftModal/DiscardDraftModal';
 import {
   closeListing,
-  openListing,
-  getOwnListingsById,
   discardDraft,
+  getOwnListingsById,
+  openListing,
 } from './ManageListingsPage.duck';
 import css from './ManageListingsPage.module.css';
-import DiscardDraftModal from './DiscardDraftModal/DiscardDraftModal';
 
 const Heading = props => {
   const { listingsAreLoaded, pagination } = props;
@@ -309,11 +308,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
 });
 
-const ManageListingsPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(ManageListingsPageComponent);
+const ManageListingsPage = compose(connect(mapStateToProps, mapDispatchToProps))(
+  ManageListingsPageComponent
+);
 
 export default ManageListingsPage;

@@ -1,79 +1,80 @@
-import React, { useEffect, useState } from 'react';
-import { compose } from 'redux';
+import classNames from 'classnames';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import classNames from 'classnames';
+import { compose } from 'redux';
 
 import appSettings from '../../config/settings.js';
 import { useConfiguration } from '../../context/configurationContext';
+import { createResourceLocatorString } from '../../context/localeContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import { requireListingImage } from '../../util/configHelpers';
+import { timestampToDate } from '../../util/dates';
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
-import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
+import { findRouteByRouteName } from '../../util/routes';
 import {
   LINE_ITEM_OFFER,
   LINE_ITEM_REQUEST,
   LISTING_UNIT_TYPES,
   propTypes,
 } from '../../util/types';
-import { timestampToDate } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
-import { requireListingImage } from '../../util/configHelpers';
 
 import {
-  INQUIRY_PROCESS_NAME,
   TX_TRANSITION_ACTOR_CUSTOMER as CUSTOMER,
-  TX_TRANSITION_ACTOR_PROVIDER as PROVIDER,
-  resolveLatestProcessName,
   getProcess,
+  INQUIRY_PROCESS_NAME,
   isBookingProcess,
   NEGOTIATION_PROCESS_NAME,
   OFFER,
+  TX_TRANSITION_ACTOR_PROVIDER as PROVIDER,
+  resolveLatestProcessName,
 } from '../../transactions/transaction';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
-import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
 import { initializeCardPaymentData } from '../../ducks/stripe.duck.js';
+import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
 
 import {
   H4,
   IconSpinner,
+  LayoutSingleColumn,
   NamedLink,
   NamedRedirect,
-  Page,
-  UserDisplayName,
   OrderBreakdown,
   OrderPanel,
-  LayoutSingleColumn,
+  Page,
+  UserDisplayName,
 } from '../../components';
 
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
-import { getStateData } from './TransactionPage.stateData';
 import ActionButtons, {
   ACTION_BUTTON_1_ID,
   ACTION_BUTTON_2_ID,
   ACTION_BUTTON_3_ID,
 } from './ActionButtons/ActionButtons';
-import RequestQuote from './RequestQuote/RequestQuote';
-import Offer from './Offer/Offer';
 import ActivityFeed from './ActivityFeed/ActivityFeed';
 import DisputeModal from './DisputeModal/DisputeModal';
-import ReviewModal from './ReviewModal/ReviewModal';
-import RequestChangesModal from './RequestChangesModal/RequestChangesModal';
 import MakeCounterOfferModal from './MakeCounterOfferModal/MakeCounterOfferModal';
+import Offer from './Offer/Offer';
+import RequestChangesModal from './RequestChangesModal/RequestChangesModal';
+import RequestQuote from './RequestQuote/RequestQuote';
+import ReviewModal from './ReviewModal/ReviewModal';
+import { getStateData } from './TransactionPage.stateData';
 import TransactionPanel from './TransactionPanel/TransactionPanel';
 
+import { getCurrentUserTypeRoles, hasPermissionToViewData } from '../../util/userHelpers.js';
 import {
-  makeTransition,
-  sendMessage,
-  sendReview,
   fetchMoreMessages,
   fetchTimeSlots,
   fetchTransactionLineItems,
+  makeTransition,
+  sendMessage,
+  sendReview,
 } from './TransactionPage.duck';
 import css from './TransactionPage.module.css';
-import { getCurrentUserTypeRoles, hasPermissionToViewData } from '../../util/userHelpers.js';
 
 const MAX_MOBILE_SCREEN_WIDTH = 1023;
 
@@ -960,10 +961,7 @@ const mapDispatchToProps = dispatch => {
 
 const TransactionPage = compose(
   withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
+  connect(mapStateToProps, mapDispatchToProps)
 )(TransactionPageComponent);
 
 export default TransactionPage;

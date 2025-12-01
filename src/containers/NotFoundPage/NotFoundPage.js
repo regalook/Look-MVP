@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
-import { compose } from 'redux';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { compose } from 'redux';
 
 import { useConfiguration } from '../../context/configurationContext';
+import { createResourceLocatorString } from '../../context/localeContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
-import { FormattedMessage, useIntl } from '../../util/reactIntl';
-import { createResourceLocatorString } from '../../util/routes';
-import { isMainSearchTypeKeywords } from '../../util/search';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
+import { isMainSearchTypeKeywords } from '../../util/search';
 
-import { Heading, Page, LayoutSingleColumn } from '../../components';
+import { Heading, LayoutSingleColumn, Page } from '../../components';
 
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import SearchForm from './SearchForm/SearchForm';
 

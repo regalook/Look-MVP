@@ -1,8 +1,7 @@
-import { Redirect, useLocation } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
-import { DEFAULT_LOCALE, getLocaleFromPath } from '../../context/localeContext';
+import { pathByRouteName } from '../../context/localeContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
-import { pathByRouteName } from '../../util/routes';
 
 /**
  * This component wraps React-Router's Redirect by providing name-based routing.
@@ -19,22 +18,10 @@ import { pathByRouteName } from '../../util/routes';
  */
 const NamedRedirect = props => {
   const routeConfiguration = useRouteConfiguration();
-  const location = useLocation();
-  const currentLocale = getLocaleFromPath(location.pathname);
-
   const { name, search, state = {}, params = {}, push = false } = props;
 
-  // Check if the route requires a locale parameter
-  const route = routeConfiguration.find(r => r.name === name);
-  const routeHasLocale = route?.path?.includes(':locale');
-
-  // Include locale in params only if the route requires it and it's not already provided
-  const paramsWithLocale =
-    routeHasLocale && !params.locale
-      ? { locale: currentLocale || DEFAULT_LOCALE, ...params }
-      : params;
-
-  const pathname = pathByRouteName(name, routeConfiguration, paramsWithLocale);
+  // pathByRouteName from localeContext auto-injects locale
+  const pathname = pathByRouteName(name, routeConfiguration, params);
   return <Redirect to={{ pathname, search, state }} push={push} />;
 };
 

@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 // Import contexts and util modules
-import { FormattedMessage, intlShape } from '../../util/reactIntl';
-import { pathByRouteName } from '../../util/routes';
-import { isValidCurrencyForTransactionProcess } from '../../util/fieldHelpers.js';
-import { propTypes } from '../../util/types';
-import { ensureTransaction } from '../../util/data';
-import { createSlug } from '../../util/urlHelpers';
-import { isTransactionInitiateListingNotFoundError } from '../../util/errors';
+import { pathByRouteName } from '../../context/localeContext';
 import {
+  BOOKING_PROCESS_NAME,
   getProcess,
   isBookingProcessAlias,
-  resolveLatestProcessName,
-  BOOKING_PROCESS_NAME,
   NEGOTIATION_PROCESS_NAME,
   PURCHASE_PROCESS_NAME,
+  resolveLatestProcessName,
 } from '../../transactions/transaction';
+import { ensureTransaction } from '../../util/data';
+import { isTransactionInitiateListingNotFoundError } from '../../util/errors';
+import { isValidCurrencyForTransactionProcess } from '../../util/fieldHelpers.js';
+import { FormattedMessage } from '../../util/reactIntl';
+import { propTypes } from '../../util/types';
+import { createSlug } from '../../util/urlHelpers';
 
 // Import shared components
 import { H3, H4, NamedLink, OrderBreakdown, Page, TopbarSimplified } from '../../components';
@@ -34,10 +34,10 @@ import {
 } from './CheckoutPageTransactionHelpers.js';
 import { getErrorMessages } from './ErrorMessages';
 
-import StripePaymentForm from './StripePaymentForm/StripePaymentForm';
 import DetailsSideCard from './DetailsSideCard';
 import MobileListingImage from './MobileListingImage';
 import MobileOrderBreakdown from './MobileOrderBreakdown';
+import StripePaymentForm from './StripePaymentForm/StripePaymentForm';
 
 import css from './CheckoutPage.module.css';
 

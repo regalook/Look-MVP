@@ -1,27 +1,26 @@
-import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
+import { useEffect, useState } from 'react';
 
 // Import configs and util modules
 import appSettings from '../../../../../config/settings';
-import { FormattedDate, FormattedMessage, useIntl } from '../../../../../util/reactIntl';
+import { createResourceLocatorString } from '../../../../../context/localeContext';
 import {
+  getEndOfWeek,
   getStartOf,
   getStartOfWeek,
-  getEndOfWeek,
   isInRange,
-  parseDateFromISO8601,
-  parseDateTimeString,
-  stringifyDateToISO8601,
   isSameDate,
+  parseDateFromISO8601,
+  stringifyDateToISO8601,
 } from '../../../../../util/dates';
 import { availabilityPerDate } from '../../../../../util/generators';
-import { createResourceLocatorString } from '../../../../../util/routes';
+import { FormattedDate, FormattedMessage, useIntl } from '../../../../../util/reactIntl';
 import { DATE_TYPE_DATE, DATE_TYPE_TIME } from '../../../../../util/types';
 
 // Import shared components
 import {
-  Heading,
   H4,
+  Heading,
   IconArrowHead,
   IconDelete,
   IconSpinner,

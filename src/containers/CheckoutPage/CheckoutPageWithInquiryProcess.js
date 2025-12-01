@@ -1,23 +1,22 @@
-import React, { useState } from 'react';
-import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
+import { useState } from 'react';
+import { Form as FinalForm } from 'react-final-form';
 
 // Import contexts and util modules
-import { FormattedMessage, intlShape } from '../../util/reactIntl';
-import { displayPrice } from '../../util/configHelpers';
-import { pathByRouteName } from '../../util/routes';
-import { propTypes } from '../../util/types';
-import { formatMoney } from '../../util/currency';
-import { createSlug } from '../../util/urlHelpers';
-import { isTransactionInitiateListingNotFoundError } from '../../util/errors';
-import * as validators from '../../util/validators';
+import { pathByRouteName } from '../../context/localeContext';
 import { getProcess } from '../../transactions/transaction';
+import { displayPrice } from '../../util/configHelpers';
+import { formatMoney } from '../../util/currency';
+import { FormattedMessage } from '../../util/reactIntl';
+import { propTypes } from '../../util/types';
+import { createSlug } from '../../util/urlHelpers';
+import * as validators from '../../util/validators';
 
 // Import shared components
 import {
+  ErrorMessage,
   FieldTextInput,
   Form,
-  ErrorMessage,
   H3,
   H4,
   Heading,

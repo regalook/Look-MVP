@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
 import classNames from 'classnames';
+import React, { useState } from 'react';
 import { Form as FinalForm } from 'react-final-form';
 import { useHistory } from 'react-router-dom';
 
 // Contexts
-import { useRouteConfiguration } from '../../../../context/routeConfigurationContext';
 import { useConfiguration } from '../../../../context/configurationContext';
+import { createResourceLocatorString } from '../../../../context/localeContext';
+import { useRouteConfiguration } from '../../../../context/routeConfigurationContext';
 
 // Utility
-import { FormattedMessage } from '../../../../util/reactIntl';
-import { createResourceLocatorString } from '../../../../util/routes';
-import { isOriginInUse } from '../../../../util/search';
 import { stringifyDateToISO8601 } from '../../../../util/dates';
+import { FormattedMessage } from '../../../../util/reactIntl';
+import { isOriginInUse } from '../../../../util/search';
 
 // Shared components
 import { Form, PrimaryButton } from '../../../../components';
 
 import FilterCategories from './FilterCategories/FilterCategories';
 import FilterDateRange from './FilterDateRange/FilterDateRange';
-import FilterLocation from './FilterLocation/FilterLocation';
 import FilterKeyword from './FilterKeyword/FilterKeyword';
+import FilterLocation from './FilterLocation/FilterLocation';
 
 import css from './SearchCTA.module.css';
 

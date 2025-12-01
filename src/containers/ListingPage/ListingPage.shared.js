@@ -1,18 +1,18 @@
-import React from 'react';
-import { FormattedMessage } from '../../util/reactIntl';
-import { types as sdkTypes } from '../../util/sdkLoader';
-import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
+import { createResourceLocatorString } from '../../context/localeContext';
+import { REQUEST } from '../../transactions/transaction';
 import { convertMoneyToNumber, formatMoney } from '../../util/currency';
 import { timestampToDate } from '../../util/dates';
-import { hasPermissionToInitiateTransactions, isUserAuthorized } from '../../util/userHelpers';
+import { FormattedMessage } from '../../util/reactIntl';
+import { findRouteByRouteName } from '../../util/routes';
+import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   NO_ACCESS_PAGE_INITIATE_TRANSACTIONS,
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
   createSlug,
 } from '../../util/urlHelpers';
-import { REQUEST } from '../../transactions/transaction';
+import { hasPermissionToInitiateTransactions, isUserAuthorized } from '../../util/userHelpers';
 
-import { Page, LayoutSingleColumn } from '../../components';
+import { LayoutSingleColumn, Page } from '../../components';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import css from './ListingPage.module.css';

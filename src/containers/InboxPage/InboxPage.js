@@ -1,61 +1,60 @@
-import React from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
 import classNames from 'classnames';
+import { connect } from 'react-redux';
+import { useHistory, useLocation } from 'react-router-dom';
+import { compose } from 'redux';
 
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
-import { FormattedMessage, intlShape, useIntl } from '../../util/reactIntl';
-import { parse } from '../../util/urlHelpers';
-import { getCurrentUserTypeRoles } from '../../util/userHelpers';
-import {
-  propTypes,
-  DATE_TYPE_DATE,
-  DATE_TYPE_DATETIME,
-  LINE_ITEM_NIGHT,
-  LINE_ITEM_HOUR,
-  LISTING_UNIT_TYPES,
-  STOCK_MULTIPLE_ITEMS,
-  AVAILABILITY_MULTIPLE_SEATS,
-  LINE_ITEM_FIXED,
-} from '../../util/types';
-import { subtractTime } from '../../util/dates';
-import { createResourceLocatorString } from '../../util/routes';
+import { createResourceLocatorString } from '../../context/localeContext';
 import {
   TX_TRANSITION_ACTOR_CUSTOMER,
   TX_TRANSITION_ACTOR_PROVIDER,
-  resolveLatestProcessName,
   getProcess,
   isBookingProcess,
-  isPurchaseProcess,
   isNegotiationProcess,
+  isPurchaseProcess,
+  resolveLatestProcessName,
 } from '../../transactions/transaction';
-
-import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
-import { isScrollingDisabled } from '../../ducks/ui.duck';
+import { subtractTime } from '../../util/dates';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import {
-  H2,
+  AVAILABILITY_MULTIPLE_SEATS,
+  DATE_TYPE_DATE,
+  DATE_TYPE_DATETIME,
+  LINE_ITEM_FIXED,
+  LINE_ITEM_HOUR,
+  LINE_ITEM_NIGHT,
+  LISTING_UNIT_TYPES,
+  STOCK_MULTIPLE_ITEMS,
+  propTypes,
+} from '../../util/types';
+import { parse } from '../../util/urlHelpers';
+import { getCurrentUserTypeRoles } from '../../util/userHelpers';
+
+import {
   Avatar,
+  H2,
+  IconSpinner,
+  LayoutSideNavigation,
   NamedLink,
   NotificationBadge,
   Page,
   PaginationLinks,
   TabNav,
-  IconSpinner,
   TimeRange,
   UserDisplayName,
-  LayoutSideNavigation,
 } from '../../components';
+import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import { isScrollingDisabled } from '../../ducks/ui.duck';
 
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import InboxSearchForm from './InboxSearchForm/InboxSearchForm';
 
-import { stateDataShape, getStateData } from './InboxPage.stateData';
 import css from './InboxPage.module.css';
+import { getStateData } from './InboxPage.stateData';
 
 // Check if the transaction line-items use booking-related units
 const getUnitLineItem = lineItems => {

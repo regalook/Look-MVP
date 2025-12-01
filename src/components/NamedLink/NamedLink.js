@@ -18,11 +18,10 @@
  * the one in the generated pathname of the link.
  */
 import classNames from 'classnames';
-import { Link, useLocation, withRouter } from 'react-router-dom';
-import { DEFAULT_LOCALE, getLocaleFromPath } from '../../context/localeContext';
+import { Link, withRouter } from 'react-router-dom';
+import { pathByRouteName } from '../../context/localeContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
-
-import { findRouteByRouteName, pathByRouteName } from '../../util/routes';
+import { findRouteByRouteName } from '../../util/routes';
 
 /**
  * This component wraps React-Router's Link by providing name-based routing.
@@ -45,44 +44,28 @@ import { findRouteByRouteName, pathByRouteName } from '../../util/routes';
  */
 export const NamedLink = withRouter(props => {
   const routeConfiguration = useRouteConfiguration();
-  const location = useLocation();
-  const currentLocale = getLocaleFromPath(location.pathname);
 
   const {
     name,
-    params = {}, // pathParams
+    params = {},
     title,
-    // Link props
     to = {},
     children,
     match = {},
-    // <a> element props
     className,
     style = {},
     activeClassName = 'NamedLink_active',
   } = props;
 
-  // Check if the route requires a locale parameter
-  const route = routeConfiguration?.find(r => r.name === name);
-  const routeHasLocale = route?.path?.includes(':locale') ?? false;
-
-  // Include locale in params only if the route requires it and it's not already provided
-  // Always use DEFAULT_LOCALE as fallback to ensure we have a valid locale
-  const effectiveLocale = currentLocale || DEFAULT_LOCALE;
-
-  const paramsWithLocale =
-    routeHasLocale && !params.locale ? { locale: effectiveLocale, ...params } : params;
-
   const onOver = () => {
     const { component: Page } = findRouteByRouteName(name, routeConfiguration);
-    // Loadable Component has a "preload" function.
     if (Page.preload) {
       Page.preload();
     }
   };
 
-  // Link props
-  const pathname = pathByRouteName(name, routeConfiguration, paramsWithLocale);
+  // pathByRouteName from localeContext auto-injects locale
+  const pathname = pathByRouteName(name, routeConfiguration, params);
   const active = match.url && match.url === pathname;
 
   // <a> element props

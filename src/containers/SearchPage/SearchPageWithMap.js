@@ -1,68 +1,69 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { useHistory, useLocation } from 'react-router-dom';
+import classNames from 'classnames';
 import debounce from 'lodash/debounce';
 import omit from 'lodash/omit';
-import classNames from 'classnames';
+import { Component } from 'react';
+import { connect } from 'react-redux';
+import { useHistory, useLocation } from 'react-router-dom';
+import { compose } from 'redux';
 
 import { useConfiguration } from '../../context/configurationContext';
+import { pathByRouteName } from '../../context/localeContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
-import { useIntl, FormattedMessage } from '../../util/reactIntl';
-import {
-  isAnyFilterActive,
-  isMainSearchTypeKeywords,
-  isOriginInUse,
-  getQueryParamNames,
-} from '../../util/search';
-import {
-  NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
-  NO_ACCESS_PAGE_VIEW_LISTINGS,
-  parse,
-} from '../../util/urlHelpers';
-import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
-import { propTypes } from '../../util/types';
+import { createResourceLocatorString } from '../../context/localeContext';
+import { getListingsById } from '../../ducks/marketplaceData.duck';
+import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
 import {
   isErrorNoViewingPermission,
   isErrorUserPendingApproval,
   isForbiddenError,
 } from '../../util/errors';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
+import {
+  getQueryParamNames,
+  isAnyFilterActive,
+  isMainSearchTypeKeywords,
+  isOriginInUse,
+} from '../../util/search';
+import { propTypes } from '../../util/types';
+import {
+  NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
+  NO_ACCESS_PAGE_VIEW_LISTINGS,
+  parse,
+} from '../../util/urlHelpers';
 import {
   hasPermissionToViewData,
   isUserAuthorized,
   showCreateListingLinkForUser,
 } from '../../util/userHelpers';
-import { getListingsById } from '../../ducks/marketplaceData.duck';
-import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 
 import { H3, H5, ModalInMobile, NamedRedirect, Page } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import { setActiveListing } from './SearchPage.duck';
 import {
-  groupListingFieldConfigs,
-  initialValues,
-  searchParamsPicker,
-  validUrlQueryParamsFromProps,
-  validFilterParams,
   cleanSearchFromConflictingParams,
   createSearchResultSchema,
-  pickListingFieldFilters,
-  omitLimitedListingFieldParams,
   getDatesAndSeatsMaybe,
   getSearchPageResourceLocatorStringParams,
+  groupListingFieldConfigs,
+  initialValues,
+  omitLimitedListingFieldParams,
+  pickListingFieldFilters,
+  searchParamsPicker,
+  validFilterParams,
+  validUrlQueryParamsFromProps,
 } from './SearchPage.shared';
 
 import FilterComponent from './FilterComponent';
-import SearchMap from './SearchMap/SearchMap';
 import MainPanelHeader from './MainPanelHeader/MainPanelHeader';
-import SearchFiltersSecondary from './SearchFiltersSecondary/SearchFiltersSecondary';
-import SearchFiltersPrimary from './SearchFiltersPrimary/SearchFiltersPrimary';
-import SearchFiltersMobile from './SearchFiltersMobile/SearchFiltersMobile';
-import SortBy from './SortBy/SortBy';
-import SearchResultsPanel from './SearchResultsPanel/SearchResultsPanel';
 import NoSearchResultsMaybe from './NoSearchResultsMaybe/NoSearchResultsMaybe';
+import SearchFiltersMobile from './SearchFiltersMobile/SearchFiltersMobile';
+import SearchFiltersPrimary from './SearchFiltersPrimary/SearchFiltersPrimary';
+import SearchFiltersSecondary from './SearchFiltersSecondary/SearchFiltersSecondary';
+import SearchMap from './SearchMap/SearchMap';
+import SearchResultsPanel from './SearchResultsPanel/SearchResultsPanel';
+import SortBy from './SortBy/SortBy';
 
 import css from './SearchPage.module.css';
 
@@ -810,11 +811,6 @@ const mapDispatchToProps = dispatch => ({
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const SearchPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(EnhancedSearchPage);
+const SearchPage = compose(connect(mapStateToProps, mapDispatchToProps))(EnhancedSearchPage);
 
 export default SearchPage;

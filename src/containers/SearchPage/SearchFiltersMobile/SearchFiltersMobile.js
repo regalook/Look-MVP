@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
 import classNames from 'classnames';
+import React, { Component } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { createResourceLocatorString } from '../../../context/localeContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
-import { createResourceLocatorString } from '../../../util/routes';
 import { getSearchPageResourceLocatorStringParams } from '../SearchPage.shared';
 
-import { ModalInMobile, Button } from '../../../components';
+import { Button, ModalInMobile } from '../../../components';
 
 import PopupOpenerButton from '../PopupOpenerButton/PopupOpenerButton';
 import css from './SearchFiltersMobile.module.css';

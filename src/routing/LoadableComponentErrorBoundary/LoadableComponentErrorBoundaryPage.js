@@ -1,9 +1,8 @@
-import React from 'react';
-import { FormattedMessage } from '../../util/reactIntl';
-import { pathByRouteName } from '../../util/routes';
+import { pathByRouteName } from '../../context/localeContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import { FormattedMessage } from '../../util/reactIntl';
 
-import { InlineTextButton, Logo, Heading, LayoutSingleColumn } from '../../components';
+import { Heading, InlineTextButton, LayoutSingleColumn, Logo } from '../../components';
 
 import css from './LoadableComponentErrorBoundary.module.css';
 

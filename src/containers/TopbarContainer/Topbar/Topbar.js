@@ -1,15 +1,11 @@
-import React from 'react';
-import pickBy from 'lodash/pickBy';
 import classNames from 'classnames';
+import pickBy from 'lodash/pickBy';
 
 import appSettings from '../../../config/settings';
 import { useConfiguration } from '../../../context/configurationContext';
+import { pathByRouteName } from '../../../context/localeContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 
-import { FormattedMessage, useIntl } from '../../../util/reactIntl';
-import { isMainSearchTypeKeywords, isOriginInUse } from '../../../util/search';
-import { parse, stringify } from '../../../util/urlHelpers';
-import { createResourceLocatorString, matchPathname, pathByRouteName } from '../../../util/routes';
 import {
   Button,
   LimitedAccessBanner,
@@ -17,16 +13,21 @@ import {
   Modal,
   ModalMissingInformation,
 } from '../../../components';
+import { createResourceLocatorString } from '../../../context/localeContext';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
+import { matchPathname } from '../../../util/routes';
+import { isMainSearchTypeKeywords, isOriginInUse } from '../../../util/search';
+import { parse, stringify } from '../../../util/urlHelpers';
 import { getSearchPageResourceLocatorStringParams } from '../../SearchPage/SearchPage.shared';
 
 import MenuIcon from './MenuIcon';
 import SearchIcon from './SearchIcon';
-import TopbarSearchForm from './TopbarSearchForm/TopbarSearchForm';
-import TopbarMobileMenu from './TopbarMobileMenu/TopbarMobileMenu';
 import TopbarDesktop from './TopbarDesktop/TopbarDesktop';
+import TopbarMobileMenu from './TopbarMobileMenu/TopbarMobileMenu';
+import TopbarSearchForm from './TopbarSearchForm/TopbarSearchForm';
 
-import css from './Topbar.module.css';
 import { getCurrentUserTypeRoles, showCreateListingLinkForUser } from '../../../util/userHelpers';
+import css from './Topbar.module.css';
 
 const MAX_MOBILE_SCREEN_WIDTH = 1024;
 

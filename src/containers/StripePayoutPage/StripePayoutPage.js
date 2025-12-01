@@ -1,32 +1,31 @@
-import React from 'react';
-import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { compose } from 'redux';
 
 import { useConfiguration } from '../../context/configurationContext';
+import { createResourceLocatorString } from '../../context/localeContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
-import { createResourceLocatorString } from '../../util/routes';
-import { FormattedMessage, useIntl } from '../../util/reactIntl';
+import {
+  getStripeConnectAccountLink,
+  stripeAccountClearError,
+} from '../../ducks/stripeConnectAccount.duck';
+import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { ensureCurrentUser } from '../../util/data';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { showCreateListingLinkForUser, showPaymentDetailsForUser } from '../../util/userHelpers';
-import { isScrollingDisabled } from '../../ducks/ui.duck';
-import {
-  stripeAccountClearError,
-  getStripeConnectAccountLink,
-} from '../../ducks/stripeConnectAccount.duck';
 
 import {
   H3,
+  LayoutSideNavigation,
   NamedRedirect,
   Page,
-  StripeConnectAccountStatusBox,
   StripeConnectAccountForm,
+  StripeConnectAccountStatusBox,
   UserNav,
-  LayoutSideNavigation,
 } from '../../components';
 
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import { savePayoutDetails } from './StripePayoutPage.duck';
 
@@ -301,11 +300,8 @@ const mapDispatchToProps = dispatch => ({
   onGetStripeConnectAccountLink: params => dispatch(getStripeConnectAccountLink(params)),
 });
 
-const StripePayoutPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(StripePayoutPageComponent);
+const StripePayoutPage = compose(connect(mapStateToProps, mapDispatchToProps))(
+  StripePayoutPageComponent
+);
 
 export default StripePayoutPage;
