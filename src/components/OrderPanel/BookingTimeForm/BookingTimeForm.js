@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
+import { useState } from 'react';
+import { Form as FinalForm } from 'react-final-form';
 
-import { FormattedMessage, useIntl } from '../../../util/reactIntl';
-import { timestampToDate } from '../../../util/dates';
-import { propTypes } from '../../../util/types';
 import { BOOKING_PROCESS_NAME } from '../../../transactions/transaction';
+import { timestampToDate } from '../../../util/dates';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
+import { propTypes } from '../../../util/types';
 
-import { Form, H6, PrimaryButton, FieldSelect } from '../../../components';
+import { FieldSelect, Form, H6, PrimaryButton } from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 import FieldDateAndTimeInput from './FieldDateAndTimeInput';
@@ -107,6 +107,7 @@ export const BookingTimeForm = props => {
     priceVariantFieldComponent: PriceVariantFieldComponent,
     preselectedPriceVariant,
     isPublishedListing,
+    installationDaysAfter,
     ...rest
   } = props;
 
@@ -205,6 +206,7 @@ export const BookingTimeForm = props => {
                 timeZone={timeZone}
                 dayCountAvailableForBooking={dayCountAvailableForBooking}
                 handleFetchLineItems={onHandleFetchLineItems}
+                installationDaysAfter={installationDaysAfter}
               />
             ) : null}
             {seatsEnabled ? (

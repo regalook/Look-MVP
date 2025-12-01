@@ -1,38 +1,38 @@
-import React, { useEffect, useState } from 'react';
-import { Field } from 'react-final-form';
 import classNames from 'classnames';
+import { useEffect, useState } from 'react';
+import { Field } from 'react-final-form';
 
+import { FieldSelect, FieldSingleDatePicker } from '../../../components';
 import appSettings from '../../../config/settings';
 import {
+  bookingTimeUnits,
+  findNextBoundary,
+  getBoundaries,
+  getStartOf,
+  isDateSameOrAfter,
   isInRange,
   isSameDate,
+  monthIdString,
+  stringifyDateToISO8601,
   timeOfDayFromLocalToTimeZone,
   timeOfDayFromTimeZoneToLocal,
-  isDateSameOrAfter,
-  findNextBoundary,
   timestampToDate,
-  monthIdString,
-  getStartOf,
-  stringifyDateToISO8601,
-  getBoundaries,
-  bookingTimeUnits,
 } from '../../../util/dates';
-import { propTypes } from '../../../util/types';
 import { timeSlotsPerDate } from '../../../util/generators';
+import { propTypes } from '../../../util/types';
 import { bookingDateRequired } from '../../../util/validators';
-import { FieldSingleDatePicker, FieldSelect } from '../../../components';
 
 import {
   TODAY,
+  endOfRange,
+  getAllTimeSlots,
+  getMonthlyFetchRange,
+  getPlaceholder,
+  getTimeSlotsOnDate,
+  getTimeSlotsOnSelectedDate,
   isToday,
   nextMonthFn,
   prevMonthFn,
-  endOfRange,
-  getPlaceholder,
-  getMonthlyFetchRange,
-  getAllTimeSlots,
-  getTimeSlotsOnDate,
-  getTimeSlotsOnSelectedDate,
   showNextMonthStepper,
   showPreviousMonthStepper,
 } from '../booking.shared';
@@ -566,6 +566,7 @@ const FieldDateAndTimeInput = props => {
     priceVariants,
     intl,
     dayCountAvailableForBooking,
+    installationDaysAfter,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
@@ -718,8 +719,36 @@ const FieldDateAndTimeInput = props => {
     );
   };
 
+  /**
+   * Check if a day falls within the installation buffer period after a booking.
+   * The buffer period is the X days after an available time slot ends.
+   */
+  const isDayInInstallationBuffer = (day, allTimeSlots, bufferDays) => {
+    if (!bufferDays || bufferDays <= 0 || !allTimeSlots?.length) {
+      return false;
+    }
+
+    for (const timeSlot of allTimeSlots) {
+      const slotEnd = timeSlot.attributes.end;
+      for (let i = 0; i < bufferDays; i++) {
+        const bufferDay = addTime(slotEnd, i, 'days');
+        const bufferDayStart = getStartOf(bufferDay, 'day', timeZone);
+        if (isSameDay(day, bufferDayStart, timeZone)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
   const isDayBlocked = day => {
     const dayInListingTZ = timeOfDayFromLocalToTimeZone(day, timeZone);
+
+    // Check if day is in installation buffer period
+    if (isDayInInstallationBuffer(dayInListingTZ, pickerTimeSlots, installationDaysAfter)) {
+      return true;
+    }
+
     const dateIdString = stringifyDateToISO8601(dayInListingTZ, timeZone);
     const timeSlotData = monthlyTimeSlotsData[dateIdString];
     return !timeSlotData?.hasAvailability;
