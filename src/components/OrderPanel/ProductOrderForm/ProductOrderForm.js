@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 
+import { PURCHASE_PROCESS_NAME } from '../../../transactions/transaction';
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { numberAtLeast, required } from '../../../util/validators';
-import { PURCHASE_PROCESS_NAME } from '../../../transactions/transaction';
 
 import {
-  Form,
   FieldSelect,
   FieldTextInput,
-  InlineTextButton,
-  PrimaryButton,
+  Form,
   H3,
   H6,
+  InlineTextButton,
+  PrimaryButton,
 } from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
@@ -162,6 +162,7 @@ const renderForm = formRenderProps => {
       handleFetchLineItems({
         quantity,
         deliveryMethod,
+        displayDeliveryMethod,
         listingId,
         isOwnListing,
         fetchLineItemsInProgress,

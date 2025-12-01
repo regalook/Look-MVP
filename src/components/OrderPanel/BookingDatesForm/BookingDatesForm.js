@@ -1,27 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
+import { useEffect, useState } from 'react';
+import { Form as FinalForm } from 'react-final-form';
 
 import appSettings from '../../../config/settings';
-import { FormattedMessage, useIntl } from '../../../util/reactIntl';
-import { required, bookingDatesRequired, composeValidators } from '../../../util/validators';
+import { BOOKING_PROCESS_NAME } from '../../../transactions/transaction';
 import {
-  getStartOf,
   addTime,
-  isSameDay,
+  getStartOf,
   isDateSameOrAfter,
   isInRange,
-  timeOfDayFromLocalToTimeZone,
-  timeOfDayFromTimeZoneToLocal,
+  isSameDay,
   monthIdString,
   parseDateFromISO8601,
   stringifyDateToISO8601,
+  timeOfDayFromLocalToTimeZone,
+  timeOfDayFromTimeZoneToLocal,
 } from '../../../util/dates';
-import { LINE_ITEM_DAY, propTypes } from '../../../util/types';
 import { timeSlotsPerDate } from '../../../util/generators';
-import { BOOKING_PROCESS_NAME } from '../../../transactions/transaction';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
+import { LINE_ITEM_DAY, propTypes } from '../../../util/types';
+import { bookingDatesRequired, composeValidators, required } from '../../../util/validators';
 
-import { Form, PrimaryButton, FieldDateRangePicker, FieldSelect, H6 } from '../../../components';
+import {
+  FieldCheckbox,
+  FieldDateRangePicker,
+  FieldSelect,
+  Form,
+  H6,
+  PrimaryButton,
+} from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 
@@ -345,16 +352,20 @@ const calculateLineItems = (
   onFetchTransactionLineItems,
   seatsEnabled
 ) => formValues => {
-  const { startDate, endDate, priceVariantName, seats } = formValues?.values || {};
+  const { startDate, endDate, priceVariantName, seats, includeInstallation } =
+    formValues?.values || {};
 
   const priceVariantMaybe = priceVariantName ? { priceVariantName } : {};
   const seatCount = seats ? parseInt(seats, 10) : 1;
+  const includeInstallationMaybe =
+    includeInstallation?.[0] === 'include' ? { includeInstallation: true } : {};
 
   const orderData = {
     bookingStart: startDate,
     bookingEnd: endDate,
     ...priceVariantMaybe,
     ...(seatsEnabled && { seats: seatCount }),
+    ...includeInstallationMaybe,
   };
 
   if (startDate && endDate && !fetchLineItemsInProgress) {
@@ -528,6 +539,7 @@ export const BookingDatesForm = props => {
     timeZone,
     dayCountAvailableForBooking,
     marketplaceName,
+    marketplaceCurrency,
     payoutDetailsWarning,
     monthlyTimeSlots,
     onMonthChanged,
@@ -537,8 +549,11 @@ export const BookingDatesForm = props => {
     priceVariantFieldComponent: PriceVariantFieldComponent,
     preselectedPriceVariant,
     isPublishedListing,
+    installationCostInSubunits,
     ...rest
   } = props;
+
+  const hasInstallationOption = !!installationCostInSubunits && installationCostInSubunits > 0;
   const intl = useIntl();
   const [currentMonth, setCurrentMonth] = useState(getStartOf(TODAY, 'month', timeZone));
   const initialValuesMaybe =
@@ -822,6 +837,37 @@ export const BookingDatesForm = props => {
                   </option>
                 ))}
               </FieldSelect>
+            ) : null}
+
+            {hasInstallationOption ? (
+              <div className={css.fieldSeats}>
+                <FieldCheckbox
+                  id={`${formId}.includeInstallation`}
+                  name="includeInstallation"
+                  label={intl.formatMessage(
+                    { id: 'BookingDatesForm.includeInstallationLabel' },
+                    {
+                      installationCost: intl.formatNumber(installationCostInSubunits / 100, {
+                        style: 'currency',
+                        currency: marketplaceCurrency,
+                      }),
+                    }
+                  )}
+                  value="include"
+                  onChange={e => {
+                    const isChecked = e.target.checked;
+                    onHandleFetchLineItems({
+                      values: {
+                        priceVariantName,
+                        startDate,
+                        endDate,
+                        seats: seatsEnabled ? values?.seats : undefined,
+                        includeInstallation: isChecked ? ['include'] : [],
+                      },
+                    });
+                  }}
+                />
+              </div>
             ) : null}
 
             {showEstimatedBreakdown ? (

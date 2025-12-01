@@ -1,18 +1,17 @@
-import React from 'react';
-import { Form as FinalForm } from 'react-final-form';
-import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
+import arrayMutators from 'final-form-arrays';
+import { Form as FinalForm } from 'react-final-form';
 
 // Import configs and util modules
 import appSettings from '../../../../config/settings';
-import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
-import * as validators from '../../../../util/validators';
-import { formatMoney } from '../../../../util/currency';
-import { types as sdkTypes } from '../../../../util/sdkLoader';
 import { FIXED, isBookingProcess } from '../../../../transactions/transaction';
+import { formatMoney } from '../../../../util/currency';
+import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
+import { types as sdkTypes } from '../../../../util/sdkLoader';
+import * as validators from '../../../../util/validators';
 
 // Import shared components
-import { Button, Form, FieldCurrencyInput } from '../../../../components';
+import { Button, FieldCurrencyInput, Form } from '../../../../components';
 
 import BookingPriceVariants from './BookingPriceVariants';
 import StartTimeInterval from './StartTimeInverval';
@@ -170,6 +169,19 @@ export const EditListingPricingForm = props => (
               validate={priceValidators}
             />
           )}
+
+          <FieldCurrencyInput
+            id={`${formId}installationCost`}
+            name="installationCost"
+            className={css.input}
+            label={intl.formatMessage({
+              id: 'EditListingPricingForm.installationCostLabel',
+            })}
+            placeholder={intl.formatMessage({
+              id: 'EditListingPricingForm.installationCostPlaceholder',
+            })}
+            currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
+          />
 
           {isFixedLengthBooking ? (
             <StartTimeInterval

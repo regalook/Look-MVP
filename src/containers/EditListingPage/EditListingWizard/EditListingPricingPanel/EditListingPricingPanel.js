@@ -1,28 +1,28 @@
-import React, { useState } from 'react';
 import classNames from 'classnames';
+import { useState } from 'react';
 
 // Import configs and util modules
-import { FormattedMessage } from '../../../../util/reactIntl';
-import { LISTING_STATE_DRAFT, propTypes } from '../../../../util/types';
-import { types as sdkTypes } from '../../../../util/sdkLoader';
+import { FIXED, isBookingProcess } from '../../../../transactions/transaction';
 import { isPriceVariationsEnabled } from '../../../../util/configHelpers';
 import { isValidCurrencyForTransactionProcess } from '../../../../util/fieldHelpers';
-import { FIXED, isBookingProcess } from '../../../../transactions/transaction';
+import { FormattedMessage } from '../../../../util/reactIntl';
+import { types as sdkTypes } from '../../../../util/sdkLoader';
+import { LISTING_STATE_DRAFT, propTypes } from '../../../../util/types';
 
 // Import shared components
 import { H3, ListingLink } from '../../../../components';
 
 // Import modules from this directory
-import EditListingPricingForm from './EditListingPricingForm';
 import {
   getInitialValuesForPriceVariants,
   handleSubmitValuesForPriceVariants,
 } from './BookingPriceVariants';
+import EditListingPricingForm from './EditListingPricingForm';
+import css from './EditListingPricingPanel.module.css';
 import {
   getInitialValuesForStartTimeInterval,
   handleSubmitValuesForStartTimeInterval,
 } from './StartTimeInverval';
-import css from './EditListingPricingPanel.module.css';
 
 const { Money } = sdkTypes;
 
@@ -34,20 +34,32 @@ const getListingTypeConfig = (publicData, listingTypes) => {
 // NOTE: components that handle price variants and start time interval are currently
 // exporting helper functions that handle the initial values and the submission values.
 // This is a tentative approach to contain logic in one place.
+// Helper to get installation cost as Money object from publicData
+const getInstallationCostMaybe = (publicData, currency) => {
+  const { installationCostInSubunits } = publicData || {};
+  return installationCostInSubunits && currency
+    ? { installationCost: new Money(installationCostInSubunits, currency) }
+    : {};
+};
+
 const getInitialValues = props => {
   const { listing, listingTypes } = props;
-  const { publicData } = listing?.attributes || {};
+  const { publicData, price } = listing?.attributes || {};
   const { unitType } = publicData || {};
   const listingTypeConfig = getListingTypeConfig(publicData, listingTypes);
   // Note: publicData contains priceVariationsEnabled if listing is created with priceVariations enabled.
   const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, listingTypeConfig);
+  const currency = price?.currency;
+
+  const installationCostMaybe = getInstallationCostMaybe(publicData, currency);
 
   return unitType === FIXED || isPriceVariationsInUse
     ? {
         ...getInitialValuesForPriceVariants(props, isPriceVariationsInUse),
         ...getInitialValuesForStartTimeInterval(props),
+        ...installationCostMaybe,
       }
-    : { price: listing?.attributes?.price };
+    : { price: listing?.attributes?.price, ...installationCostMaybe };
 };
 
 // This is needed to show the listing's price consistently over XHR calls.
@@ -162,13 +174,19 @@ const EditListingPricingPanel = props => {
           className={css.form}
           initialValues={initialValues}
           onSubmit={values => {
-            const { price } = values;
+            const { price, installationCost } = values;
+
+            // Convert installation cost Money to subunits for storage in publicData
+            const installationCostInSubunits = installationCost?.amount || null;
 
             // New values for listing attributes
             let updateValues = {};
 
             if (unitType === FIXED || isPriceVariationsInUse) {
-              let publicDataUpdates = { priceVariationsEnabled: isPriceVariationsInUse };
+              let publicDataUpdates = {
+                priceVariationsEnabled: isPriceVariationsInUse,
+                installationCostInSubunits,
+              };
               // NOTE: components that handle price variants and start time interval are currently
               // exporting helper functions that handle the initial values and the submission values.
               // This is a tentative approach to contain logic in one place.
@@ -191,6 +209,7 @@ const EditListingPricingPanel = props => {
                 ...startTimeIntervalChanges,
                 publicData: {
                   priceVariationsEnabled: isPriceVariationsInUse,
+                  installationCostInSubunits,
                   ...startTimeIntervalChanges.publicData,
                   ...priceVariantChanges.publicData,
                 },
@@ -200,9 +219,14 @@ const EditListingPricingPanel = props => {
                 ? {
                     publicData: {
                       priceVariationsEnabled: false,
+                      installationCostInSubunits,
                     },
                   }
-                : {};
+                : {
+                    publicData: {
+                      installationCostInSubunits,
+                    },
+                  };
               updateValues = { price, ...priceVariationsEnabledMaybe };
             }
 
