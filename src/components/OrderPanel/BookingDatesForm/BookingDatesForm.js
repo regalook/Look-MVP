@@ -20,6 +20,7 @@ import { timeSlotsPerDate } from '../../../util/generators';
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { LINE_ITEM_DAY, propTypes } from '../../../util/types';
 import { bookingDatesRequired, composeValidators, required } from '../../../util/validators';
+import { isDayInInstallationBuffer } from '../booking.shared';
 
 import {
   FieldCheckbox,
@@ -239,38 +240,6 @@ const isOutsideRangeFn = (
       !isDateSameOrAfter(lastDayToEndBooking, dayInListingTZ)
     );
   };
-};
-
-/**
- * Check if a day falls within the installation buffer period after a booking.
- * The buffer period is the X days after an available time slot ends (i.e., before the next booking starts).
- *
- * @param {Date} day - The day to check
- * @param {Array} allTimeSlots - All available time slots
- * @param {number} installationDaysAfter - Number of buffer days after each booking
- * @param {string} timeZone - The time zone
- * @returns {boolean} - True if the day is within a buffer period
- */
-const isDayInInstallationBuffer = (day, allTimeSlots, installationDaysAfter, timeZone) => {
-  if (!installationDaysAfter || installationDaysAfter <= 0 || !allTimeSlots?.length) {
-    return false;
-  }
-
-  // For each time slot, check if the day falls within the buffer period after it ends
-  // The buffer period represents days needed for installation before the next booking
-  for (const timeSlot of allTimeSlots) {
-    const slotEnd = timeSlot.attributes.end;
-    // Buffer period: from slot end to (slot end + installationDaysAfter)
-    for (let i = 0; i < installationDaysAfter; i++) {
-      const bufferDay = addTime(slotEnd, i, 'days');
-      const bufferDayStart = getStartOf(bufferDay, 'day', timeZone);
-      if (isSameDay(day, bufferDayStart, timeZone)) {
-        return true;
-      }
-    }
-  }
-
-  return false;
 };
 
 /**

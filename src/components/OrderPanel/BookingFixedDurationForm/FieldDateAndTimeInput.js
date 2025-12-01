@@ -30,6 +30,7 @@ import {
   getPlaceholder,
   getTimeSlotsOnDate,
   getTimeSlotsOnSelectedDate,
+  isDayInInstallationBuffer,
   isToday,
   nextMonthFn,
   prevMonthFn,
@@ -719,33 +720,13 @@ const FieldDateAndTimeInput = props => {
     );
   };
 
-  /**
-   * Check if a day falls within the installation buffer period after a booking.
-   * The buffer period is the X days after an available time slot ends.
-   */
-  const isDayInInstallationBuffer = (day, allTimeSlots, bufferDays) => {
-    if (!bufferDays || bufferDays <= 0 || !allTimeSlots?.length) {
-      return false;
-    }
-
-    for (const timeSlot of allTimeSlots) {
-      const slotEnd = timeSlot.attributes.end;
-      for (let i = 0; i < bufferDays; i++) {
-        const bufferDay = addTime(slotEnd, i, 'days');
-        const bufferDayStart = getStartOf(bufferDay, 'day', timeZone);
-        if (isSameDay(day, bufferDayStart, timeZone)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  };
-
   const isDayBlocked = day => {
     const dayInListingTZ = timeOfDayFromLocalToTimeZone(day, timeZone);
 
     // Check if day is in installation buffer period
-    if (isDayInInstallationBuffer(dayInListingTZ, pickerTimeSlots, installationDaysAfter)) {
+    if (
+      isDayInInstallationBuffer(dayInListingTZ, pickerTimeSlots, installationDaysAfter, timeZone)
+    ) {
       return true;
     }
 

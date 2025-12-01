@@ -1,9 +1,11 @@
 import {
-  isInRange,
-  isDateSameOrAfter,
+  addTime,
   findNextBoundary,
   formatDateIntoPartials,
   getStartOf,
+  isDateSameOrAfter,
+  isInRange,
+  isSameDay,
   parseDateFromISO8601,
   stringifyDateToISO8601,
 } from '../../util/dates';
@@ -191,4 +193,32 @@ export const getPlaceholder = (defaultPlaceholderTime = '08:00', timeZone, intl)
     // No need to handle error
   }
   return placeholder;
+};
+
+/**
+ * Check if a day falls within the installation buffer period after a booking.
+ * The buffer period is the X days after an available time slot ends.
+ *
+ * @param {Date} day - The day to check (in listing timezone)
+ * @param {Array} allTimeSlots - All available time slots
+ * @param {number} installationDaysAfter - Number of buffer days after each booking
+ * @param {string} timeZone - The time zone
+ * @returns {boolean} - True if the day is within a buffer period
+ */
+export const isDayInInstallationBuffer = (day, allTimeSlots, installationDaysAfter, timeZone) => {
+  if (!installationDaysAfter || installationDaysAfter <= 0 || !allTimeSlots?.length) {
+    return false;
+  }
+
+  for (const timeSlot of allTimeSlots) {
+    const slotEnd = timeSlot.attributes.end;
+    for (let i = 0; i < installationDaysAfter; i++) {
+      const bufferDay = addTime(slotEnd, i, 'days');
+      const bufferDayStart = getStartOf(bufferDay, 'day', timeZone);
+      if (isSameDay(day, bufferDayStart, timeZone)) {
+        return true;
+      }
+    }
+  }
+  return false;
 };
