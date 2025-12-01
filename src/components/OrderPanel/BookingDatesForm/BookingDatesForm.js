@@ -242,11 +242,51 @@ const isOutsideRangeFn = (
 };
 
 /**
+ * Check if a day falls within the installation buffer period after a booking.
+ * The buffer period is the X days after an available time slot ends (i.e., before the next booking starts).
+ *
+ * @param {Date} day - The day to check
+ * @param {Array} allTimeSlots - All available time slots
+ * @param {number} installationDaysAfter - Number of buffer days after each booking
+ * @param {string} timeZone - The time zone
+ * @returns {boolean} - True if the day is within a buffer period
+ */
+const isDayInInstallationBuffer = (day, allTimeSlots, installationDaysAfter, timeZone) => {
+  if (!installationDaysAfter || installationDaysAfter <= 0 || !allTimeSlots?.length) {
+    return false;
+  }
+
+  // For each time slot, check if the day falls within the buffer period after it ends
+  // The buffer period represents days needed for installation before the next booking
+  for (const timeSlot of allTimeSlots) {
+    const slotEnd = timeSlot.attributes.end;
+    // Buffer period: from slot end to (slot end + installationDaysAfter)
+    for (let i = 0; i < installationDaysAfter; i++) {
+      const bufferDay = addTime(slotEnd, i, 'days');
+      const bufferDayStart = getStartOf(bufferDay, 'day', timeZone);
+      if (isSameDay(day, bufferDayStart, timeZone)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+
+/**
  * Returns an isDayBlocked function that can be passed to
  * a DateRangePicker component.
  */
 const isDayBlockedFn = params => {
-  const { allTimeSlots, monthlyTimeSlots, isDaily, startDate, endDate, timeZone } = params || {};
+  const {
+    allTimeSlots,
+    monthlyTimeSlots,
+    isDaily,
+    startDate,
+    endDate,
+    timeZone,
+    installationDaysAfter,
+  } = params || {};
 
   const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, timeZone);
   const timeSlotsData = timeSlotsPerDate(startMonth, endMonth, allTimeSlots, timeZone);
@@ -257,6 +297,17 @@ const isDayBlockedFn = params => {
 
     const dayIdString = stringifyDateToISO8601(dayInListingTZ, timeZone);
     const hasAvailabilityOnDay = timeSlotsData[dayIdString]?.hasAvailability === true;
+
+    // Check if day is in installation buffer period
+    const isInBuffer = isDayInInstallationBuffer(
+      dayInListingTZ,
+      allTimeSlots,
+      installationDaysAfter,
+      timeZone
+    );
+    if (isInBuffer) {
+      return true; // Block this day
+    }
 
     if (!isDaily && startDate) {
       // Nightly
@@ -550,6 +601,7 @@ export const BookingDatesForm = props => {
     preselectedPriceVariant,
     isPublishedListing,
     installationCostInSubunits,
+    installationDaysAfter,
     ...rest
   } = props;
 
@@ -693,6 +745,7 @@ export const BookingDatesForm = props => {
           startDate,
           endDate,
           timeZone,
+          installationDaysAfter,
         });
         const isOutsideRange = isOutsideRangeFn(
           relevantTimeSlots,
