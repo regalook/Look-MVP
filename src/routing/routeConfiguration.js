@@ -9,6 +9,9 @@ import PreviewResolverPage from '../containers/PreviewResolverPage/PreviewResolv
 // at that point css bundling / imports will happen in wrong order.
 import { NamedRedirect } from '../components';
 
+// Multi-language support
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from '../context/localeContext';
+
 const pageDataLoadingAPI = getPageDataLoadingAPI();
 
 const AuthenticationPage = loadable(() => import(/* webpackChunkName: "AuthenticationPage" */ '../containers/AuthenticationPage/AuthenticationPage'));
@@ -57,6 +60,30 @@ const draftSlug = 'draft';
 
 const RedirectToLandingPage = () => <NamedRedirect name="LandingPage" />;
 
+// Redirect root path to default locale
+const LocaleRedirect = () => {
+  // On client side, we can check browser preference
+  if (typeof window !== 'undefined') {
+    const browserLang = navigator.language?.split('-')[0];
+    const locale = SUPPORTED_LOCALES.includes(browserLang) ? browserLang : DEFAULT_LOCALE;
+    return <NamedRedirect name="LandingPage" params={{ locale }} />;
+  }
+  // On server side, default to DEFAULT_LOCALE
+  return <NamedRedirect name="LandingPage" params={{ locale: DEFAULT_LOCALE }} />;
+};
+
+/**
+ * Add locale prefix to route path
+ * @param {string} path - Original route path
+ * @returns {string} - Path with locale prefix
+ */
+const withLocale = path => {
+  if (path === '/') {
+    return '/:locale';
+  }
+  return `/:locale${path}`;
+};
+
 // NOTE: Most server-side endpoints are prefixed with /api. Requests to those
 // endpoints are indended to be handled in the server instead of the browser and
 // they will not render the application. So remember to avoid routes starting
@@ -77,14 +104,21 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
   const authForPrivateMarketplace = isPrivateMarketplace ? { auth: true } : {};
   
   return [
+    // Root path redirects to default locale
     {
       path: '/',
+      name: 'LocaleRedirect',
+      component: LocaleRedirect,
+    },
+    // Localized landing page
+    {
+      path: withLocale('/'),
       name: 'LandingPage',
       component: LandingPage,
       loadData: pageDataLoadingAPI.LandingPage.loadData,
     },
     {
-      path: '/p/:pageId',
+      path: withLocale('/p/:pageId'),
       name: 'CMSPage',
       component: CMSPage,
       loadData: pageDataLoadingAPI.CMSPage.loadData,
@@ -92,40 +126,40 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
     // NOTE: when the private marketplace feature is enabled, the '/s' route is disallowed by the robots.txt resource.
     // If you add new routes that start with '/s*' (e.g. /support), you should add them to the robotsPrivateMarketplace.txt file.
     {
-      path: '/s',
+      path: withLocale('/s'),
       name: 'SearchPage',
       ...authForPrivateMarketplace,
       component: SearchPage,
       loadData: pageDataLoadingAPI.SearchPage.loadData,
     },
     {
-      path: '/s/:listingType',
+      path: withLocale('/s/:listingType'),
       name: 'SearchPageWithListingType',
       ...authForPrivateMarketplace,
       component: SearchPage,
       loadData: pageDataLoadingAPI.SearchPage.loadData,
     },
     {
-      path: '/l',
+      path: withLocale('/l'),
       name: 'ListingBasePage',
       component: RedirectToLandingPage,
     },
     {
-      path: '/l/:slug/:id',
+      path: withLocale('/l/:slug/:id'),
       name: 'ListingPage',
       ...authForPrivateMarketplace,
       component: ListingPage,
       loadData: pageDataLoadingAPI.ListingPage.loadData,
     },
     {
-      path: '/l/:slug/:id/make-offer',
+      path: withLocale('/l/:slug/:id/make-offer'),
       name: 'MakeOfferPage',
       auth: true,
       component: MakeOfferPage,
       loadData: pageDataLoadingAPI.MakeOfferPage.loadData,
     },
     {
-      path: '/l/:slug/:id/request-quote',
+      path: withLocale('/l/:slug/:id/request-quote'),
       name: 'RequestQuotePage',
       auth: true,
       component: RequestQuotePage,
@@ -133,14 +167,14 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       loadData: pageDataLoadingAPI.RequestQuotePage.loadData,
     },
     {
-      path: '/l/:slug/:id/checkout',
+      path: withLocale('/l/:slug/:id/checkout'),
       name: 'CheckoutPage',
       auth: true,
       component: CheckoutPage,
       setInitialValues: pageDataLoadingAPI.CheckoutPage.setInitialValues,
     },
     {
-      path: '/l/:slug/:id/:variant',
+      path: withLocale('/l/:slug/:id/:variant'),
       name: 'ListingPageVariant',
       auth: true,
       authPage: 'LoginPage',
@@ -148,7 +182,7 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       loadData: pageDataLoadingAPI.ListingPage.loadData,
     },
     {
-      path: '/l/new',
+      path: withLocale('/l/new'),
       name: 'NewListingPage',
       auth: true,
       component: () => (
@@ -159,14 +193,14 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       ),
     },
     {
-      path: '/l/:slug/:id/:type/:tab',
+      path: withLocale('/l/:slug/:id/:type/:tab'),
       name: 'EditListingPage',
       auth: true,
       component: EditListingPage,
       loadData: pageDataLoadingAPI.EditListingPage.loadData,
     },
     {
-      path: '/l/:slug/:id/:type/:tab/:returnURLType',
+      path: withLocale('/l/:slug/:id/:type/:tab/:returnURLType'),
       name: 'EditListingStripeOnboardingPage',
       auth: true,
       component: EditListingPage,
@@ -176,33 +210,33 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
     // Canonical path should be after the `/l/new` path since they
     // conflict and `new` is not a valid listing UUID.
     {
-      path: '/l/:id',
+      path: withLocale('/l/:id'),
       name: 'ListingPageCanonical',
       ...authForPrivateMarketplace,
       component: ListingPage,
       loadData: pageDataLoadingAPI.ListingPage.loadData,
     },
     {
-      path: '/u',
+      path: withLocale('/u'),
       name: 'ProfileBasePage',
       component: RedirectToLandingPage,
     },
     {
-      path: '/u/:id',
+      path: withLocale('/u/:id'),
       name: 'ProfilePage',
       ...authForPrivateMarketplace,
       component: ProfilePage,
       loadData: pageDataLoadingAPI.ProfilePage.loadData,
     },
     {
-      path: '/u/:id/:variant',
+      path: withLocale('/u/:id/:variant'),
       name: 'ProfilePageVariant',
       auth: true,
       component: ProfilePage,
       loadData: pageDataLoadingAPI.ProfilePage.loadData,
     },
     {
-      path: '/profile-settings',
+      path: withLocale('/profile-settings'),
       name: 'ProfileSettingsPage',
       auth: true,
       authPage: 'LoginPage',
@@ -213,46 +247,46 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
     // so that in the error case users can be redirected back to the LoginPage
     // In case you change this, remember to update the route in server/api/auth/loginWithIdp.js
     {
-      path: '/login',
+      path: withLocale('/login'),
       name: 'LoginPage',
       component: AuthenticationPage,
       extraProps: { tab: 'login' },
     },
     {
-      path: '/signup',
+      path: withLocale('/signup'),
       name: 'SignupPage',
       component: AuthenticationPage,
       extraProps: { tab: 'signup' },
       loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
     },
     {
-      path: '/signup/:userType',
+      path: withLocale('/signup/:userType'),
       name: 'SignupForUserTypePage',
       component: AuthenticationPage,
       extraProps: { tab: 'signup' },
       loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
     },
     {
-      path: '/confirm',
+      path: withLocale('/confirm'),
       name: 'ConfirmPage',
       component: AuthenticationPage,
       extraProps: { tab: 'confirm' },
       loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
     },
     {
-      path: '/recover-password',
+      path: withLocale('/recover-password'),
       name: 'PasswordRecoveryPage',
       component: PasswordRecoveryPage,
     },
     {
-      path: '/inbox',
+      path: withLocale('/inbox'),
       name: 'InboxBasePage',
       auth: true,
       authPage: 'LoginPage',
       component: () => <NamedRedirect name="InboxPage" params={{ tab: 'sales' }} />,
     },
     {
-      path: '/inbox/:tab',
+      path: withLocale('/inbox/:tab'),
       name: 'InboxPage',
       auth: true,
       authPage: 'LoginPage',
@@ -260,7 +294,7 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       loadData: pageDataLoadingAPI.InboxPage.loadData,
     },
     {
-      path: '/order/:id',
+      path: withLocale('/order/:id'),
       name: 'OrderDetailsPage',
       auth: true,
       authPage: 'LoginPage',
@@ -271,14 +305,14 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       setInitialValues: pageDataLoadingAPI.TransactionPage.setInitialValues,
     },
     {
-      path: '/order/:id/details',
+      path: withLocale('/order/:id/details'),
       name: 'OrderDetailsPageRedirect',
       auth: true,
       authPage: 'LoginPage',
       component: props => <NamedRedirect name="OrderDetailsPage" params={{ id: props.params?.id }} />,
     },
     {
-      path: '/sale/:id',
+      path: withLocale('/sale/:id'),
       name: 'SaleDetailsPage',
       auth: true,
       authPage: 'LoginPage',
@@ -287,14 +321,14 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       loadData: pageDataLoadingAPI.TransactionPage.loadData,
     },
     {
-      path: '/sale/:id/details',
+      path: withLocale('/sale/:id/details'),
       name: 'SaleDetailsPageRedirect',
       auth: true,
       authPage: 'LoginPage',
       component: props => <NamedRedirect name="SaleDetailsPage" params={{ id: props.params?.id }} />,
     },
     {
-      path: '/listings',
+      path: withLocale('/listings'),
       name: 'ManageListingsPage',
       auth: true,
       authPage: 'LoginPage',
@@ -302,7 +336,7 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       loadData: pageDataLoadingAPI.ManageListingsPage.loadData,
     },
     {
-      path: '/rented',
+      path: withLocale('/rented'),
       name: 'ManageRentedListingsPage',
       auth: true,
       authPage: 'LoginPage',
@@ -310,14 +344,14 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       loadData: pageDataLoadingAPI.ManageRentedListingsPage.loadData,
     },
     {
-      path: '/account',
+      path: withLocale('/account'),
       name: 'AccountSettingsPage',
       auth: true,
       authPage: 'LoginPage',
       component: () => <NamedRedirect name="ContactDetailsPage" />,
     },
     {
-      path: '/account/contact-details',
+      path: withLocale('/account/contact-details'),
       name: 'ContactDetailsPage',
       auth: true,
       authPage: 'LoginPage',
@@ -325,14 +359,14 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       loadData: pageDataLoadingAPI.ContactDetailsPage.loadData,
     },
     {
-      path: '/account/change-password',
+      path: withLocale('/account/change-password'),
       name: 'PasswordChangePage',
       auth: true,
       authPage: 'LoginPage',
       component: PasswordChangePage,
     },
     {
-      path: '/account/payments',
+      path: withLocale('/account/payments'),
       name: 'StripePayoutPage',
       auth: true,
       authPage: 'LoginPage',
@@ -340,7 +374,7 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       loadData: pageDataLoadingAPI.StripePayoutPage.loadData,
     },
     {
-      path: '/account/payments/:returnURLType',
+      path: withLocale('/account/payments/:returnURLType'),
       name: 'StripePayoutOnboardingPage',
       auth: true,
       authPage: 'LoginPage',
@@ -348,7 +382,7 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       loadData: pageDataLoadingAPI.StripePayoutPage.loadData,
     },
     {
-      path: '/account/payment-methods',
+      path: withLocale('/account/payment-methods'),
       name: 'PaymentMethodsPage',
       auth: true,
       authPage: 'LoginPage',
@@ -356,62 +390,62 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       loadData: pageDataLoadingAPI.PaymentMethodsPage.loadData,
     },
     {
-      path: '/account/manage',
+      path: withLocale('/account/manage'),
       name: 'ManageAccountPage',
       auth: true,
       authPage: 'LoginPage',
       component: ManageAccountPage,
     },
     {
-      path: '/terms-of-service',
+      path: withLocale('/terms-of-service'),
       name: 'TermsOfServicePage',
       component: TermsOfServicePage,
       loadData: pageDataLoadingAPI.TermsOfServicePage.loadData,
     },
     {
-      path: '/privacy-policy',
+      path: withLocale('/privacy-policy'),
       name: 'PrivacyPolicyPage',
       component: PrivacyPolicyPage,
       loadData: pageDataLoadingAPI.PrivacyPolicyPage.loadData,
     },
     {
-      path: '/styleguide',
+      path: withLocale('/styleguide'),
       name: 'Styleguide',
       ...authForPrivateMarketplace,
       component: StyleguidePage,
     },
     {
-      path: '/styleguide/g/:group',
+      path: withLocale('/styleguide/g/:group'),
       name: 'StyleguideGroup',
       ...authForPrivateMarketplace,
       component: StyleguidePage,
     },
     {
-      path: '/styleguide/c/:component',
+      path: withLocale('/styleguide/c/:component'),
       name: 'StyleguideComponent',
       ...authForPrivateMarketplace,
       component: StyleguidePage,
     },
     {
-      path: '/styleguide/c/:component/:example',
+      path: withLocale('/styleguide/c/:component/:example'),
       name: 'StyleguideComponentExample',
       ...authForPrivateMarketplace,
       component: StyleguidePage,
     },
     {
-      path: '/styleguide/c/:component/:example/raw',
+      path: withLocale('/styleguide/c/:component/:example/raw'),
       name: 'StyleguideComponentExampleRaw',
       ...authForPrivateMarketplace,
       component: StyleguidePage,
       extraProps: { raw: true },
     },
     {
-      path: '/no-:missingAccessRight',
+      path: withLocale('/no-:missingAccessRight'),
       name: 'NoAccessPage',
       component: NoAccessPage,
     },
     {
-      path: '/notfound',
+      path: withLocale('/notfound'),
       name: 'NotFoundPage',
       component: props => <NotFoundPage {...props} />,
     },

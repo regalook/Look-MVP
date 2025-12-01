@@ -1,17 +1,21 @@
-import React, { Component } from 'react';
-import { any, array, arrayOf, bool, number, object, oneOfType, shape, string } from 'prop-types';
+import classNames from 'classnames';
+import { Component } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
-import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
+import {
+  DEFAULT_LOCALE,
+  getLocaleFromPath,
+  replaceLocaleInPath,
+  SUPPORTED_LOCALES,
+} from '../../context/localeContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
-import { getCustomCSSPropertiesFromConfig } from '../../util/style';
-import { useIntl, intlShape } from '../../util/reactIntl';
-import { metaTagProps } from '../../util/seo';
-import { canonicalRoutePath } from '../../util/routes';
-import { propTypes } from '../../util/types';
 import { apiBaseUrl } from '../../util/api';
+import { useIntl } from '../../util/reactIntl';
+import { canonicalRoutePath } from '../../util/routes';
+import { metaTagProps } from '../../util/seo';
+import { getCustomCSSPropertiesFromConfig } from '../../util/style';
 
 import css from './Page.module.css';
 
@@ -129,6 +133,16 @@ class PageComponent extends Component {
     const shouldReturnPathOnly = referrer && referrer !== 'unsafe-url';
     const canonicalPath = canonicalRoutePath(routeConfiguration, location, shouldReturnPathOnly);
     const canonicalUrl = `${marketplaceRootURL}${canonicalPath}`;
+
+    // Generate hreflang URLs for all supported locales
+    const currentLocale = getLocaleFromPath(location.pathname);
+    const hreflangUrls = SUPPORTED_LOCALES.map(locale => {
+      const localePath = replaceLocaleInPath(canonicalPath, currentLocale, locale);
+      return {
+        locale,
+        url: `${marketplaceRootURL}${localePath}`,
+      };
+    });
 
     const marketplaceName = config.marketplaceName;
     const schemaTitle = intl.formatMessage({ id: 'Page.schemaTitle' }, { marketplaceName });
@@ -254,6 +268,16 @@ class PageComponent extends Component {
           <title>{pageTitle}</title>
           {referrer ? <meta name="referrer" content={referrer} /> : null}
           <link rel="canonical" href={canonicalUrl} />
+
+          {/* Hreflang tags for multi-language SEO */}
+          {hreflangUrls.map(({ locale, url }) => (
+            <link key={`hreflang-${locale}`} rel="alternate" hrefLang={locale} href={url} />
+          ))}
+          <link
+            rel="alternate"
+            hrefLang="x-default"
+            href={hreflangUrls.find(h => h.locale === DEFAULT_LOCALE)?.url || canonicalUrl}
+          />
 
           {faviconVariants.map(variant => {
             return (

@@ -307,3 +307,12 @@
     }
   }
 }
+
+/* Language Switcher */
+.languageSwitcher {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 12px;
+  border-left: 1px solid var(--colorGrey100);
+}

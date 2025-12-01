@@ -1,7 +1,8 @@
 import find from 'lodash/find';
-import { matchPath } from 'react-router-dom';
 import { compile } from 'path-to-regexp';
+import { matchPath } from 'react-router-dom';
 // NOTE: This file imports urlHelpers.js, which may lead to circular dependency
+import { SUPPORTED_LOCALES } from '../context/localeContext';
 import { stringify } from './urlHelpers';
 
 const findRouteByName = (nameToFind, routes) => find(routes, route => route.name === nameToFind);
@@ -111,16 +112,30 @@ export const canonicalRoutePath = (routes, location, pathOnly = false) => {
 
   if (isListingRoute) {
     // Remove the dynamic slug from the listing page canonical URL
+    // With locale prefix, the path is: /:locale/l/:slug/:id
 
     // Remove possible trailing slash
     const cleanedPathName = pathname.replace(/\/$/, '');
     const parts = cleanedPathName.split('/');
 
-    if (parts.length !== 4) {
-      throw new Error('Expected ListingPage route to have 4 parts');
+    // Check if first part (after empty string) is a locale
+    const hasLocalePrefix = parts.length > 1 && SUPPORTED_LOCALES.includes(parts[1]);
+
+    if (hasLocalePrefix) {
+      // Path is: ['', 'en', 'l', 'slug', 'id'] -> canonical: /en/l/id
+      if (parts.length !== 5) {
+        throw new Error('Expected ListingPage route with locale to have 5 parts');
+      }
+      const canonicalListingPathname = `/${parts[1]}/${parts[2]}/${parts[4]}`;
+      return pathOnly ? canonicalListingPathname : `${canonicalListingPathname}${search}${hash}`;
+    } else {
+      // Fallback for paths without locale prefix
+      if (parts.length !== 4) {
+        throw new Error('Expected ListingPage route to have 4 parts');
+      }
+      const canonicalListingPathname = `/${parts[1]}/${parts[3]}`;
+      return pathOnly ? canonicalListingPathname : `${canonicalListingPathname}${search}${hash}`;
     }
-    const canonicalListingPathname = `/${parts[1]}/${parts[3]}`;
-    return pathOnly ? canonicalListingPathname : `${canonicalListingPathname}${search}${hash}`;
   }
 
   return pathOnly ? pathname : `${pathname}${search}${hash}`;

@@ -2,17 +2,17 @@
  *  TopbarMobileMenu prints the menu content for authenticated user or
  * shows login actions for those who are not authenticated.
  */
-import React from 'react';
 import classNames from 'classnames';
 
 import { ACCOUNT_SETTINGS_PAGES } from '../../../../routing/routeConfiguration';
-import { FormattedMessage } from '../../../../util/reactIntl';
 import { ensureCurrentUser } from '../../../../util/data';
+import { FormattedMessage } from '../../../../util/reactIntl';
 
 import {
   AvatarLarge,
   ExternalLink,
   InlineTextButton,
+  LanguageSwitcher,
   NamedLink,
   NotificationBadge,
 } from '../../../../components';
@@ -130,6 +130,10 @@ const TopbarMobileMenu = props => {
 
           <div className={css.customLinksWrapper}>{extraLinks}</div>
 
+          <div className={css.languageSwitcherWrapper}>
+            <LanguageSwitcher variant="buttons" />
+          </div>
+
           <div className={css.spacer} />
         </div>
         <div className={css.footer}>{createListingsLinkMaybe}</div>
@@ -204,6 +208,11 @@ const TopbarMobileMenu = props => {
           </NamedLink>
         </div>
         <div className={css.customLinksWrapper}>{extraLinks}</div>
+
+        <div className={css.languageSwitcherWrapper}>
+          <LanguageSwitcher variant="buttons" />
+        </div>
+
         <div className={css.spacer} />
       </div>
       <div className={css.footer}>{createListingsLinkMaybe}</div>

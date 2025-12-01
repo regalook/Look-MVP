@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
+import { useEffect, useState } from 'react';
 
-import { FormattedMessage } from '../../../../util/reactIntl';
-import { ACCOUNT_SETTINGS_PAGES } from '../../../../routing/routeConfiguration';
 import {
   Avatar,
   InlineTextButton,
+  LanguageSwitcher,
   LinkedLogo,
   Menu,
-  MenuLabel,
   MenuContent,
   MenuItem,
+  MenuLabel,
   NamedLink,
 } from '../../../../components';
+import { ACCOUNT_SETTINGS_PAGES } from '../../../../routing/routeConfiguration';
+import { FormattedMessage } from '../../../../util/reactIntl';
 
 import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
 import CustomLinksMenu from './CustomLinksMenu/CustomLinksMenu';
@@ -225,6 +226,7 @@ const TopbarDesktop = props => {
       {profileMenuMaybe}
       {signupLinkMaybe}
       {loginLinkMaybe}
+      <LanguageSwitcher className={css.languageSwitcher} variant="links" />
     </nav>
   );
 };

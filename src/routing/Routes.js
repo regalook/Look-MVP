@@ -1,13 +1,14 @@
-import React, { Component } from 'react';
-import { compose } from 'redux';
+import { Component } from 'react';
 import { connect } from 'react-redux';
-import { Switch, Route, withRouter } from 'react-router-dom';
+import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
+import { compose } from 'redux';
 
+import { useConfiguration } from '../context/configurationContext';
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from '../context/localeContext';
 import { useRouteConfiguration } from '../context/routeConfigurationContext';
-import { propTypes } from '../util/types';
 import * as log from '../util/log';
 import { canonicalRoutePath } from '../util/routes';
-import { useConfiguration } from '../context/configurationContext';
+import { propTypes } from '../util/types';
 
 import { locationChanged } from '../ducks/routing.duck';
 
@@ -225,19 +226,36 @@ const Routes = (props, context) => {
     // By default, our routes are exact.
     // https://reacttraining.com/react-router/web/api/Route/exact-bool
     const isExact = route.exact != null ? route.exact : true;
+
+    // Check if route has locale parameter
+    const hasLocaleParam = route.path.includes(':locale');
+
     return (
       <Route
         key={route.name}
         path={route.path}
         exact={isExact}
-        render={matchProps => (
-          <RouteComponentContainer
-            {...renderProps}
-            match={matchProps.match}
-            location={matchProps.location}
-            staticContext={matchProps.staticContext}
-          />
-        )}
+        render={matchProps => {
+          // Validate locale parameter if present
+          if (hasLocaleParam) {
+            const locale = matchProps.match.params.locale;
+            if (!SUPPORTED_LOCALES.includes(locale)) {
+              // Invalid locale - redirect to default locale version
+              const pathWithoutLocale = matchProps.location.pathname.replace(`/${locale}`, '');
+              const newPath = `/${DEFAULT_LOCALE}${pathWithoutLocale || '/'}`;
+              return <Redirect to={newPath + matchProps.location.search} />;
+            }
+          }
+
+          return (
+            <RouteComponentContainer
+              {...renderProps}
+              match={matchProps.match}
+              location={matchProps.location}
+              staticContext={matchProps.staticContext}
+            />
+          );
+        }}
       />
     );
   };

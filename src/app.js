@@ -1,13 +1,9 @@
-import React from 'react';
-import { any, string } from 'prop-types';
-
-import { HelmetProvider } from 'react-helmet-async';
-import { BrowserRouter, StaticRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
 import loadable from '@loadable/component';
-import difference from 'lodash/difference';
 import mapValues from 'lodash/mapValues';
 import moment from 'moment';
+import { HelmetProvider } from 'react-helmet-async';
+import { Provider } from 'react-redux';
+import { BrowserRouter, StaticRouter, useLocation } from 'react-router-dom';
 
 // Configs and store setup
 import defaultConfig from './config/configDefault';
@@ -15,12 +11,12 @@ import appSettings from './config/settings';
 import configureStore from './store';
 
 // utils
-import { RouteConfigurationProvider } from './context/routeConfigurationContext';
 import { ConfigurationProvider } from './context/configurationContext';
+import { RouteConfigurationProvider } from './context/routeConfigurationContext';
 import { mergeConfig } from './util/configHelpers';
+import { IncludeScripts } from './util/includeScripts';
 import { IntlProvider } from './util/reactIntl';
 import { includeCSSProperties } from './util/style';
-import { IncludeScripts } from './util/includeScripts';
 
 import { MaintenanceMode } from './components';
 
@@ -28,78 +24,20 @@ import { MaintenanceMode } from './components';
 import routeConfiguration from './routing/routeConfiguration';
 import Routes from './routing/Routes';
 
+// Multi-language support
+import { DEFAULT_LOCALE, LocaleProvider, getLocaleFromPath } from './context/localeContext';
+import { getMessages } from './translations';
+
 // Sharetribe Web Template uses English translations as default translations.
 import defaultMessages from './translations/en.json';
-
-// If you want to change the language of default (fallback) translations,
-// change the imports to match the wanted locale:
-//
-//   1) Change the language in the config.js file!
-//   2) Import correct locale rules for Moment library
-//   3) Use the `messagesInLocale` import to add the correct translation file.
-//   4) (optionally) To support older browsers you need add the intl-relativetimeformat npm packages
-//      and take it into use in `util/polyfills.js`
 
 // Note that there is also translations in './translations/countryCodes.js' file
 // This file contains ISO 3166-1 alpha-2 country codes, country names and their translations in our default languages
 // This used to collect billing address in StripePaymentAddress on CheckoutPage
 
-// Step 2:
-// If you are using a non-english locale with moment library,
-// you should also import time specific formatting rules for that locale
-// There are 2 ways to do it:
-// - you can add your preferred locale to MomentLocaleLoader or
-// - stop using MomentLocaleLoader component and directly import the locale here.
-// E.g. for French:
-// import 'moment/locale/fr';
-// const hardCodedLocale = process.env.NODE_ENV === 'test' ? 'en' : 'fr';
-
-// Step 3:
-// The "./translations/en.json" has generic English translations
-// that should work as a default translation if some translation keys are missing
-// from the hosted translation.json (which can be edited in Console). The other files
-// (e.g. en.json) in that directory has Biketribe themed translations.
-//
-// If you are using a non-english locale, point `messagesInLocale` to correct <lang>.json file.
-// That way the priority order would be:
-//   1. hosted translation.json
-//   2. <lang>.json
-//   3. en.json
-//
-// I.e. remove "const messagesInLocale" and add import for the correct locale:
-// import messagesInLocale from './translations/fr.json';
-const messagesInLocale = {};
-
-// If translation key is missing from `messagesInLocale` (e.g. fr.json),
-// corresponding key will be added to messages from `defaultMessages` (en.json)
-// to prevent missing translation key errors.
-const addMissingTranslations = (sourceLangTranslations, targetLangTranslations) => {
-  const sourceKeys = Object.keys(sourceLangTranslations);
-  const targetKeys = Object.keys(targetLangTranslations);
-
-  // if there's no translations defined for target language, return source translations
-  if (targetKeys.length === 0) {
-    return sourceLangTranslations;
-  }
-  const missingKeys = difference(sourceKeys, targetKeys);
-
-  const addMissingTranslation = (translations, missingKey) => ({
-    ...translations,
-    [missingKey]: sourceLangTranslations[missingKey],
-  });
-
-  return missingKeys.reduce(addMissingTranslation, targetLangTranslations);
-};
-
-// Get default messages for a given locale.
-//
-// Note: Locale should not affect the tests. We ensure this by providing
-//       messages with the key as the value of each message and discard the value.
-//       { 'My.translationKey1': 'My.translationKey1', 'My.translationKey2': 'My.translationKey2' }
+// Test environment uses keys as values for predictable testing
 const isTestEnv = process.env.NODE_ENV === 'test';
-const localeMessages = isTestEnv
-  ? mapValues(defaultMessages, (val, key) => key)
-  : addMissingTranslations(defaultMessages, messagesInLocale);
+const testMessages = mapValues(defaultMessages, (val, key) => key);
 
 // For customized apps, this dynamic loading of locale files is not necessary.
 // It helps locale change from configDefault.js file or hosted configs, but customizers should probably
@@ -144,14 +82,38 @@ const MomentLocaleLoader = props => {
 const Configurations = props => {
   const { appConfig, children } = props;
   const routeConfig = routeConfiguration(appConfig.layout, appConfig?.accessControl);
-  const locale = isTestEnv ? 'en' : appConfig.localization.locale;
 
   return (
     <ConfigurationProvider value={appConfig}>
-      <MomentLocaleLoader locale={locale}>
-        <RouteConfigurationProvider value={routeConfig}>{children}</RouteConfigurationProvider>
-      </MomentLocaleLoader>
+      <RouteConfigurationProvider value={routeConfig}>{children}</RouteConfigurationProvider>
     </ConfigurationProvider>
+  );
+};
+
+/**
+ * IntlWrapper - Wraps IntlProvider and reacts to location changes
+ * This must be inside BrowserRouter to access useLocation
+ */
+const IntlWrapper = props => {
+  const { children, hostedTranslations } = props;
+  const location = useLocation();
+  const locale = getLocaleFromPath(location.pathname) || DEFAULT_LOCALE;
+  const messages = isTestEnv ? testMessages : getMessages(locale, hostedTranslations);
+  const effectiveLocale = isTestEnv ? 'en' : locale;
+
+  return (
+    <LocaleProvider value={{ locale: effectiveLocale }}>
+      <MomentLocaleLoader locale={effectiveLocale}>
+        <IntlProvider
+          key={effectiveLocale}
+          locale={effectiveLocale}
+          messages={messages}
+          textComponent="span"
+        >
+          {children}
+        </IntlProvider>
+      </MomentLocaleLoader>
+    </LocaleProvider>
   );
 };
 
@@ -231,12 +193,9 @@ export const ClientApp = props => {
 
   // Show MaintenanceMode if the mandatory configurations are not available
   if (!appConfig.hasMandatoryConfigurations) {
-    return (
-      <MaintenanceModeError
-        locale={appConfig.localization.locale}
-        messages={{ ...localeMessages, ...hostedTranslations }}
-      />
-    );
+    const locale = getLocaleFromPath(window.location.pathname) || DEFAULT_LOCALE;
+    const messages = getMessages(locale, hostedTranslations);
+    return <MaintenanceModeError locale={locale} messages={messages} />;
   }
 
   // Marketplace color and the color for <PrimaryButton> come from configs
@@ -251,20 +210,16 @@ export const ClientApp = props => {
 
   return (
     <Configurations appConfig={appConfig}>
-      <IntlProvider
-        locale={appConfig.localization.locale}
-        messages={{ ...localeMessages, ...hostedTranslations }}
-        textComponent="span"
-      >
-        <Provider store={store}>
-          <HelmetProvider>
-            <IncludeScripts config={appConfig} />
-            <BrowserRouter>
+      <Provider store={store}>
+        <HelmetProvider>
+          <IncludeScripts config={appConfig} />
+          <BrowserRouter>
+            <IntlWrapper hostedTranslations={hostedTranslations}>
               <Routes logLoadDataCalls={logLoadDataCalls} />
-            </BrowserRouter>
-          </HelmetProvider>
-        </Provider>
-      </IntlProvider>
+            </IntlWrapper>
+          </BrowserRouter>
+        </HelmetProvider>
+      </Provider>
     </Configurations>
   );
 };
@@ -285,33 +240,35 @@ export const ServerApp = props => {
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
   HelmetProvider.canUseDOM = false;
 
+  // Get locale from URL path for SSR
+  const locale = getLocaleFromPath(url);
+
+  // Get messages for the current locale
+  const messages = getMessages(locale, hostedTranslations);
+
   // Show MaintenanceMode if the mandatory configurations are not available
   if (!appConfig.hasMandatoryConfigurations) {
     return (
-      <MaintenanceModeError
-        locale={appConfig.localization.locale}
-        messages={{ ...localeMessages, ...hostedTranslations }}
-        helmetContext={helmetContext}
-      />
+      <MaintenanceModeError locale={locale} messages={messages} helmetContext={helmetContext} />
     );
   }
 
   return (
     <Configurations appConfig={appConfig}>
-      <IntlProvider
-        locale={appConfig.localization.locale}
-        messages={{ ...localeMessages, ...hostedTranslations }}
-        textComponent="span"
-      >
-        <Provider store={store}>
-          <HelmetProvider context={helmetContext}>
-            <IncludeScripts config={appConfig} />
-            <StaticRouter location={url} context={context}>
-              <Routes />
-            </StaticRouter>
-          </HelmetProvider>
-        </Provider>
-      </IntlProvider>
+      <Provider store={store}>
+        <HelmetProvider context={helmetContext}>
+          <IncludeScripts config={appConfig} />
+          <StaticRouter location={url} context={context}>
+            <LocaleProvider value={{ locale }}>
+              <MomentLocaleLoader locale={locale}>
+                <IntlProvider locale={locale} messages={messages} textComponent="span">
+                  <Routes />
+                </IntlProvider>
+              </MomentLocaleLoader>
+            </LocaleProvider>
+          </StaticRouter>
+        </HelmetProvider>
+      </Provider>
     </Configurations>
   );
 };

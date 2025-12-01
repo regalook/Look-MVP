@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
 import classNames from 'classnames';
+import { Component } from 'react';
 
+import { DEFAULT_LOCALE, getLocaleFromPath } from '../../context/localeContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
-import { FormattedMessage } from '../../util/reactIntl';
 import { ensureCurrentUser } from '../../util/data';
-import { isUserAuthorized } from '../../util/userHelpers';
+import { FormattedMessage } from '../../util/reactIntl';
 import { pathByRouteName } from '../../util/routes';
+import { isUserAuthorized } from '../../util/userHelpers';
 
 import { Modal } from '../../components';
 
@@ -53,9 +54,20 @@ class ModalMissingInformation extends Component {
     newLocation
   ) {
     const routes = this.props.routeConfiguration;
-    const whitelistedPaths = MISSING_INFORMATION_MODAL_WHITELIST.map(page =>
-      pathByRouteName(page, routes)
-    );
+    const currentLocale = getLocaleFromPath(newLocation.pathname) || DEFAULT_LOCALE;
+
+    // Generate whitelisted paths with locale parameter
+    const whitelistedPaths = MISSING_INFORMATION_MODAL_WHITELIST.map(page => {
+      const route = routes?.find(r => r.name === page);
+      const routeHasLocale = route?.path?.includes(':locale');
+      const params = routeHasLocale ? { locale: currentLocale } : {};
+      try {
+        return pathByRouteName(page, routes, params);
+      } catch (e) {
+        // If route generation fails, return empty string to avoid crash
+        return '';
+      }
+    });
 
     // Is the current page whitelisted?
     const isPageWhitelisted = whitelistedPaths.includes(newLocation.pathname);
