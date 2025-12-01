@@ -42,24 +42,38 @@ const getInstallationCostMaybe = (publicData, currency) => {
     : {};
 };
 
+// Helper to get installation days after from publicData
+const getInstallationDaysAfterMaybe = publicData => {
+  const { installationDaysAfter } = publicData || {};
+  return installationDaysAfter != null
+    ? { installationDaysAfter: String(installationDaysAfter) }
+    : {};
+};
+
 const getInitialValues = props => {
   const { listing, listingTypes } = props;
   const { publicData, price } = listing?.attributes || {};
   const { unitType } = publicData || {};
   const listingTypeConfig = getListingTypeConfig(publicData, listingTypes);
   // Note: publicData contains priceVariationsEnabled if listing is created with priceVariations enabled.
-  const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, listingTypeConfig);
+  const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, listingTypes);
   const currency = price?.currency;
 
   const installationCostMaybe = getInstallationCostMaybe(publicData, currency);
+  const installationDaysAfterMaybe = getInstallationDaysAfterMaybe(publicData);
 
   return unitType === FIXED || isPriceVariationsInUse
     ? {
         ...getInitialValuesForPriceVariants(props, isPriceVariationsInUse),
         ...getInitialValuesForStartTimeInterval(props),
         ...installationCostMaybe,
+        ...installationDaysAfterMaybe,
       }
-    : { price: listing?.attributes?.price, ...installationCostMaybe };
+    : {
+        price: listing?.attributes?.price,
+        ...installationCostMaybe,
+        ...installationDaysAfterMaybe,
+      };
 };
 
 // This is needed to show the listing's price consistently over XHR calls.
@@ -174,10 +188,14 @@ const EditListingPricingPanel = props => {
           className={css.form}
           initialValues={initialValues}
           onSubmit={values => {
-            const { price, installationCost } = values;
+            const { price, installationCost, installationDaysAfter } = values;
 
             // Convert installation cost Money to subunits for storage in publicData
             const installationCostInSubunits = installationCost?.amount || null;
+            // Parse installation days after as integer (or null if empty)
+            const installationDaysAfterValue = installationDaysAfter
+              ? parseInt(installationDaysAfter, 10)
+              : null;
 
             // New values for listing attributes
             let updateValues = {};
@@ -186,6 +204,7 @@ const EditListingPricingPanel = props => {
               let publicDataUpdates = {
                 priceVariationsEnabled: isPriceVariationsInUse,
                 installationCostInSubunits,
+                installationDaysAfter: installationDaysAfterValue,
               };
               // NOTE: components that handle price variants and start time interval are currently
               // exporting helper functions that handle the initial values and the submission values.
@@ -210,6 +229,7 @@ const EditListingPricingPanel = props => {
                 publicData: {
                   priceVariationsEnabled: isPriceVariationsInUse,
                   installationCostInSubunits,
+                  installationDaysAfter: installationDaysAfterValue,
                   ...startTimeIntervalChanges.publicData,
                   ...priceVariantChanges.publicData,
                 },
@@ -220,11 +240,13 @@ const EditListingPricingPanel = props => {
                     publicData: {
                       priceVariationsEnabled: false,
                       installationCostInSubunits,
+                      installationDaysAfter: installationDaysAfterValue,
                     },
                   }
                 : {
                     publicData: {
                       installationCostInSubunits,
+                      installationDaysAfter: installationDaysAfterValue,
                     },
                   };
               updateValues = { price, ...priceVariationsEnabledMaybe };

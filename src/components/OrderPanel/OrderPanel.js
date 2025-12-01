@@ -359,7 +359,7 @@ const OrderPanel = props => {
   const supportedProcessesInfo = getSupportedProcessesInfo();
   const isKnownProcess = supportedProcessesInfo.map(info => info.name).includes(processName);
 
-  const { pickupEnabled, shippingEnabled, installationCostInSubunits } =
+  const { pickupEnabled, shippingEnabled, installationCostInSubunits, installationDaysAfter } =
     listing?.attributes?.publicData || {};
 
   const listingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
@@ -415,6 +415,7 @@ const OrderPanel = props => {
     fetchLineItemsError,
     payoutDetailsWarning,
     installationCostInSubunits,
+    installationDaysAfter,
   };
 
   const showClosedListingHelpText = listing.id && isClosed;

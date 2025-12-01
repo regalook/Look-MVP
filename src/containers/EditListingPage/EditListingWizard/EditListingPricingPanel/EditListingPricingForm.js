@@ -11,7 +11,7 @@ import { types as sdkTypes } from '../../../../util/sdkLoader';
 import * as validators from '../../../../util/validators';
 
 // Import shared components
-import { Button, FieldCurrencyInput, Form } from '../../../../components';
+import { Button, FieldCurrencyInput, FieldTextInput, Form } from '../../../../components';
 
 import BookingPriceVariants from './BookingPriceVariants';
 import StartTimeInterval from './StartTimeInverval';
@@ -181,6 +181,20 @@ export const EditListingPricingForm = props => (
               id: 'EditListingPricingForm.installationCostPlaceholder',
             })}
             currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
+          />
+
+          <FieldTextInput
+            id={`${formId}installationDaysAfter`}
+            name="installationDaysAfter"
+            type="number"
+            min="0"
+            className={css.input}
+            label={intl.formatMessage({
+              id: 'EditListingPricingForm.installationDaysAfterLabel',
+            })}
+            placeholder={intl.formatMessage({
+              id: 'EditListingPricingForm.installationDaysAfterPlaceholder',
+            })}
           />
 
           {isFixedLengthBooking ? (
