@@ -9,6 +9,32 @@ const { types } = require('sharetribe-flex-sdk');
 const { Money } = types;
 
 /**
+ * Get installation fee line item if applicable
+ *
+ * @param {Object} orderData should contain includeInstallation flag
+ * @param {Object} publicData should contain installationCostInSubunits
+ * @param {string} currency should point to the currency of listing's price
+ * @returns {Array} installation fee line item or empty array
+ */
+const getInstallationFeeLineItem = (orderData, publicData, currency) => {
+  const { includeInstallation } = orderData || {};
+  const { installationCostInSubunits } = publicData || {};
+
+  if (includeInstallation && installationCostInSubunits && installationCostInSubunits > 0) {
+    return [
+      {
+        code: 'line-item/installation-fee',
+        unitPrice: new Money(installationCostInSubunits, currency),
+        quantity: 1,
+        includeFor: ['customer', 'provider'],
+      },
+    ];
+  }
+
+  return [];
+};
+
+/**
  * Get quantity and add extra line-items that are related to delivery method
  *
  * @param {Object} orderData should contain stockReservationQuantity and deliveryMethod
@@ -47,7 +73,10 @@ const getItemQuantityAndLineItems = (orderData, publicData, currency) => {
       ]
     : [];
 
-  return { quantity, extraLineItems: deliveryLineItem };
+  // Add installation fee line item if applicable
+  const installationLineItem = getInstallationFeeLineItem(orderData, publicData, currency);
+
+  return { quantity, extraLineItems: [...deliveryLineItem, ...installationLineItem] };
 };
 
 const getOfferQuantityAndLineItems = orderData => {
@@ -58,13 +87,18 @@ const getOfferQuantityAndLineItems = orderData => {
  * Get quantity for fixed bookings with seats.
  * @param {Object} orderData
  * @param {number} [orderData.seats]
+ * @param {Object} publicData
+ * @param {string} currency
  */
-const getFixedQuantityAndLineItems = orderData => {
+const getFixedQuantityAndLineItems = (orderData, publicData, currency) => {
   const { seats } = orderData || {};
   const hasSeats = !!seats;
+  const installationLineItem = getInstallationFeeLineItem(orderData, publicData, currency);
   // If there are seats, the quantity is split to factors: units and seats.
   // E.g. 1 session x 2 seats (aka unit price is multiplied by 2)
-  return hasSeats ? { units: 1, seats, extraLineItems: [] } : { quantity: 1, extraLineItems: [] };
+  return hasSeats
+    ? { units: 1, seats, extraLineItems: installationLineItem }
+    : { quantity: 1, extraLineItems: installationLineItem };
 };
 
 /**
@@ -74,16 +108,21 @@ const getFixedQuantityAndLineItems = orderData => {
  * @param {string} orderData.bookingStart
  * @param {string} orderData.bookingEnd
  * @param {number} [orderData.seats]
+ * @param {Object} publicData
+ * @param {string} currency
  */
-const getHourQuantityAndLineItems = orderData => {
+const getHourQuantityAndLineItems = (orderData, publicData, currency) => {
   const { bookingStart, bookingEnd, seats } = orderData || {};
   const hasSeats = !!seats;
   const units =
     bookingStart && bookingEnd ? calculateQuantityFromHours(bookingStart, bookingEnd) : null;
+  const installationLineItem = getInstallationFeeLineItem(orderData, publicData, currency);
 
   // If there are seats, the quantity is split to factors: units and seats.
   // E.g. 3 hours x 2 seats (aka unit price is multiplied by 6)
-  return hasSeats ? { units, seats, extraLineItems: [] } : { quantity: units, extraLineItems: [] };
+  return hasSeats
+    ? { units, seats, extraLineItems: installationLineItem }
+    : { quantity: units, extraLineItems: installationLineItem };
 };
 
 /**
@@ -94,16 +133,21 @@ const getHourQuantityAndLineItems = orderData => {
  * @param {string} orderData.bookingEnd
  * @param {number} [orderData.seats]
  * @param {'line-item/day' | 'line-item/night'} code
+ * @param {Object} publicData
+ * @param {string} currency
  */
-const getDateRangeQuantityAndLineItems = (orderData, code) => {
+const getDateRangeQuantityAndLineItems = (orderData, code, publicData, currency) => {
   const { bookingStart, bookingEnd, seats } = orderData;
   const hasSeats = !!seats;
   const units =
     bookingStart && bookingEnd ? calculateQuantityFromDates(bookingStart, bookingEnd, code) : null;
+  const installationLineItem = getInstallationFeeLineItem(orderData, publicData, currency);
 
   // If there are seats, the quantity is split to factors: units and seats.
   // E.g. 3 nights x 4 seats (aka unit price is multiplied by 12)
-  return hasSeats ? { units, seats, extraLineItems: [] } : { quantity: units, extraLineItems: [] };
+  return hasSeats
+    ? { units, seats, extraLineItems: installationLineItem }
+    : { quantity: units, extraLineItems: installationLineItem };
 };
 
 /**
@@ -179,11 +223,11 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
     unitType === 'item'
       ? getItemQuantityAndLineItems(orderData, publicData, currency)
       : unitType === 'fixed'
-      ? getFixedQuantityAndLineItems(orderData)
+      ? getFixedQuantityAndLineItems(orderData, publicData, currency)
       : unitType === 'hour'
-      ? getHourQuantityAndLineItems(orderData)
+      ? getHourQuantityAndLineItems(orderData, publicData, currency)
       : ['day', 'night'].includes(unitType)
-      ? getDateRangeQuantityAndLineItems(orderData, code)
+      ? getDateRangeQuantityAndLineItems(orderData, code, publicData, currency)
       : isNegotiationUnitType
       ? getOfferQuantityAndLineItems(orderData)
       : {};

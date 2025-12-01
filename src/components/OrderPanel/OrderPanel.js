@@ -1,42 +1,42 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
 import loadable from '@loadable/component';
 import classNames from 'classnames';
+import { useEffect, useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
-import { FormattedMessage, useIntl } from '../../util/reactIntl';
-import {
-  displayDeliveryPickup,
-  displayDeliveryShipping,
-  displayPrice,
-} from '../../util/configHelpers';
-import {
-  propTypes,
-  AVAILABILITY_MULTIPLE_SEATS,
-  LISTING_STATE_CLOSED,
-  LINE_ITEM_NIGHT,
-  LINE_ITEM_DAY,
-  LINE_ITEM_HOUR,
-  LINE_ITEM_FIXED,
-  LINE_ITEM_ITEM,
-  STOCK_MULTIPLE_ITEMS,
-  STOCK_INFINITE_MULTIPLE_ITEMS,
-  LISTING_STATE_PUBLISHED,
-} from '../../util/types';
-import { formatMoney } from '../../util/currency';
-import { createSlug, parse, stringify } from '../../util/urlHelpers';
-import { userDisplayNameAsString } from '../../util/data';
 import {
   OFFER,
   REQUEST,
   getSupportedProcessesInfo,
   isBookingProcess,
-  isNegotiationProcess,
   isInquiryProcess,
+  isNegotiationProcess,
   isPurchaseProcess,
   resolveLatestProcessName,
 } from '../../transactions/transaction';
+import {
+  displayDeliveryPickup,
+  displayDeliveryShipping,
+  displayPrice,
+} from '../../util/configHelpers';
+import { formatMoney } from '../../util/currency';
+import { userDisplayNameAsString } from '../../util/data';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
+import {
+  AVAILABILITY_MULTIPLE_SEATS,
+  LINE_ITEM_DAY,
+  LINE_ITEM_FIXED,
+  LINE_ITEM_HOUR,
+  LINE_ITEM_ITEM,
+  LINE_ITEM_NIGHT,
+  LISTING_STATE_CLOSED,
+  LISTING_STATE_PUBLISHED,
+  STOCK_INFINITE_MULTIPLE_ITEMS,
+  STOCK_MULTIPLE_ITEMS,
+  propTypes,
+} from '../../util/types';
+import { createSlug, parse, stringify } from '../../util/urlHelpers';
 
-import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../components';
+import { AvatarSmall, H1, H2, ModalInMobile, PrimaryButton } from '../../components';
 import PriceVariantPicker from './PriceVariantPicker/PriceVariantPicker';
 import SubmitFinePrint from './SubmitFinePrint/SubmitFinePrint';
 
@@ -359,7 +359,8 @@ const OrderPanel = props => {
   const supportedProcessesInfo = getSupportedProcessesInfo();
   const isKnownProcess = supportedProcessesInfo.map(info => info.name).includes(processName);
 
-  const { pickupEnabled, shippingEnabled } = listing?.attributes?.publicData || {};
+  const { pickupEnabled, shippingEnabled, installationCostInSubunits } =
+    listing?.attributes?.publicData || {};
 
   const listingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
   const displayShipping = displayDeliveryShipping(listingTypeConfig);
@@ -413,6 +414,7 @@ const OrderPanel = props => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     payoutDetailsWarning,
+    installationCostInSubunits,
   };
 
   const showClosedListingHelpText = listing.id && isClosed;

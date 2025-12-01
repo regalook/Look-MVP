@@ -2,14 +2,12 @@
  * This component will show the booking info and calculated total price.
  * I.e. dates and other details related to payment decision in receipt format.
  */
-import React from 'react';
 import classNames from 'classnames';
 
 import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import {
   DATE_TYPE_DATE,
   DATE_TYPE_DATETIME,
-  DATE_TYPE_TIME,
   LINE_ITEM_CUSTOMER_COMMISSION,
   LINE_ITEM_FIXED,
   LINE_ITEM_HOUR,
@@ -18,16 +16,17 @@ import {
   propTypes,
 } from '../../util/types';
 
-import LineItemBookingPeriod from './LineItemBookingPeriod';
 import LineItemBasePriceMaybe from './LineItemBasePriceMaybe';
-import LineItemSubTotalMaybe from './LineItemSubTotalMaybe';
-import LineItemShippingFeeMaybe from './LineItemShippingFeeMaybe';
-import LineItemPickupFeeMaybe from './LineItemPickupFeeMaybe';
+import LineItemBookingPeriod from './LineItemBookingPeriod';
 import LineItemCustomerCommissionMaybe from './LineItemCustomerCommissionMaybe';
 import LineItemCustomerCommissionRefundMaybe from './LineItemCustomerCommissionRefundMaybe';
+import LineItemInstallationFeeMaybe from './LineItemInstallationFeeMaybe';
+import LineItemPickupFeeMaybe from './LineItemPickupFeeMaybe';
 import LineItemProviderCommissionMaybe from './LineItemProviderCommissionMaybe';
 import LineItemProviderCommissionRefundMaybe from './LineItemProviderCommissionRefundMaybe';
 import LineItemRefundMaybe from './LineItemRefundMaybe';
+import LineItemShippingFeeMaybe from './LineItemShippingFeeMaybe';
+import LineItemSubTotalMaybe from './LineItemSubTotalMaybe';
 import LineItemTotalPrice from './LineItemTotalPrice';
 import LineItemUnknownItemsMaybe from './LineItemUnknownItemsMaybe';
 
@@ -116,6 +115,7 @@ export const OrderBreakdownComponent = props => {
       <LineItemBasePriceMaybe lineItems={lineItems} code={lineItemUnitType} intl={intl} />
       <LineItemShippingFeeMaybe lineItems={lineItems} intl={intl} />
       <LineItemPickupFeeMaybe lineItems={lineItems} intl={intl} />
+      <LineItemInstallationFeeMaybe lineItems={lineItems} intl={intl} />
       <LineItemUnknownItemsMaybe lineItems={lineItems} isProvider={isProvider} intl={intl} />
 
       <LineItemSubTotalMaybe
