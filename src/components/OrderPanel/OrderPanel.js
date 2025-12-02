@@ -359,8 +359,13 @@ const OrderPanel = props => {
   const supportedProcessesInfo = getSupportedProcessesInfo();
   const isKnownProcess = supportedProcessesInfo.map(info => info.name).includes(processName);
 
-  const { pickupEnabled, shippingEnabled, installationCostInSubunits, installationDaysAfter } =
-    listing?.attributes?.publicData || {};
+  const {
+    pickupEnabled,
+    shippingEnabled,
+    installationCostInSubunits,
+    installationDaysBefore,
+    installationDaysAfter,
+  } = listing?.attributes?.publicData || {};
 
   const listingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
   const displayShipping = displayDeliveryShipping(listingTypeConfig);
@@ -415,6 +420,7 @@ const OrderPanel = props => {
     fetchLineItemsError,
     payoutDetailsWarning,
     installationCostInSubunits,
+    installationDaysBefore,
     installationDaysAfter,
   };
 

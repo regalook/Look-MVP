@@ -20,7 +20,7 @@ import { timeSlotsPerDate } from '../../../util/generators';
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { LINE_ITEM_DAY, propTypes } from '../../../util/types';
 import { bookingDatesRequired, composeValidators, required } from '../../../util/validators';
-import { isDayInInstallationBuffer } from '../booking.shared';
+import { isDayInInstallationBuffer, isDayInLeadTimePeriod } from '../booking.shared';
 
 import {
   FieldCheckbox,
@@ -254,7 +254,9 @@ const isDayBlockedFn = params => {
     startDate,
     endDate,
     timeZone,
+    installationDaysBefore,
     installationDaysAfter,
+    includeInstallation,
   } = params || {};
 
   const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, timeZone);
@@ -267,7 +269,18 @@ const isDayBlockedFn = params => {
     const dayIdString = stringifyDateToISO8601(dayInListingTZ, timeZone);
     const hasAvailabilityOnDay = timeSlotsData[dayIdString]?.hasAvailability === true;
 
-    // Check if day is in installation buffer period
+    // Check if day is within lead time period (only when installation is selected)
+    const isInLeadTime = isDayInLeadTimePeriod(
+      dayInListingTZ,
+      installationDaysBefore,
+      includeInstallation,
+      timeZone
+    );
+    if (isInLeadTime) {
+      return true; // Block this day
+    }
+
+    // Check if day is in installation buffer period (after bookings)
     const isInBuffer = isDayInInstallationBuffer(
       dayInListingTZ,
       allTimeSlots,
@@ -570,6 +583,7 @@ export const BookingDatesForm = props => {
     preselectedPriceVariant,
     isPublishedListing,
     installationCostInSubunits,
+    installationDaysBefore,
     installationDaysAfter,
     ...rest
   } = props;
@@ -707,6 +721,7 @@ export const BookingDatesForm = props => {
           listingId,
           onFetchTimeSlots
         );
+        const includeInstallation = values?.includeInstallation?.[0] === 'include';
         const isDayBlocked = isDayBlockedFn({
           allTimeSlots: relevantTimeSlots,
           monthlyTimeSlots,
@@ -714,7 +729,9 @@ export const BookingDatesForm = props => {
           startDate,
           endDate,
           timeZone,
+          installationDaysBefore,
           installationDaysAfter,
+          includeInstallation,
         });
         const isOutsideRange = isOutsideRangeFn(
           relevantTimeSlots,
@@ -807,9 +824,10 @@ export const BookingDatesForm = props => {
               onClose={() => {
                 setCurrentMonth(startDate || endDate || startOfToday);
               }}
-              onChange={values => {
-                const { startDate: startDateFromValues, endDate: endDateFromValues } = values || {};
-                const { startDate, endDate } = values
+              onChange={dateValues => {
+                const { startDate: startDateFromValues, endDate: endDateFromValues } =
+                  dateValues || {};
+                const { startDate, endDate } = dateValues
                   ? getStartAndEndOnTimeZone(
                       startDateFromValues,
                       endDateFromValues,
@@ -826,6 +844,7 @@ export const BookingDatesForm = props => {
                     startDate,
                     endDate,
                     seats: seatsEnabled ? 1 : undefined,
+                    includeInstallation: formRenderProps.values?.includeInstallation,
                   },
                 });
               }}
@@ -839,13 +858,14 @@ export const BookingDatesForm = props => {
                 disabled={!(startDate && endDate)}
                 showLabelAsDisabled={!(startDate && endDate)}
                 className={css.fieldSeats}
-                onChange={values => {
+                onChange={seatValue => {
                   onHandleFetchLineItems({
                     values: {
                       priceVariantName,
                       startDate: startDate,
                       endDate: endDate,
-                      seats: values,
+                      seats: seatValue,
+                      includeInstallation: values?.includeInstallation,
                     },
                   });
                 }}
@@ -878,6 +898,20 @@ export const BookingDatesForm = props => {
                   value="include"
                   onChange={e => {
                     const isChecked = e.target.checked;
+
+                    // Check if selected start date is within lead time period
+                    const startDateInLeadTime =
+                      isChecked && startDate
+                        ? isDayInLeadTimePeriod(startDate, installationDaysBefore, true, timeZone)
+                        : false;
+
+                    // If start date is in lead time, clear the dates
+                    if (startDateInLeadTime) {
+                      formApi.change('bookingDates', { startDate: null, endDate: null });
+                      // Don't fetch line items since dates are cleared
+                      return;
+                    }
+
                     onHandleFetchLineItems({
                       values: {
                         priceVariantName,

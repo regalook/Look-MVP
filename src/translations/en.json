@@ -339,6 +339,8 @@
   "EditListingPricingForm.priceVariant.variationNamesMustBeUnique": "Each variation must have a unique name.",
   "EditListingPricingForm.installationCostLabel": "Installation cost (optional)",
   "EditListingPricingForm.installationCostPlaceholder": "Add an installation cost…",
+  "EditListingPricingForm.installationDaysBeforeLabel": "Lead time days (optional)",
+  "EditListingPricingForm.installationDaysBeforePlaceholder": "e.g., 2",
   "EditListingPricingForm.installationDaysAfterLabel": "Buffer days after booking (optional)",
   "EditListingPricingForm.installationDaysAfterPlaceholder": "e.g., 2",
   "EditListingPricingForm.showListingFailed": "Fetching listing data failed.",

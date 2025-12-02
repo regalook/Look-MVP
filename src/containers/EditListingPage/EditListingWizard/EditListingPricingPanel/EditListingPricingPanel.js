@@ -42,6 +42,14 @@ const getInstallationCostMaybe = (publicData, currency) => {
     : {};
 };
 
+// Helper to get installation days before from publicData
+const getInstallationDaysBeforeMaybe = publicData => {
+  const { installationDaysBefore } = publicData || {};
+  return installationDaysBefore != null
+    ? { installationDaysBefore: String(installationDaysBefore) }
+    : {};
+};
+
 // Helper to get installation days after from publicData
 const getInstallationDaysAfterMaybe = publicData => {
   const { installationDaysAfter } = publicData || {};
@@ -60,6 +68,7 @@ const getInitialValues = props => {
   const currency = price?.currency;
 
   const installationCostMaybe = getInstallationCostMaybe(publicData, currency);
+  const installationDaysBeforeMaybe = getInstallationDaysBeforeMaybe(publicData);
   const installationDaysAfterMaybe = getInstallationDaysAfterMaybe(publicData);
 
   return unitType === FIXED || isPriceVariationsInUse
@@ -67,11 +76,13 @@ const getInitialValues = props => {
         ...getInitialValuesForPriceVariants(props, isPriceVariationsInUse),
         ...getInitialValuesForStartTimeInterval(props),
         ...installationCostMaybe,
+        ...installationDaysBeforeMaybe,
         ...installationDaysAfterMaybe,
       }
     : {
         price: listing?.attributes?.price,
         ...installationCostMaybe,
+        ...installationDaysBeforeMaybe,
         ...installationDaysAfterMaybe,
       };
 };
@@ -188,11 +199,19 @@ const EditListingPricingPanel = props => {
           className={css.form}
           initialValues={initialValues}
           onSubmit={values => {
-            const { price, installationCost, installationDaysAfter } = values;
+            const {
+              price,
+              installationCost,
+              installationDaysBefore,
+              installationDaysAfter,
+            } = values;
 
             // Convert installation cost Money to subunits for storage in publicData
             const installationCostInSubunits = installationCost?.amount || null;
-            // Parse installation days after as integer (or null if empty)
+            // Parse installation days as integers (or null if empty)
+            const installationDaysBeforeValue = installationDaysBefore
+              ? parseInt(installationDaysBefore, 10)
+              : null;
             const installationDaysAfterValue = installationDaysAfter
               ? parseInt(installationDaysAfter, 10)
               : null;
@@ -204,6 +223,7 @@ const EditListingPricingPanel = props => {
               let publicDataUpdates = {
                 priceVariationsEnabled: isPriceVariationsInUse,
                 installationCostInSubunits,
+                installationDaysBefore: installationDaysBeforeValue,
                 installationDaysAfter: installationDaysAfterValue,
               };
               // NOTE: components that handle price variants and start time interval are currently
@@ -229,6 +249,7 @@ const EditListingPricingPanel = props => {
                 publicData: {
                   priceVariationsEnabled: isPriceVariationsInUse,
                   installationCostInSubunits,
+                  installationDaysBefore: installationDaysBeforeValue,
                   installationDaysAfter: installationDaysAfterValue,
                   ...startTimeIntervalChanges.publicData,
                   ...priceVariantChanges.publicData,
@@ -240,12 +261,14 @@ const EditListingPricingPanel = props => {
                     publicData: {
                       priceVariationsEnabled: false,
                       installationCostInSubunits,
+                      installationDaysBefore: installationDaysBeforeValue,
                       installationDaysAfter: installationDaysAfterValue,
                     },
                   }
                 : {
                     publicData: {
                       installationCostInSubunits,
+                      installationDaysBefore: installationDaysBeforeValue,
                       installationDaysAfter: installationDaysAfterValue,
                     },
                   };

@@ -184,6 +184,20 @@ export const EditListingPricingForm = props => (
           />
 
           <FieldTextInput
+            id={`${formId}installationDaysBefore`}
+            name="installationDaysBefore"
+            type="number"
+            min="0"
+            className={css.input}
+            label={intl.formatMessage({
+              id: 'EditListingPricingForm.installationDaysBeforeLabel',
+            })}
+            placeholder={intl.formatMessage({
+              id: 'EditListingPricingForm.installationDaysBeforePlaceholder',
+            })}
+          />
+
+          <FieldTextInput
             id={`${formId}installationDaysAfter`}
             name="installationDaysAfter"
             type="number"
