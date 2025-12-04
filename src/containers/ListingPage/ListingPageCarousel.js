@@ -1,39 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { compose } from 'redux';
+import classNames from 'classnames';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
-import classNames from 'classnames';
+import { compose } from 'redux';
 
 // Contexts
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 // Utils
-import { FormattedMessage, useIntl } from '../../util/reactIntl';
-import { LISTING_STATE_PENDING_APPROVAL, LISTING_STATE_CLOSED, propTypes } from '../../util/types';
-import { types as sdkTypes } from '../../util/sdkLoader';
-import {
-  LISTING_PAGE_DRAFT_VARIANT,
-  LISTING_PAGE_PENDING_APPROVAL_VARIANT,
-  LISTING_PAGE_PARAM_TYPE_DRAFT,
-  LISTING_PAGE_PARAM_TYPE_EDIT,
-  createSlug,
-  NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
-  NO_ACCESS_PAGE_VIEW_LISTINGS,
-} from '../../util/urlHelpers';
-import {
-  isErrorNoViewingPermission,
-  isErrorUserPendingApproval,
-  isForbiddenError,
-} from '../../util/errors.js';
-import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers.js';
-import { requireListingImage } from '../../util/configHelpers';
-import {
-  ensureListing,
-  ensureOwnListing,
-  ensureUser,
-  userDisplayNameAsString,
-} from '../../util/data';
-import { richText } from '../../util/richText';
 import {
   OFFER,
   REQUEST,
@@ -42,54 +16,81 @@ import {
   isPurchaseProcess,
   resolveLatestProcessName,
 } from '../../transactions/transaction';
+import { requireListingImage } from '../../util/configHelpers';
+import {
+  ensureListing,
+  ensureOwnListing,
+  ensureUser,
+  userDisplayNameAsString,
+} from '../../util/data';
+import {
+  isErrorNoViewingPermission,
+  isErrorUserPendingApproval,
+  isForbiddenError,
+} from '../../util/errors.js';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
+import { richText } from '../../util/richText';
+import { types as sdkTypes } from '../../util/sdkLoader';
+import { LISTING_STATE_CLOSED, LISTING_STATE_PENDING_APPROVAL, propTypes } from '../../util/types';
+import {
+  LISTING_PAGE_DRAFT_VARIANT,
+  LISTING_PAGE_PARAM_TYPE_DRAFT,
+  LISTING_PAGE_PARAM_TYPE_EDIT,
+  LISTING_PAGE_PENDING_APPROVAL_VARIANT,
+  NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
+  NO_ACCESS_PAGE_VIEW_LISTINGS,
+  createSlug,
+} from '../../util/urlHelpers';
+import { hasPermissionToViewData, isUserAuthorized } from '../../util/userHelpers.js';
 
 // Global ducks (for Redux actions and thunks)
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
-import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 import { initializeCardPaymentData } from '../../ducks/stripe.duck.js';
+import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
 
 // Shared components
 import {
-  H4,
   H3,
-  Page,
+  H4,
+  LayoutSingleColumn,
   NamedLink,
   NamedRedirect,
   OrderPanel,
-  LayoutSingleColumn,
+  Page,
 } from '../../components';
 
 // Related components and modules
-import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import FooterContainer from '../FooterContainer/FooterContainer';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
+import TopbarContainer from '../TopbarContainer/TopbarContainer';
 
 import {
-  sendInquiry,
-  setInitialValues,
   fetchTimeSlots,
   fetchTransactionLineItems,
+  sendInquiry,
+  setInitialValues,
 } from './ListingPage.duck';
 
+import ActionBarMaybe from './ActionBarMaybe';
+import CustomListingFields from './CustomListingFields';
 import {
-  LoadingPage,
   ErrorPage,
-  priceData,
-  listingImages,
+  LoadingPage,
   handleContactUser,
-  handleSubmitInquiry,
   handleNavigateToMakeOfferPage,
   handleNavigateToRequestQuotePage,
   handleSubmit,
+  handleSubmitInquiry,
+  listingImages,
+  priceData,
   priceForSchemaMaybe,
 } from './ListingPage.shared';
-import ActionBarMaybe from './ActionBarMaybe';
-import SectionTextMaybe from './SectionTextMaybe';
-import SectionReviews from './SectionReviews';
+import SectionAdPreview from './SectionAdPreview';
 import SectionAuthorMaybe from './SectionAuthorMaybe';
-import SectionMapMaybe from './SectionMapMaybe';
 import SectionGallery from './SectionGallery';
-import CustomListingFields from './CustomListingFields';
+import SectionMapMaybe from './SectionMapMaybe';
+import SectionReviews from './SectionReviews';
+import SectionTextMaybe from './SectionTextMaybe';
 
 import css from './ListingPage.module.css';
 
@@ -234,7 +235,7 @@ export const ListingPageComponent = props => {
   const authorNeedsPayoutDetails =
     ['booking', 'purchase'].includes(processType) || (isNegotiation && unitType === OFFER);
   const noPayoutDetailsSetWithOwnListing =
-    isOwnListing && (authorNeedsPayoutDetails && !currentUser?.attributes?.stripeConnected);
+    isOwnListing && authorNeedsPayoutDetails && !currentUser?.attributes?.stripeConnected;
   const payoutDetailsWarning = noPayoutDetailsSetWithOwnListing ? (
     <span className={css.payoutDetailsWarning}>
       <FormattedMessage id="ListingPage.payoutDetailsWarning" values={{ processType }} />
@@ -401,6 +402,15 @@ export const ListingPageComponent = props => {
               listingFieldConfigs={listingConfig.listingFields}
               categoryConfiguration={config.categoryConfiguration}
               intl={intl}
+            />
+
+            <SectionAdPreview
+              listing={currentListing}
+              dimensions={publicData.dimensions}
+              listingImageUrl={
+                currentListing.images?.[0]?.attributes?.variants?.['scaled-medium']?.url ||
+                currentListing.images?.[0]?.attributes?.variants?.['scaled-small']?.url
+              }
             />
 
             <SectionMapMaybe
@@ -625,11 +635,6 @@ const mapDispatchToProps = dispatch => ({
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const ListingPage = compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(EnhancedListingPage);
+const ListingPage = compose(connect(mapStateToProps, mapDispatchToProps))(EnhancedListingPage);
 
 export default ListingPage;
