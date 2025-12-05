@@ -1,0 +1,248 @@
+@import '../../styles/customMediaQueries.css';
+
+.sectionAdPreview {
+  padding: 0 24px;
+  margin-bottom: 40px;
+
+  @media (--viewportMedium) {
+    padding: 0;
+  }
+}
+
+.sectionHeading {
+  composes: p from global;
+  padding: 0;
+  font-weight: var(--fontWeightBold);
+  margin-top: 0;
+  margin-bottom: 12px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 8px;
+  }
+}
+
+.sectionDescription {
+  composes: marketplaceBodyFontStyles from global;
+  color: var(--colorGrey700);
+  margin: 0 0 16px 0;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.uploadSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.previewHint {
+  position: relative;
+  border-radius: var(--borderRadiusMedium);
+  overflow: hidden;
+  max-width: 100%;
+
+  @media (--viewportMedium) {
+    max-width: 600px;
+  }
+}
+
+.hintImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  opacity: 0.7;
+}
+
+.hintOverlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.6);
+  color: var(--colorWhite);
+  padding: 12px 24px;
+  border-radius: var(--borderRadius);
+  font-weight: var(--fontWeightSemiBold);
+  text-align: center;
+}
+
+.uploadButton {
+  composes: buttonDefault from global;
+  composes: buttonBorders from global;
+  composes: buttonColors from global;
+  composes: buttonFont from global;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  min-height: 48px;
+  width: fit-content;
+  cursor: pointer;
+  transition: var(--transitionStyleButton);
+
+  &:hover {
+    background-color: var(--marketplaceColorDark);
+    border-color: var(--marketplaceColorDark);
+  }
+}
+
+.previewContainer {
+  margin-top: 16px;
+}
+
+.interactivePreview {
+  position: relative;
+  display: inline-block;
+  border-radius: var(--borderRadiusMedium);
+  overflow: hidden;
+  max-width: 100%;
+  user-select: none;
+  touch-action: none;
+
+  @media (--viewportMedium) {
+    max-width: 700px;
+  }
+}
+
+.baseImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.overlay {
+  position: absolute;
+  border: 2px dashed var(--marketplaceColor);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  overflow: visible;
+  background-color: rgba(255, 255, 255, 0.1);
+  touch-action: none;
+
+  &:hover {
+    border-color: var(--marketplaceColorDark);
+  }
+}
+
+.overlayImage {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+}
+
+.resizeHandle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  background-color: var(--marketplaceColor);
+  cursor: se-resize;
+  border-top-left-radius: 4px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid var(--colorWhite);
+    border-bottom: 2px solid var(--colorWhite);
+  }
+}
+
+.rotateHandle {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 24px;
+  background-color: var(--marketplaceColor);
+  border-radius: 50%;
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::before {
+    content: '↻';
+    color: var(--colorWhite);
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  &:hover {
+    background-color: var(--marketplaceColorDark);
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.instructions {
+  composes: textSmall from global;
+  margin: 12px 0 0 0;
+  color: var(--colorGrey500);
+  font-style: italic;
+}
+
+.noImage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--colorGrey500);
+  font-style: italic;
+  background-color: var(--colorGrey100);
+}
+
+.dimensionsReminder {
+  composes: textSmall from global;
+  margin: 12px 0;
+  padding: 12px 16px;
+  background-color: var(--colorGrey50);
+  border-radius: var(--borderRadius);
+  color: var(--colorGrey700);
+  border-left: 3px solid var(--marketplaceColor);
+}
+
+.actionButtons {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.changeButton {
+  composes: buttonSmall from global;
+  background-color: var(--colorWhite);
+  border: 1px solid var(--colorGrey300);
+  color: var(--colorGrey700);
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: var(--transitionStyleButton);
+
+  &:hover {
+    background-color: var(--colorGrey50);
+    border-color: var(--colorGrey400);
+  }
+}
+
+.removeButton {
+  composes: buttonSmall from global;
+  background-color: transparent;
+  border: 1px solid var(--colorFail);
+  color: var(--colorFail);
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: var(--transitionStyleButton);
+
+  &:hover {
+    background-color: var(--colorFailLight);
+  }
+}
