@@ -19,6 +19,7 @@
   display: flex;
   gap: 12px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .uploadButton {
@@ -70,13 +71,19 @@
   top: 0;
   left: 0;
   transform-origin: 0 0;
-  pointer-events: none;
+  pointer-events: auto;
+  cursor: pointer;
   opacity: 0;
   will-change: transform;
 }
 
 .overlayVisible {
   opacity: 1;
+}
+
+.overlayActive {
+  outline: 2px solid rgba(31, 111, 235, 0.6);
+  outline-offset: 1px;
 }
 
 .handlesLayer {
@@ -102,4 +109,26 @@
   margin-top: 12px;
   font-size: 13px;
   color: var(--colorGrey700);
+}
+
+.primaryAction {
+  min-height: 44px;
+  padding: 0 18px;
+}
+
+.secondaryAction {
+  min-height: 44px;
+  padding: 0 16px 2px;
+}
+
+.downloadAction {
+  min-height: 44px;
+  padding: 0 16px 2px;
+  border: 1px solid var(--marketplaceColor);
+  color: var(--marketplaceColor);
+}
+
+.downloadAction:disabled {
+  border-color: var(--colorGrey300);
+  color: var(--colorGrey500);
 }

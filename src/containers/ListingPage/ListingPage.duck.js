@@ -378,8 +378,8 @@ const initialState = {
   sendInquiryError: null,
   inquiryModalOpenForListingId: null,
   overlayEditor: {
-    image: null,
-    corners: null,
+    overlays: [],
+    activeOverlayId: null,
     opacity: 0.8,
   },
 };
@@ -391,17 +391,29 @@ const listingPageSlice = createSlice({
     setInitialValues: (state, action) => {
       return { ...initialState, ...action.payload };
     },
-    setOverlayImage: (state, action) => {
-      state.overlayEditor.image = action.payload;
+    addOverlay: (state, action) => {
+      state.overlayEditor.overlays.push(action.payload);
+      state.overlayEditor.activeOverlayId = action.payload.id;
+    },
+    setActiveOverlay: (state, action) => {
+      state.overlayEditor.activeOverlayId = action.payload;
     },
     setOverlayCorners: (state, action) => {
-      state.overlayEditor.corners = action.payload;
+      const { id, corners } = action.payload || {};
+      const overlay = state.overlayEditor.overlays.find(item => item.id === id);
+      if (overlay) {
+        overlay.corners = corners;
+      }
     },
     setOverlayOpacity: (state, action) => {
       state.overlayEditor.opacity = action.payload;
     },
     resetOverlayEditor: (state, action) => {
-      state.overlayEditor.corners = action.payload || null;
+      const { id, corners } = action.payload || {};
+      const overlay = state.overlayEditor.overlays.find(item => item.id === id);
+      if (overlay) {
+        overlay.corners = corners || null;
+      }
     },
   },
   extraReducers: builder => {
@@ -519,7 +531,8 @@ const listingPageSlice = createSlice({
 
 export const {
   setInitialValues,
-  setOverlayImage,
+  addOverlay,
+  setActiveOverlay,
   setOverlayCorners,
   setOverlayOpacity,
   resetOverlayEditor,

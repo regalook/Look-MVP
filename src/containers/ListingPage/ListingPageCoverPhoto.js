@@ -69,7 +69,8 @@ import {
   setInitialValues,
   fetchTimeSlots,
   fetchTransactionLineItems,
-  setOverlayImage,
+  addOverlay,
+  setActiveOverlay,
   setOverlayCorners,
   setOverlayOpacity,
   resetOverlayEditor,
@@ -134,7 +135,8 @@ export const ListingPageComponent = props => {
     onSendInquiry,
     onInitializeCardPaymentData,
     overlayEditor,
-    onOverlayImageChange,
+    onOverlayAdd,
+    onOverlaySetActive,
     onOverlayCornersChange,
     onOverlayOpacityChange,
     onOverlayReset,
@@ -443,7 +445,8 @@ export const ListingPageComponent = props => {
               <OverlayEditor
                 baseImageUrl={overlayBaseImageUrl}
                 overlayState={overlayEditor}
-                onOverlayImageChange={onOverlayImageChange}
+                onOverlayAdd={onOverlayAdd}
+                onOverlaySetActive={onOverlaySetActive}
                 onOverlayCornersChange={onOverlayCornersChange}
                 onOverlayOpacityChange={onOverlayOpacityChange}
                 onOverlayReset={onOverlayReset}
@@ -673,7 +676,8 @@ const mapDispatchToProps = dispatch => ({
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
   onFetchTimeSlots: (listingId, start, end, timeZone, options) =>
     dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)), // for OrderPanel
-  onOverlayImageChange: payload => dispatch(setOverlayImage(payload)),
+  onOverlayAdd: payload => dispatch(addOverlay(payload)),
+  onOverlaySetActive: id => dispatch(setActiveOverlay(id)),
   onOverlayCornersChange: payload => dispatch(setOverlayCorners(payload)),
   onOverlayOpacityChange: value => dispatch(setOverlayOpacity(value)),
   onOverlayReset: payload => dispatch(resetOverlayEditor(payload)),

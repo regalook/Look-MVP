@@ -225,8 +225,10 @@ export const renderMockupToCanvas = ({
   baseImage,
   overlayImage,
   corners,
+  overlays,
   outputSize,
   overlaySize,
+  overlayOpacity,
 }) => {
   // Note: Canvas export will fail if any image is loaded without CORS headers.
   const canvas = document.createElement('canvas');
@@ -262,6 +264,7 @@ export const renderMockupToCanvas = ({
     uniform mat3 u_hinv;
     uniform vec2 u_overlaySize;
     uniform vec2 u_canvasSize;
+    uniform float u_opacity;
     void main() {
       vec2 fragPos = gl_FragCoord.xy;
       float x = fragPos.x;
@@ -275,7 +278,9 @@ export const renderMockupToCanvas = ({
       if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) {
         discard;
       }
-      gl_FragColor = texture2D(u_overlay, uv);
+      vec4 color = texture2D(u_overlay, uv);
+      color.a *= u_opacity;
+      gl_FragColor = color;
     }
   `;
 
@@ -300,63 +305,90 @@ export const renderMockupToCanvas = ({
   gl.bindTexture(gl.TEXTURE_2D, baseTexture);
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
-  // Draw overlay using inverse homography
-  const overlayProgram = createProgram(gl, vertexSource, fragmentOverlaySource);
-  gl.useProgram(overlayProgram);
-  const overlayPosition = gl.getAttribLocation(overlayProgram, 'a_position');
-  gl.enableVertexAttribArray(overlayPosition);
-  gl.vertexAttribPointer(overlayPosition, 2, gl.FLOAT, false, 0, 0);
+  const overlayList =
+    overlays && overlays.length
+      ? overlays
+      : overlayImage && corners
+        ? [
+            {
+              image: overlayImage,
+              corners,
+              size: overlaySize,
+              hidden: false,
+            },
+          ]
+        : [];
 
-  gl.enable(gl.BLEND);
-  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  if (overlayList.length) {
+    const overlayProgram = createProgram(gl, vertexSource, fragmentOverlaySource);
+    gl.useProgram(overlayProgram);
+    const overlayPosition = gl.getAttribLocation(overlayProgram, 'a_position');
+    gl.enableVertexAttribArray(overlayPosition);
+    gl.vertexAttribPointer(overlayPosition, 2, gl.FLOAT, false, 0, 0);
 
-  const overlayTexture = createTexture(gl, overlayImage);
-  const overlaySampler = gl.getUniformLocation(overlayProgram, 'u_overlay');
-  gl.uniform1i(overlaySampler, 0);
-  gl.activeTexture(gl.TEXTURE0);
-  gl.bindTexture(gl.TEXTURE_2D, overlayTexture);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-  const overlayWidth =
-    overlaySize?.width || overlayImage.naturalWidth || overlayImage.width || 0;
-  const overlayHeight =
-    overlaySize?.height || overlayImage.naturalHeight || overlayImage.height || 0;
-  if (!overlayWidth || !overlayHeight) {
-    throw new Error('Invalid overlay image size');
+    const overlaySampler = gl.getUniformLocation(overlayProgram, 'u_overlay');
+    gl.uniform1i(overlaySampler, 0);
+    gl.activeTexture(gl.TEXTURE0);
+
+    const overlaySizeLocation = gl.getUniformLocation(overlayProgram, 'u_overlaySize');
+    const canvasSizeLocation = gl.getUniformLocation(overlayProgram, 'u_canvasSize');
+    gl.uniform2f(canvasSizeLocation, canvas.width, canvas.height);
+    const opacityLocation = gl.getUniformLocation(overlayProgram, 'u_opacity');
+    const safeOpacity =
+      typeof overlayOpacity === 'number' ? Math.max(0, Math.min(1, overlayOpacity)) : 1;
+    gl.uniform1f(opacityLocation, safeOpacity);
+
+    overlayList.forEach(overlay => {
+      if (!overlay || overlay.hidden) return;
+      const image = overlay.image;
+      if (!image) return;
+
+      const overlayWidth =
+        overlay.size?.width || image.naturalWidth || image.width || 0;
+      const overlayHeight =
+        overlay.size?.height || image.naturalHeight || image.height || 0;
+      if (!overlayWidth || !overlayHeight) {
+        return;
+      }
+
+      const h = computeHomography(
+        { width: overlayWidth, height: overlayHeight },
+        overlay.corners,
+        outputSize
+      );
+      const hinv = invertHomography(h);
+      if (!hinv) {
+        return;
+      }
+
+      const overlayTexture = createTexture(gl, image);
+      gl.bindTexture(gl.TEXTURE_2D, overlayTexture);
+
+      const hinvLocation = gl.getUniformLocation(overlayProgram, 'u_hinv');
+      gl.uniformMatrix3fv(
+        hinvLocation,
+        false,
+        new Float32Array([
+          // Column-major order for GLSL mat3
+          hinv[0][0],
+          hinv[1][0],
+          hinv[2][0],
+          hinv[0][1],
+          hinv[1][1],
+          hinv[2][1],
+          hinv[0][2],
+          hinv[1][2],
+          hinv[2][2],
+        ])
+      );
+      gl.uniform2f(overlaySizeLocation, overlayWidth, overlayHeight);
+
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    });
   }
-
-  const h = computeHomography(
-    { width: overlayWidth, height: overlayHeight },
-    corners,
-    outputSize
-  );
-  const hinv = invertHomography(h);
-  if (!hinv) {
-    throw new Error('Invalid transform');
-  }
-
-  const hinvLocation = gl.getUniformLocation(overlayProgram, 'u_hinv');
-  gl.uniformMatrix3fv(
-    hinvLocation,
-    false,
-    new Float32Array([
-      // Column-major order for GLSL mat3
-      hinv[0][0],
-      hinv[1][0],
-      hinv[2][0],
-      hinv[0][1],
-      hinv[1][1],
-      hinv[2][1],
-      hinv[0][2],
-      hinv[1][2],
-      hinv[2][2],
-    ])
-  );
-  const overlaySizeLocation = gl.getUniformLocation(overlayProgram, 'u_overlaySize');
-  gl.uniform2f(overlaySizeLocation, overlayWidth, overlayHeight);
-  const canvasSizeLocation = gl.getUniformLocation(overlayProgram, 'u_canvasSize');
-  gl.uniform2f(canvasSizeLocation, canvas.width, canvas.height);
-
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
   return canvas;
 };

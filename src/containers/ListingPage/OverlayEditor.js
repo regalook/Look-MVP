@@ -25,7 +25,8 @@ const OverlayEditor = props => {
   const {
     baseImageUrl,
     overlayState,
-    onOverlayImageChange,
+    onOverlayAdd,
+    onOverlaySetActive,
     onOverlayCornersChange,
     onOverlayOpacityChange,
     onOverlayReset,
@@ -35,7 +36,7 @@ const OverlayEditor = props => {
   const fileInputRef = useRef(null);
   const rafRef = useRef(null);
   const draggingRef = useRef(null);
-  const cornersRef = useRef(overlayState?.corners || DEFAULT_CORNERS);
+  const cornersRef = useRef(DEFAULT_CORNERS);
   const [baseSize, setBaseSize] = useState({ width: 0, height: 0 });
   const handleBaseImageLoad = () => {
     const rect = imgRef.current?.getBoundingClientRect();
@@ -44,9 +45,22 @@ const OverlayEditor = props => {
     }
   };
 
+  const overlays = overlayState?.overlays || [];
+  const activeOverlayId = overlayState?.activeOverlayId || overlays[0]?.id || null;
+  const activeOverlay = overlays.find(item => item.id === activeOverlayId) || overlays[0] || null;
+  const activeCorners = activeOverlay?.corners || DEFAULT_CORNERS;
+  const opacity = typeof overlayState?.opacity === 'number' ? overlayState.opacity : DEFAULT_OPACITY;
+
   useEffect(() => {
-    cornersRef.current = overlayState?.corners || DEFAULT_CORNERS;
-  }, [overlayState?.corners]);
+    cornersRef.current = activeCorners;
+  }, [activeCorners]);
+
+  useEffect(() => {
+    if (!overlays.length) return;
+    if (!activeOverlayId || !overlays.some(item => item.id === activeOverlayId)) {
+      onOverlaySetActive(overlays[0].id);
+    }
+  }, [overlays, activeOverlayId, onOverlaySetActive]);
 
   useEffect(() => {
     const img = imgRef.current;
@@ -78,28 +92,31 @@ const OverlayEditor = props => {
     };
   }, [baseImageUrl]);
 
-  useEffect(() => {
-    if (overlayState?.image && !overlayState?.corners) {
-      onOverlayReset(DEFAULT_CORNERS);
+  const overlayTransforms = useMemo(() => {
+    if (!baseSize.width || !baseSize.height) {
+      return {};
     }
-  }, [overlayState?.image, overlayState?.corners, onOverlayReset]);
+    return overlays.reduce((acc, overlay) => {
+      const image = overlay?.image;
+      if (!image) {
+        return acc;
+      }
+      const corners = overlay.corners || DEFAULT_CORNERS;
+      const h = computeHomography(
+        { width: image.naturalWidth, height: image.naturalHeight },
+        corners,
+        baseSize
+      );
+      const matrix = homographyToCssMatrix3d(h);
+      if (matrix) {
+        acc[overlay.id] = `matrix3d(${matrix.join(',')})`;
+      }
+      return acc;
+    }, {});
+  }, [overlays, baseSize]);
 
-  const overlayImage = overlayState?.image;
-  const opacity = typeof overlayState?.opacity === 'number' ? overlayState.opacity : DEFAULT_OPACITY;
-  const corners = overlayState?.corners || DEFAULT_CORNERS;
-
-  const overlayTransform = useMemo(() => {
-    if (!overlayImage || !baseSize.width || !baseSize.height) {
-      return null;
-    }
-    const h = computeHomography(
-      { width: overlayImage.naturalWidth, height: overlayImage.naturalHeight },
-      corners,
-      baseSize
-    );
-    const matrix = homographyToCssMatrix3d(h);
-    return matrix ? `matrix3d(${matrix.join(',')})` : null;
-  }, [overlayImage, corners, baseSize]);
+  const createOverlayId = () =>
+    `overlay-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 
   const handleFileChange = event => {
     const file = event.target.files && event.target.files[0];
@@ -110,17 +127,21 @@ const OverlayEditor = props => {
       const url = e.target.result;
       const img = new Image();
       img.onload = () => {
-        onOverlayImageChange({
-          url,
-          name: file.name,
-          naturalWidth: img.naturalWidth,
-          naturalHeight: img.naturalHeight,
+        onOverlayAdd({
+          id: createOverlayId(),
+          image: {
+            url,
+            name: file.name,
+            naturalWidth: img.naturalWidth,
+            naturalHeight: img.naturalHeight,
+          },
+          corners: DEFAULT_CORNERS,
         });
-        onOverlayReset(DEFAULT_CORNERS);
       };
       img.src = url;
     };
     reader.readAsDataURL(file);
+    event.target.value = '';
   };
 
   const updateCorner = useCallback(
@@ -165,9 +186,11 @@ const OverlayEditor = props => {
       }
 
       cornersRef.current = nextCorners;
-      onOverlayCornersChange(nextCorners);
+      if (activeOverlayId) {
+        onOverlayCornersChange({ id: activeOverlayId, corners: nextCorners });
+      }
     },
-    [onOverlayCornersChange]
+    [onOverlayCornersChange, activeOverlayId]
   );
 
   const handlePointerMove = useCallback(
@@ -213,21 +236,12 @@ const OverlayEditor = props => {
     window.addEventListener('pointercancel', handlePointerUp);
   };
 
-  const cornersInDisplay = baseSize.width
+  const cornersInDisplay = baseSize.width && activeCorners
     ? {
-        tl: toDisplayPoint(corners.tl, baseSize),
-        tr: toDisplayPoint(corners.tr, baseSize),
-        br: toDisplayPoint(corners.br, baseSize),
-        bl: toDisplayPoint(corners.bl, baseSize),
-      }
-    : null;
-
-  const overlayStyle = overlayTransform
-    ? {
-        transform: overlayTransform,
-        opacity,
-        width: `${overlayImage?.naturalWidth || 0}px`,
-        height: `${overlayImage?.naturalHeight || 0}px`,
+        tl: toDisplayPoint(activeCorners.tl, baseSize),
+        tr: toDisplayPoint(activeCorners.tr, baseSize),
+        br: toDisplayPoint(activeCorners.br, baseSize),
+        bl: toDisplayPoint(activeCorners.bl, baseSize),
       }
     : null;
 
@@ -243,19 +257,29 @@ const OverlayEditor = props => {
     });
 
   const handleDownload = async () => {
-    if (!overlayImage || !baseImageUrl) return;
+    if (!overlays.length || !baseImageUrl) return;
     try {
       const baseImg = await loadImage(baseImageUrl, 'anonymous');
-      const overlayImg = await loadImage(overlayImage.url, 'anonymous');
+      const overlayAssets = await Promise.all(
+        overlays.map(async overlay => {
+          const image = overlay.image;
+          if (!image) return null;
+          const loaded = await loadImage(image.url, 'anonymous');
+          return {
+            id: overlay.id,
+            image: loaded,
+            corners: overlay.corners || DEFAULT_CORNERS,
+            size: { width: image.naturalWidth, height: image.naturalHeight },
+            hidden: overlay.hidden,
+          };
+        })
+      );
 
       const canvas = renderMockupToCanvas({
         baseImage: baseImg,
-        overlayImage: overlayImg,
-        corners,
+        overlays: overlayAssets.filter(Boolean),
         outputSize: { width: baseImg.naturalWidth, height: baseImg.naturalHeight },
-        overlaySize: overlayImage
-          ? { width: overlayImage.naturalWidth, height: overlayImage.naturalHeight }
-          : null,
+        overlayOpacity: opacity,
       });
 
       canvas.toBlob(blob => {
@@ -291,17 +315,37 @@ const OverlayEditor = props => {
             accept="image/*"
             onChange={handleFileChange}
           />
-          <PrimaryButton type="button" onClick={() => fileInputRef.current?.click()}>
-            <FormattedMessage id="ListingPage.overlayEditor.upload" />
+          <PrimaryButton
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className={css.primaryAction}
+          >
+            <FormattedMessage
+              id={
+                overlays.length
+                  ? 'ListingPage.overlayEditor.add'
+                  : 'ListingPage.overlayEditor.upload'
+              }
+            />
           </PrimaryButton>
           <SecondaryButton
             type="button"
-            onClick={() => onOverlayReset(DEFAULT_CORNERS)}
-            disabled={!overlayImage}
+            onClick={() =>
+              activeOverlayId
+                ? onOverlayReset({ id: activeOverlayId, corners: DEFAULT_CORNERS })
+                : null
+            }
+            disabled={!activeOverlayId}
+            className={css.secondaryAction}
           >
             <FormattedMessage id="ListingPage.overlayEditor.reset" />
           </SecondaryButton>
-          <SecondaryButton type="button" onClick={handleDownload} disabled={!overlayImage}>
+          <SecondaryButton
+            type="button"
+            onClick={handleDownload}
+            disabled={!overlays.length}
+            className={css.downloadAction}
+          >
             <FormattedMessage id="ListingPage.overlayEditor.download" />
           </SecondaryButton>
         </div>
@@ -319,7 +363,7 @@ const OverlayEditor = props => {
           step="0.01"
           value={opacity}
           onChange={e => onOverlayOpacityChange(Number.parseFloat(e.target.value))}
-          disabled={!overlayImage}
+          disabled={!overlays.length}
           className={css.slider}
           aria-label={intl.formatMessage({ id: 'ListingPage.overlayEditor.opacity' })}
         />
@@ -334,17 +378,31 @@ const OverlayEditor = props => {
             className={css.baseImage}
             onLoad={handleBaseImageLoad}
           />
-          {overlayImage ? (
-            <img
-              src={overlayImage.url}
-              alt={overlayImage.name || ''}
-              className={classNames(css.overlayImage, {
-                [css.overlayVisible]: overlayTransform,
-              })}
-              style={overlayStyle}
-            />
-          ) : null}
-          {overlayImage && cornersInDisplay ? (
+          {overlays.map(overlay => {
+            const image = overlay.image;
+            if (!image) return null;
+            const transform = overlayTransforms[overlay.id];
+            if (!transform) return null;
+            return (
+              <img
+                key={overlay.id}
+                src={image.url}
+                alt={image.name || ''}
+                className={classNames(css.overlayImage, {
+                  [css.overlayVisible]: transform,
+                  [css.overlayActive]: overlay.id === activeOverlayId,
+                })}
+                style={{
+                  transform,
+                  opacity,
+                  width: `${image.naturalWidth || 0}px`,
+                  height: `${image.naturalHeight || 0}px`,
+                }}
+                onPointerDown={() => onOverlaySetActive(overlay.id)}
+              />
+            );
+          })}
+          {activeOverlay && cornersInDisplay ? (
             <div
               className={css.handlesLayer}
               onPointerMove={handlePointerMove}
