@@ -221,7 +221,13 @@ const getWebGLContext = canvas => {
   return gl;
 };
 
-export const renderMockupToCanvas = ({ baseImage, overlayImage, corners, outputSize }) => {
+export const renderMockupToCanvas = ({
+  baseImage,
+  overlayImage,
+  corners,
+  outputSize,
+  overlaySize,
+}) => {
   // Note: Canvas export will fail if any image is loaded without CORS headers.
   const canvas = document.createElement('canvas');
   canvas.width = outputSize.width;
@@ -310,8 +316,16 @@ export const renderMockupToCanvas = ({ baseImage, overlayImage, corners, outputS
   gl.activeTexture(gl.TEXTURE0);
   gl.bindTexture(gl.TEXTURE_2D, overlayTexture);
 
+  const overlayWidth =
+    overlaySize?.width || overlayImage.naturalWidth || overlayImage.width || 0;
+  const overlayHeight =
+    overlaySize?.height || overlayImage.naturalHeight || overlayImage.height || 0;
+  if (!overlayWidth || !overlayHeight) {
+    throw new Error('Invalid overlay image size');
+  }
+
   const h = computeHomography(
-    { width: overlayImage.naturalWidth, height: overlayImage.naturalHeight },
+    { width: overlayWidth, height: overlayHeight },
     corners,
     outputSize
   );
@@ -325,19 +339,20 @@ export const renderMockupToCanvas = ({ baseImage, overlayImage, corners, outputS
     hinvLocation,
     false,
     new Float32Array([
+      // Column-major order for GLSL mat3
       hinv[0][0],
-      hinv[0][1],
-      hinv[0][2],
       hinv[1][0],
-      hinv[1][1],
-      hinv[1][2],
       hinv[2][0],
+      hinv[0][1],
+      hinv[1][1],
       hinv[2][1],
+      hinv[0][2],
+      hinv[1][2],
       hinv[2][2],
     ])
   );
   const overlaySizeLocation = gl.getUniformLocation(overlayProgram, 'u_overlaySize');
-  gl.uniform2f(overlaySizeLocation, overlayImage.naturalWidth, overlayImage.naturalHeight);
+  gl.uniform2f(overlaySizeLocation, overlayWidth, overlayHeight);
   const canvasSizeLocation = gl.getUniformLocation(overlayProgram, 'u_canvasSize');
   gl.uniform2f(canvasSizeLocation, canvas.width, canvas.height);
 

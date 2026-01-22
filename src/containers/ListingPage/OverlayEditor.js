@@ -253,6 +253,9 @@ const OverlayEditor = props => {
         overlayImage: overlayImg,
         corners,
         outputSize: { width: baseImg.naturalWidth, height: baseImg.naturalHeight },
+        overlaySize: overlayImage
+          ? { width: overlayImage.naturalWidth, height: overlayImage.naturalHeight }
+          : null,
       });
 
       canvas.toBlob(blob => {
