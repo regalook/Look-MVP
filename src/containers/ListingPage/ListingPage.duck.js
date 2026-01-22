@@ -398,6 +398,28 @@ const listingPageSlice = createSlice({
     setActiveOverlay: (state, action) => {
       state.overlayEditor.activeOverlayId = action.payload;
     },
+    deleteOverlay: (state, action) => {
+      const id = action.payload;
+      const nextOverlays = state.overlayEditor.overlays.filter(item => item.id !== id);
+      state.overlayEditor.overlays = nextOverlays;
+      if (state.overlayEditor.activeOverlayId === id) {
+        state.overlayEditor.activeOverlayId = nextOverlays[0]?.id || null;
+      }
+    },
+    updateOverlayImage: (state, action) => {
+      const { id, image } = action.payload || {};
+      const overlay = state.overlayEditor.overlays.find(item => item.id === id);
+      if (overlay) {
+        overlay.image = image;
+      }
+    },
+    toggleOverlayVisibility: (state, action) => {
+      const id = action.payload;
+      const overlay = state.overlayEditor.overlays.find(item => item.id === id);
+      if (overlay) {
+        overlay.hidden = !overlay.hidden;
+      }
+    },
     setOverlayCorners: (state, action) => {
       const { id, corners } = action.payload || {};
       const overlay = state.overlayEditor.overlays.find(item => item.id === id);
@@ -533,6 +555,9 @@ export const {
   setInitialValues,
   addOverlay,
   setActiveOverlay,
+  deleteOverlay,
+  updateOverlayImage,
+  toggleOverlayVisibility,
   setOverlayCorners,
   setOverlayOpacity,
   resetOverlayEditor,

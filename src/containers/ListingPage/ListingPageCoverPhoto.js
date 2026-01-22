@@ -71,6 +71,9 @@ import {
   fetchTransactionLineItems,
   addOverlay,
   setActiveOverlay,
+  deleteOverlay,
+  updateOverlayImage,
+  toggleOverlayVisibility,
   setOverlayCorners,
   setOverlayOpacity,
   resetOverlayEditor,
@@ -447,6 +450,9 @@ export const ListingPageComponent = props => {
                 overlayState={overlayEditor}
                 onOverlayAdd={onOverlayAdd}
                 onOverlaySetActive={onOverlaySetActive}
+                onOverlayDelete={onOverlayDelete}
+                onOverlayReplace={onOverlayReplace}
+                onOverlayToggleVisibility={onOverlayToggleVisibility}
                 onOverlayCornersChange={onOverlayCornersChange}
                 onOverlayOpacityChange={onOverlayOpacityChange}
                 onOverlayReset={onOverlayReset}
@@ -678,6 +684,9 @@ const mapDispatchToProps = dispatch => ({
     dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)), // for OrderPanel
   onOverlayAdd: payload => dispatch(addOverlay(payload)),
   onOverlaySetActive: id => dispatch(setActiveOverlay(id)),
+  onOverlayDelete: id => dispatch(deleteOverlay(id)),
+  onOverlayReplace: payload => dispatch(updateOverlayImage(payload)),
+  onOverlayToggleVisibility: id => dispatch(toggleOverlayVisibility(id)),
   onOverlayCornersChange: payload => dispatch(setOverlayCorners(payload)),
   onOverlayOpacityChange: value => dispatch(setOverlayOpacity(value)),
   onOverlayReset: payload => dispatch(resetOverlayEditor(payload)),

@@ -27,6 +27,9 @@ const OverlayEditor = props => {
     overlayState,
     onOverlayAdd,
     onOverlaySetActive,
+    onOverlayDelete,
+    onOverlayReplace,
+    onOverlayToggleVisibility,
     onOverlayCornersChange,
     onOverlayOpacityChange,
     onOverlayReset,
@@ -34,6 +37,8 @@ const OverlayEditor = props => {
   const intl = useIntl();
   const imgRef = useRef(null);
   const fileInputRef = useRef(null);
+  const replaceInputRef = useRef(null);
+  const replaceTargetRef = useRef(null);
   const rafRef = useRef(null);
   const draggingRef = useRef(null);
   const cornersRef = useRef(DEFAULT_CORNERS);
@@ -144,6 +149,33 @@ const OverlayEditor = props => {
     event.target.value = '';
   };
 
+  const handleReplaceFileChange = event => {
+    const file = event.target.files && event.target.files[0];
+    const targetId = replaceTargetRef.current;
+    if (!file || !targetId) return;
+
+    const reader = new FileReader();
+    reader.onload = e => {
+      const url = e.target.result;
+      const img = new Image();
+      img.onload = () => {
+        onOverlayReplace({
+          id: targetId,
+          image: {
+            url,
+            name: file.name,
+            naturalWidth: img.naturalWidth,
+            naturalHeight: img.naturalHeight,
+          },
+        });
+      };
+      img.src = url;
+    };
+    reader.readAsDataURL(file);
+    event.target.value = '';
+    replaceTargetRef.current = null;
+  };
+
   const updateCorner = useCallback(
     (cornerKey, nextPoint, constrain) => {
       const current = cornersRef.current || DEFAULT_CORNERS;
@@ -193,10 +225,25 @@ const OverlayEditor = props => {
     [onOverlayCornersChange, activeOverlayId]
   );
 
+  const pointInQuad = (point, quad) => {
+    const vertices = [quad.tl, quad.tr, quad.br, quad.bl];
+    let inside = false;
+    for (let i = 0, j = vertices.length - 1; i < vertices.length; j = i++) {
+      const xi = vertices[i].x;
+      const yi = vertices[i].y;
+      const xj = vertices[j].x;
+      const yj = vertices[j].y;
+      const intersect =
+        yi > point.y !== yj > point.y &&
+        point.x < ((xj - xi) * (point.y - yi)) / (yj - yi) + xi;
+      if (intersect) inside = !inside;
+    }
+    return inside;
+  };
+
   const handlePointerMove = useCallback(
     event => {
       if (!draggingRef.current || !baseSize.width || !baseSize.height) return;
-      const { cornerKey } = draggingRef.current;
       const rect = imgRef.current?.getBoundingClientRect();
       if (!rect) return;
 
@@ -204,16 +251,32 @@ const OverlayEditor = props => {
       const y = event.clientY - rect.top;
       const nextPoint = toNormalizedPoint({ x, y }, baseSize);
 
-      const isConstrained = event.shiftKey === true;
-
       if (rafRef.current) {
         cancelAnimationFrame(rafRef.current);
       }
       rafRef.current = requestAnimationFrame(() => {
-        updateCorner(cornerKey, nextPoint, isConstrained);
+        if (draggingRef.current?.type === 'corner') {
+          const { cornerKey } = draggingRef.current;
+          const isConstrained = event.shiftKey === true;
+          updateCorner(cornerKey, nextPoint, isConstrained);
+        } else if (draggingRef.current?.type === 'move') {
+          const { startPoint, startCorners, overlayId } = draggingRef.current;
+          const deltaX = nextPoint.x - startPoint.x;
+          const deltaY = nextPoint.y - startPoint.y;
+          const nextCorners = {
+            tl: { x: startCorners.tl.x + deltaX, y: startCorners.tl.y + deltaY },
+            tr: { x: startCorners.tr.x + deltaX, y: startCorners.tr.y + deltaY },
+            br: { x: startCorners.br.x + deltaX, y: startCorners.br.y + deltaY },
+            bl: { x: startCorners.bl.x + deltaX, y: startCorners.bl.y + deltaY },
+          };
+          cornersRef.current = nextCorners;
+          if (overlayId) {
+            onOverlayCornersChange({ id: overlayId, corners: nextCorners });
+          }
+        }
       });
     },
-    [baseSize, updateCorner]
+    [baseSize, updateCorner, onOverlayCornersChange]
   );
 
   const handlePointerUp = useCallback(event => {
@@ -229,7 +292,36 @@ const OverlayEditor = props => {
 
   const startDrag = cornerKey => event => {
     if (!baseSize.width || !baseSize.height) return;
-    draggingRef.current = { cornerKey };
+    draggingRef.current = { type: 'corner', cornerKey, overlayId: activeOverlayId };
+    event.currentTarget.setPointerCapture(event.pointerId);
+    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointerup', handlePointerUp);
+    window.addEventListener('pointercancel', handlePointerUp);
+  };
+
+  const startMove = (event, overlay, corners) => {
+    if (!overlay || !baseSize.width || !baseSize.height) return;
+    const rect = imgRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const point = { x, y };
+    const displayCorners = {
+      tl: toDisplayPoint(corners.tl, baseSize),
+      tr: toDisplayPoint(corners.tr, baseSize),
+      br: toDisplayPoint(corners.br, baseSize),
+      bl: toDisplayPoint(corners.bl, baseSize),
+    };
+    if (!pointInQuad(point, displayCorners)) {
+      return;
+    }
+    const normalizedPoint = toNormalizedPoint(point, baseSize);
+    draggingRef.current = {
+      type: 'move',
+      startPoint: normalizedPoint,
+      startCorners: { ...corners },
+      overlayId: overlay.id,
+    };
     event.currentTarget.setPointerCapture(event.pointerId);
     window.addEventListener('pointermove', handlePointerMove);
     window.addEventListener('pointerup', handlePointerUp);
@@ -307,13 +399,20 @@ const OverlayEditor = props => {
         <div className={css.title}>
           <FormattedMessage id="ListingPage.overlayEditor.title" />
         </div>
-        <div className={css.controls}>
+        <div className={css.topActions}>
           <input
             ref={fileInputRef}
             className={css.fileInput}
             type="file"
             accept="image/*"
             onChange={handleFileChange}
+          />
+          <input
+            ref={replaceInputRef}
+            className={css.fileInput}
+            type="file"
+            accept="image/*"
+            onChange={handleReplaceFileChange}
           />
           <PrimaryButton
             type="button"
@@ -351,22 +450,24 @@ const OverlayEditor = props => {
         </div>
       </div>
 
-      <div className={css.sliderRow}>
-        <label className={css.sliderLabel} htmlFor="overlay-opacity">
-          <FormattedMessage id="ListingPage.overlayEditor.opacity" />
-        </label>
-        <input
-          id="overlay-opacity"
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={opacity}
-          onChange={e => onOverlayOpacityChange(Number.parseFloat(e.target.value))}
-          disabled={!overlays.length}
-          className={css.slider}
-          aria-label={intl.formatMessage({ id: 'ListingPage.overlayEditor.opacity' })}
-        />
+      <div className={css.controlsRow}>
+        <div className={css.sliderRow}>
+          <label className={css.sliderLabel} htmlFor="overlay-opacity">
+            <FormattedMessage id="ListingPage.overlayEditor.opacity" />
+          </label>
+          <input
+            id="overlay-opacity"
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={opacity}
+            onChange={e => onOverlayOpacityChange(Number.parseFloat(e.target.value))}
+            disabled={!overlays.length}
+            className={css.slider}
+            aria-label={intl.formatMessage({ id: 'ListingPage.overlayEditor.opacity' })}
+          />
+        </div>
       </div>
 
       <div className={css.editor}>
@@ -380,7 +481,7 @@ const OverlayEditor = props => {
           />
           {overlays.map(overlay => {
             const image = overlay.image;
-            if (!image) return null;
+            if (!image || overlay.hidden) return null;
             const transform = overlayTransforms[overlay.id];
             if (!transform) return null;
             return (
@@ -398,7 +499,10 @@ const OverlayEditor = props => {
                   width: `${image.naturalWidth || 0}px`,
                   height: `${image.naturalHeight || 0}px`,
                 }}
-                onPointerDown={() => onOverlaySetActive(overlay.id)}
+                onPointerDown={event => {
+                  onOverlaySetActive(overlay.id);
+                  startMove(event, overlay, overlay.corners || DEFAULT_CORNERS);
+                }}
               />
             );
           })}
@@ -429,6 +533,99 @@ const OverlayEditor = props => {
 
       <div className={css.helperText}>
         <FormattedMessage id="ListingPage.overlayEditor.helper" />
+      </div>
+
+      <div className={css.panel}>
+        <div className={css.panelHeader}>
+          <div className={css.panelTitle}>
+            <FormattedMessage id="ListingPage.overlayEditor.overlays" />
+          </div>
+          <div className={css.panelHint}>
+            <FormattedMessage id="ListingPage.overlayEditor.overlaysHint" />
+          </div>
+        </div>
+        <div className={css.panelList}>
+          {overlays.length ? (
+            overlays.map((overlay, index) => {
+              const isActive = overlay.id === activeOverlayId;
+              return (
+                <div
+                  key={overlay.id}
+                  className={classNames(css.panelItem, { [css.panelItemActive]: isActive })}
+                >
+                  <button
+                    type="button"
+                    className={css.panelSelect}
+                    onClick={() => onOverlaySetActive(overlay.id)}
+                  >
+                    <div className={css.panelThumb}>
+                      {overlay.image ? (
+                        <img src={overlay.image.url} alt="" className={css.panelThumbImage} />
+                      ) : (
+                        <span className={css.panelThumbPlaceholder}>{index + 1}</span>
+                      )}
+                    </div>
+                    <div className={css.panelMeta}>
+                      <div className={css.panelName}>
+                        {overlay.image?.name ||
+                          intl.formatMessage(
+                            { id: 'ListingPage.overlayEditor.unnamed' },
+                            { index: index + 1 }
+                          )}
+                      </div>
+                      <div className={css.panelSub}>
+                        <FormattedMessage
+                          id="ListingPage.overlayEditor.overlayIndex"
+                          values={{ index: index + 1 }}
+                        />
+                      </div>
+                    </div>
+                  </button>
+                  <div className={css.panelActions}>
+                    <button
+                      type="button"
+                      className={css.panelAction}
+                      onClick={event => {
+                        onOverlayToggleVisibility(overlay.id);
+                      }}
+                    >
+                      <FormattedMessage
+                        id={
+                          overlay.hidden
+                            ? 'ListingPage.overlayEditor.show'
+                            : 'ListingPage.overlayEditor.hide'
+                        }
+                      />
+                    </button>
+                    <button
+                      type="button"
+                      className={css.panelAction}
+                      onClick={event => {
+                        replaceTargetRef.current = overlay.id;
+                        replaceInputRef.current?.click();
+                      }}
+                    >
+                      <FormattedMessage id="ListingPage.overlayEditor.replace" />
+                    </button>
+                    <button
+                      type="button"
+                      className={css.panelActionDanger}
+                      onClick={event => {
+                        onOverlayDelete(overlay.id);
+                      }}
+                    >
+                      <FormattedMessage id="ListingPage.overlayEditor.delete" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <div className={css.panelEmpty}>
+              <FormattedMessage id="ListingPage.overlayEditor.empty" />
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );
