@@ -571,6 +571,7 @@
   "ListingPage.overlayEditor.title": "Editor de maqueta",
   "ListingPage.overlayEditor.upload": "Subir overlay",
   "ListingPage.overlayEditor.reset": "Restablecer",
+  "ListingPage.overlayEditor.download": "Descargar maqueta",
   "ListingPage.overlayEditor.opacity": "Opacidad del overlay",
   "ListingPage.overlayEditor.helper": "Arrastra las esquinas para ajustar el overlay. Mantén Shift para conservar el rectángulo.",
   "ListingPage.overlayEditor.handleLabel": "Esquina del overlay {corner}",

@@ -573,6 +573,7 @@
   "ListingPage.overlayEditor.title": "Ad mockup editor",
   "ListingPage.overlayEditor.upload": "Upload overlay",
   "ListingPage.overlayEditor.reset": "Reset",
+  "ListingPage.overlayEditor.download": "Download mockup",
   "ListingPage.overlayEditor.opacity": "Overlay opacity",
   "ListingPage.overlayEditor.helper": "Drag the corner handles to fit the overlay. Hold Shift to keep a rectangle.",
   "ListingPage.overlayEditor.handleLabel": "Overlay corner {corner}",

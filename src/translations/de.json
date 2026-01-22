@@ -566,6 +566,7 @@
   "ListingPage.overlayEditor.title": "Mockup-Editor",
   "ListingPage.overlayEditor.upload": "Overlay hochladen",
   "ListingPage.overlayEditor.reset": "Zurücksetzen",
+  "ListingPage.overlayEditor.download": "Mockup herunterladen",
   "ListingPage.overlayEditor.opacity": "Overlay-Deckkraft",
   "ListingPage.overlayEditor.helper": "Ziehe die Ecken, um das Overlay anzupassen. Halte Shift, um das Rechteck zu behalten.",
   "ListingPage.overlayEditor.handleLabel": "Overlay-Ecke {corner}",
