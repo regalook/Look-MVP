@@ -429,18 +429,6 @@ const OverlayEditor = props => {
           </PrimaryButton>
           <SecondaryButton
             type="button"
-            onClick={() =>
-              activeOverlayId
-                ? onOverlayReset({ id: activeOverlayId, corners: DEFAULT_CORNERS })
-                : null
-            }
-            disabled={!activeOverlayId}
-            className={css.secondaryAction}
-          >
-            <FormattedMessage id="ListingPage.overlayEditor.reset" />
-          </SecondaryButton>
-          <SecondaryButton
-            type="button"
             onClick={handleDownload}
             disabled={!overlays.length}
             className={css.downloadAction}
