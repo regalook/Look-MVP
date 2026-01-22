@@ -69,6 +69,10 @@ import {
   setInitialValues,
   fetchTimeSlots,
   fetchTransactionLineItems,
+  setOverlayImage,
+  setOverlayCorners,
+  setOverlayOpacity,
+  resetOverlayEditor,
 } from './ListingPage.duck';
 
 import {
@@ -90,6 +94,7 @@ import SectionAuthorMaybe from './SectionAuthorMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
 import CustomListingFields from './CustomListingFields';
 import ActionBarMaybe from './ActionBarMaybe';
+import OverlayEditor from './OverlayEditor';
 
 import css from './ListingPage.module.css';
 
@@ -128,6 +133,11 @@ export const ListingPageComponent = props => {
     callSetInitialValues,
     onSendInquiry,
     onInitializeCardPaymentData,
+    overlayEditor,
+    onOverlayImageChange,
+    onOverlayCornersChange,
+    onOverlayOpacityChange,
+    onOverlayReset,
     config,
     routeConfiguration,
     showOwnListingsOnly,
@@ -193,6 +203,12 @@ export const ListingPageComponent = props => {
     publicData = {},
     metadata = {},
   } = currentListing.attributes;
+  const overlayImageVariant =
+    listingImages(currentListing, 'scaled-large')[0] ||
+    listingImages(currentListing, 'scaled-medium')[0] ||
+    listingImages(currentListing, 'scaled-small')[0] ||
+    listingImages(currentListing, 'scaled-xlarge')[0];
+  const overlayBaseImageUrl = overlayImageVariant?.url;
 
   const richTitle = (
     <span>
@@ -207,6 +223,7 @@ export const ListingPageComponent = props => {
   const userAndListingAuthorAvailable = !!(currentUser && authorAvailable);
   const isOwnListing =
     userAndListingAuthorAvailable && currentListing.author.id.uuid === currentUser.id.uuid;
+  const showOverlayEditor = !isOwnListing && !!overlayBaseImageUrl;
 
   const { listingType, transactionProcessAlias, unitType } = publicData;
   if (!(listingType && transactionProcessAlias && unitType)) {
@@ -422,6 +439,16 @@ export const ListingPageComponent = props => {
               )}
             </div>
             <SectionTextMaybe text={description} showAsIngress />
+            {showOverlayEditor ? (
+              <OverlayEditor
+                baseImageUrl={overlayBaseImageUrl}
+                overlayState={overlayEditor}
+                onOverlayImageChange={onOverlayImageChange}
+                onOverlayCornersChange={onOverlayCornersChange}
+                onOverlayOpacityChange={onOverlayOpacityChange}
+                onOverlayReset={onOverlayReset}
+              />
+            ) : null}
 
             <CustomListingFields
               publicData={publicData}
@@ -599,6 +626,7 @@ const mapStateToProps = state => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     inquiryModalOpenForListingId,
+    overlayEditor,
   } = state.ListingPage;
   const { currentUser } = state.user;
 
@@ -631,6 +659,7 @@ const mapStateToProps = state => {
     fetchLineItemsError, // for OrderPanel
     sendInquiryInProgress,
     sendInquiryError,
+    overlayEditor,
   };
 };
 
@@ -644,6 +673,10 @@ const mapDispatchToProps = dispatch => ({
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
   onFetchTimeSlots: (listingId, start, end, timeZone, options) =>
     dispatch(fetchTimeSlots(listingId, start, end, timeZone, options)), // for OrderPanel
+  onOverlayImageChange: payload => dispatch(setOverlayImage(payload)),
+  onOverlayCornersChange: payload => dispatch(setOverlayCorners(payload)),
+  onOverlayOpacityChange: value => dispatch(setOverlayOpacity(value)),
+  onOverlayReset: payload => dispatch(resetOverlayEditor(payload)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the

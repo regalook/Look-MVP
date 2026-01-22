@@ -377,6 +377,11 @@ const initialState = {
   sendInquiryInProgress: false,
   sendInquiryError: null,
   inquiryModalOpenForListingId: null,
+  overlayEditor: {
+    image: null,
+    corners: null,
+    opacity: 0.8,
+  },
 };
 
 const listingPageSlice = createSlice({
@@ -386,12 +391,25 @@ const listingPageSlice = createSlice({
     setInitialValues: (state, action) => {
       return { ...initialState, ...action.payload };
     },
+    setOverlayImage: (state, action) => {
+      state.overlayEditor.image = action.payload;
+    },
+    setOverlayCorners: (state, action) => {
+      state.overlayEditor.corners = action.payload;
+    },
+    setOverlayOpacity: (state, action) => {
+      state.overlayEditor.opacity = action.payload;
+    },
+    resetOverlayEditor: (state, action) => {
+      state.overlayEditor.corners = action.payload || null;
+    },
   },
   extraReducers: builder => {
     builder
       .addCase(showListingThunk.pending, (state, action) => {
         state.id = action.meta.arg.listingId;
         state.showListingError = null;
+        state.overlayEditor = { ...initialState.overlayEditor };
       })
       .addCase(showListingThunk.fulfilled, (state, action) => {
         // Data is handled by addMarketplaceEntities in the thunk
@@ -499,7 +517,13 @@ const listingPageSlice = createSlice({
   },
 });
 
-export const { setInitialValues } = listingPageSlice.actions;
+export const {
+  setInitialValues,
+  setOverlayImage,
+  setOverlayCorners,
+  setOverlayOpacity,
+  resetOverlayEditor,
+} = listingPageSlice.actions;
 
 export default listingPageSlice.reducer;
 

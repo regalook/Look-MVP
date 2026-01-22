@@ -1,0 +1,105 @@
+.section {
+  margin: 24px 0 32px;
+}
+
+.headerRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.uploadButton {
+  display: inline-flex;
+  align-items: center;
+}
+
+.fileInput {
+  display: none;
+}
+
+.sliderRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0 12px;
+}
+
+.sliderLabel {
+  font-size: 14px;
+  color: var(--colorGrey700);
+}
+
+.slider {
+  flex: 1;
+}
+
+.editor {
+  position: relative;
+  background: #f5f5f5;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.imageStage {
+  position: relative;
+  width: 100%;
+}
+
+.baseImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+}
+
+.overlayImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform;
+}
+
+.overlayVisible {
+  opacity: 1;
+}
+
+.handlesLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.handle {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  background: #1f6feb;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  touch-action: none;
+}
+
+.helperText {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--colorGrey700);
+}
