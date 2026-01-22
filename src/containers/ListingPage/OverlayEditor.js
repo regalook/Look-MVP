@@ -327,12 +327,18 @@ const OverlayEditor = props => {
     if (event.target?.releasePointerCapture) {
       event.target.releasePointerCapture(event.pointerId);
     }
+    window.removeEventListener('pointermove', handlePointerMove);
+    window.removeEventListener('pointerup', handlePointerUp);
+    window.removeEventListener('pointercancel', handlePointerUp);
   }, []);
 
   const startDrag = cornerKey => event => {
     if (!baseSize.width || !baseSize.height) return;
     draggingRef.current = { cornerKey };
     event.currentTarget.setPointerCapture(event.pointerId);
+    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointerup', handlePointerUp);
+    window.addEventListener('pointercancel', handlePointerUp);
   };
 
   const cornersInDisplay = baseSize.width

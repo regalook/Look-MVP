@@ -82,7 +82,7 @@
 .handlesLayer {
   position: absolute;
   inset: 0;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .handle {
