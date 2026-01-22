@@ -246,7 +246,7 @@ export const renderMockupToCanvas = ({ baseImage, overlayImage, corners, outputS
     varying vec2 v_uv;
     uniform sampler2D u_image;
     void main() {
-      gl_FragColor = texture2D(u_image, v_uv);
+      gl_FragColor = texture2D(u_image, vec2(v_uv.x, 1.0 - v_uv.y));
     }
   `;
 
@@ -300,6 +300,9 @@ export const renderMockupToCanvas = ({ baseImage, overlayImage, corners, outputS
   const overlayPosition = gl.getAttribLocation(overlayProgram, 'a_position');
   gl.enableVertexAttribArray(overlayPosition);
   gl.vertexAttribPointer(overlayPosition, 2, gl.FLOAT, false, 0, 0);
+
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
   const overlayTexture = createTexture(gl, overlayImage);
   const overlaySampler = gl.getUniformLocation(overlayProgram, 'u_overlay');
