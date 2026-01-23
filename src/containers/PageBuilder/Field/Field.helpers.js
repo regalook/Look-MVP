@@ -5,45 +5,7 @@ import { supportedPlatforms } from '../Primitives/Link/SocialMediaLink';
 // Pickers for valid props //
 /////////////////////////////
 
-const normalizeLocale = locale => {
-  if (typeof locale !== 'string') return null;
-  const trimmed = locale.trim();
-  return trimmed.length > 0 ? trimmed : null;
-};
-
-export const resolveLocalizedString = (value, locale, allowEmpty = false) => {
-  if (typeof value === 'string') {
-    return allowEmpty || value.length > 0 ? value : null;
-  }
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
-
-  const normalizedLocale = normalizeLocale(locale);
-  const baseLocale = normalizedLocale ? normalizedLocale.split('-')[0] : null;
-  const fallbackLocale = 'en';
-
-  const candidates = [
-    normalizedLocale,
-    baseLocale,
-    value[fallbackLocale] ? fallbackLocale : null,
-  ].filter(Boolean);
-
-  for (const key of candidates) {
-    const candidate = value[key];
-    if (typeof candidate === 'string' && (allowEmpty || candidate.length > 0)) {
-      return candidate;
-    }
-  }
-
-  const firstString = Object.values(value).find(
-    entry => typeof entry === 'string' && (allowEmpty || entry.length > 0)
-  );
-  return typeof firstString === 'string' ? firstString : null;
-};
-
-export const hasContent = (data, options) => {
-  const content = resolveLocalizedString(data?.content, options?.locale);
-  return typeof content === 'string' && content.length > 0;
-};
+export const hasContent = data => typeof data?.content === 'string' && data?.content.length > 0;
 
 /**
  * Exposes "content" prop as children property, if "content" has type of string.
@@ -51,9 +13,8 @@ export const hasContent = (data, options) => {
  * @param {Object} data E.g. "{ fieldType: 'heading3', content: 'my title' }"
  * @returns object containing content string as value for key: children.
  */
-export const exposeContentAsChildren = (data, options) => {
-  const content = resolveLocalizedString(data?.content, options?.locale);
-  return typeof content === 'string' && content.length > 0 ? { children: content } : {};
+export const exposeContentAsChildren = data => {
+  return hasContent(data) ? { children: data.content } : {};
 };
 
 /**
@@ -62,10 +23,7 @@ export const exposeContentAsChildren = (data, options) => {
  * @param {Object} data E.g. "{ fieldType: 'markdown', content: 'my title' }"
  * @returns object containing "content" key if the value is string.
  */
-export const exposeContentString = (data, options) => {
-  const content = resolveLocalizedString(data?.content, options?.locale);
-  return typeof content === 'string' && content.length > 0 ? { content } : {};
-};
+export const exposeContentString = data => (hasContent(data) ? { content: data.content } : {});
 
 /**
  * Exposes "label" and "href" as "children" and "href" props respectively,
@@ -74,14 +32,13 @@ export const exposeContentString = (data, options) => {
  * @param {Object} data E.g. "{ fieldType: 'internalButtonLink', content: 'my title', href: 'https://my.domain.com' }"
  * @returns object containing children and href.
  */
-export const exposeLinkProps = (data, options) => {
-  const { href } = data;
+export const exposeLinkProps = data => {
+  const { content, href } = data;
   const hasCorrectProps = typeof href === 'string' && href.length > 0;
   // Sanitize the URL. See: src/utl/sanitize.js for more information.
   const cleanUrl = hasCorrectProps ? sanitizeUrl(href) : null;
   // If no content is given, use href.
-  const content = resolveLocalizedString(data?.content, options?.locale);
-  const linkText = typeof content === 'string' && content.length > 0 ? content : cleanUrl;
+  const linkText = hasContent(data) ? content : cleanUrl;
   return cleanUrl ? { children: linkText, href: cleanUrl } : {};
 };
 
@@ -145,7 +102,7 @@ const getValidSanitizedImage = image => {
  * @param {Object} data E.g. "{ fieldType: 'image', alt: 'my portrait', image: { id, type, attributes } }"
  * @returns object containing alt string and variants.
  */
-export const exposeImageProps = (data, options) => {
+export const exposeImageProps = data => {
   // Note: data includes also "aspectRatio" key (and "fieldType"),
   //       but image refs can rely on actual image variants
   const { alt, image, link } = data;
@@ -160,7 +117,7 @@ export const exposeImageProps = (data, options) => {
   const cleanUrl = hasCorrectProps ? sanitizeUrl(href) : null;
   const linkData = cleanUrl && fieldType !== 'none' ? { href: cleanUrl, fieldType } : null;
 
-  const alternativeText = resolveLocalizedString(alt, options?.locale) || '🖼️';
+  const alternativeText = typeof alt === 'string' ? alt : '🖼️';
   const sanitizedImage = getValidSanitizedImage(image);
 
   return sanitizedImage ? { alt: alternativeText, image: sanitizedImage, link: linkData } : {};
@@ -186,7 +143,7 @@ const exposeColorValue = color => {
  * @param {Object} data E.g. "{ fieldType: 'customAppearance', backgroundImage: imageAssetRef, backgroundColor: '#000000', textColor: '#FFFFFF' }"
  * @returns object containing valid data.
  */
-export const exposeCustomAppearanceProps = (data, options) => {
+export const exposeCustomAppearanceProps = data => {
   const { backgroundImage, backgroundImageOverlay, backgroundColor, textColor, alt } = data;
   const { type } = backgroundImage || {};
 
@@ -203,10 +160,7 @@ export const exposeCustomAppearanceProps = (data, options) => {
   const textColorMaybe = isValidTextColor ? { textColor } : {};
 
   const sanitizedImage = getValidSanitizedImage(backgroundImage);
-  const localizedAlt = resolveLocalizedString(alt, options?.locale);
-  const backgroundImageMaybe = sanitizedImage
-    ? { backgroundImage: sanitizedImage, alt: localizedAlt || alt }
-    : {};
+  const backgroundImageMaybe = sanitizedImage ? { backgroundImage: sanitizedImage, alt } : {};
 
   // On top of the background image there could be an overlay that mixes in some color (e.g. black)
   // with the given opacity.

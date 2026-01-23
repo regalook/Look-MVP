@@ -1,6 +1,5 @@
 import React from 'react';
 import { useConfiguration } from '../../context/configurationContext';
-import { useIntl } from '../../util/reactIntl';
 import loadable from '@loadable/component';
 
 const SectionBuilder = loadable(
@@ -12,7 +11,6 @@ const SectionBuilder = loadable(
 
 const FooterComponent = () => {
   const { footer = {}, topbar } = useConfiguration();
-  const intl = useIntl();
 
   // If footer asset is not set, let's not render Footer at all.
   if (Object.keys(footer).length === 0) {
@@ -29,7 +27,7 @@ const FooterComponent = () => {
     linkLogoToExternalSite: topbar?.logoLink,
   };
 
-  return <SectionBuilder sections={[footerSection]} options={{ locale: intl?.locale }} />;
+  return <SectionBuilder sections={[footerSection]} />;
 };
 
 // NOTE: if you want to add dynamic data to FooterComponent,

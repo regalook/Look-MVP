@@ -533,8 +533,6 @@
   "KeywordFilter.placeholder": "Enter a keyword…",
   "LandingPage.schemaDescription": "An online marketplace.",
   "LandingPage.schemaTitle": "{marketplaceName}",
-  "LandingPage.maintenance.title": "Oops, something went wrong!",
-  "LandingPage.maintenance.description": "The marketplace is not fully operational at the moment.{br}Try refreshing the page and if that does not solve the issue, contact the marketplace admins.",
   "LayoutSideNavigation.screenreader.accountNavigation": "Account settings navigation",
   "LayoutWrapperAccountSettingsSideNav.contactDetailsTabTitle": "Contact details",
   "LayoutWrapperAccountSettingsSideNav.manageAccountTabTitle": "Manage account",

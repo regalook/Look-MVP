@@ -1,5 +1,4 @@
 import React from 'react';
-import { useIntl } from '../../util/reactIntl';
 
 import { IconSpinner, LayoutComposer } from '../../components/index.js';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer.js';
@@ -101,7 +100,6 @@ const LoadingSpinner = () => {
  * @returns {JSX.Element} page component
  */
 const PageBuilder = props => {
-  const intl = useIntl();
   const {
     pageAssetsData,
     inProgress,
@@ -121,8 +119,7 @@ const PageBuilder = props => {
   // - "sections" (data that goes inside <body>)
   // - "meta" (which is data that goes inside <head>)
   const { sections = [], meta = {} } = pageAssetsData || {};
-  const optionsWithLocale = { ...options, locale: intl?.locale };
-  const pageMetaProps = getMetadata(meta, schemaType, optionsWithLocale);
+  const pageMetaProps = getMetadata(meta, schemaType, options?.fieldComponents);
 
   const layoutAreas = `
     topbar
@@ -143,7 +140,7 @@ const PageBuilder = props => {
                 {sections.length === 0 && inProgress ? (
                   <LoadingSpinner />
                 ) : (
-                  <SectionBuilder sections={sections} options={optionsWithLocale} />
+                  <SectionBuilder sections={sections} options={options} />
                 )}
               </Main>
               <Footer>

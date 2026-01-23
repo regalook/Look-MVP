@@ -7,22 +7,13 @@ const PageBuilder = loadable(() =>
 
 // NOTE: You could add the actual Privacy Policy here as a fallback
 //       instead of showing this error message.
-const fallbackPrivacyPolicy = {
-  en: `
+const fallbackPrivacyPolicy = `
 # An error occurred
 The web app couldn\'t reach the backend to fetch the Privacy Policy page.
 
 ## Possible actions
 Please refresh the page and, if that doesn't help, contact the marketplace administrators.
-`,
-  es: `
-# Se produjo un error
-La aplicación web no pudo conectarse al backend para obtener la página de Política de privacidad.
-
-## Posibles acciones
-Actualiza la página y, si eso no ayuda, ponte en contacto con los administradores del marketplace.
-`,
-};
+`;
 
 // Create fallback content (array of sections) in page asset format:
 export const fallbackSections = {
@@ -31,10 +22,7 @@ export const fallbackSections = {
       sectionType: 'article',
       sectionId: 'privacy',
       appearance: { fieldType: 'customAppearance', backgroundColor: '#ffffff' },
-      title: {
-        fieldType: 'heading1',
-        content: { en: 'Privacy Policy', es: 'Política de privacidad' },
-      },
+      title: { fieldType: 'heading1', content: 'Privacy Policy' },
       blocks: [
         {
           blockType: 'defaultBlock',
@@ -50,14 +38,11 @@ export const fallbackSections = {
   meta: {
     pageTitle: {
       fieldType: 'metaTitle',
-      content: { en: 'Privacy policy page', es: 'Página de política de privacidad' },
+      content: 'Privacy policy page',
     },
     pageDescription: {
       fieldType: 'metaDescription',
-      content: {
-        en: 'Privacy policy fetch failed',
-        es: 'No se pudo cargar la política de privacidad',
-      },
+      content: 'Privacy policy fetch failed',
     },
   },
 };

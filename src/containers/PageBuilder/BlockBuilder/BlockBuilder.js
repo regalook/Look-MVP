@@ -63,9 +63,8 @@ const BlockBuilder = props => {
   // Extract block & field component mappings from props
   // If external mapping has been included for fields
   // E.g. { h1: { component: MyAwesomeHeader } }
-  const { blockComponents, fieldComponents, locale } = options || {};
-  const hasFieldOptions = fieldComponents || locale;
-  const blockOptionsMaybe = hasFieldOptions ? { options: { fieldComponents, locale } } : {};
+  const { blockComponents, fieldComponents } = options || {};
+  const blockOptionsMaybe = fieldComponents ? { options: { fieldComponents } } : {};
 
   // If there's no block, we can't render the correct block component
   if (!blocks || blocks.length === 0) {

@@ -7,22 +7,13 @@ const PageBuilder = loadable(() =>
 
 // NOTE: You could add the actual Terms of Service here as a fallback
 //       instead of showing this error message.
-const fallbackTerms = {
-  en: `
+const fallbackTerms = `
 # An error occurred
 The web app couldn\'t reach the backend to fetch the Term of Service page.
 
 ## Possible actions
 Please refresh the page and, if that doesn't help, contact the marketplace administrators.
-`,
-  es: `
-# Se produjo un error
-La aplicación web no pudo conectarse al backend para obtener la página de Términos del servicio.
-
-## Posibles acciones
-Actualiza la página y, si eso no ayuda, ponte en contacto con los administradores del marketplace.
-`,
-};
+`;
 
 // Create fallback content (array of sections) in page asset format:
 export const fallbackSections = {
@@ -31,10 +22,7 @@ export const fallbackSections = {
       sectionType: 'article',
       sectionId: 'terms',
       appearance: { fieldType: 'customAppearance', backgroundColor: '#ffffff' },
-      title: {
-        fieldType: 'heading1',
-        content: { en: 'Terms of Service', es: 'Términos del servicio' },
-      },
+      title: { fieldType: 'heading1', content: 'Terms of Service' },
       blocks: [
         {
           blockType: 'defaultBlock',
@@ -50,14 +38,11 @@ export const fallbackSections = {
   meta: {
     pageTitle: {
       fieldType: 'metaTitle',
-      content: { en: 'Terms of service page', es: 'Página de términos del servicio' },
+      content: 'Terms of service page',
     },
     pageDescription: {
       fieldType: 'metaDescription',
-      content: {
-        en: 'Terms of service fetch failed',
-        es: 'No se pudieron cargar los términos del servicio',
-      },
+      content: 'Terms of service fetch failed',
     },
   },
 };

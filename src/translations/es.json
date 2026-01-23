@@ -533,8 +533,6 @@
   "KeywordFilter.placeholder": "Escribe una palabra clave…",
   "LandingPage.schemaDescription": "Un marketplace en línea",
   "LandingPage.schemaTitle": "{marketplaceName}",
-  "LandingPage.maintenance.title": "Vaya, algo salió mal.",
-  "LandingPage.maintenance.description": "El marketplace no está totalmente operativo en este momento.{br}Prueba a actualizar la página y, si eso no soluciona el problema, contacta con los administradores del marketplace.",
   "LayoutSideNavigation.screenreader.accountNavigation": "Navegación de configuración de cuenta",
   "LayoutWrapperAccountSettingsSideNav.contactDetailsTabTitle": "Datos de contacto",
   "LayoutWrapperAccountSettingsSideNav.manageAccountTabTitle": "Gestionar cuenta",
