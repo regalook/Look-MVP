@@ -1,6 +1,8 @@
 import React from 'react';
 import loadable from '@loadable/component';
 
+import { FormattedMessage } from '../../util/reactIntl';
+
 import css from './FallbackPage.module.css';
 
 const PageBuilder = loadable(() =>
@@ -20,11 +22,14 @@ export const fallbackSections = error => ({
   meta: {
     pageTitle: {
       fieldType: 'metaTitle',
-      content: 'Home page',
+      content: { en: 'Home page', es: 'Página de inicio' },
     },
     pageDescription: {
       fieldType: 'metaDescription',
-      content: 'Home page fetch failed',
+      content: {
+        en: 'Home page fetch failed',
+        es: 'No se pudo cargar la página de inicio',
+      },
     },
   },
 });
@@ -41,17 +46,21 @@ const SectionMaintenanceMode = props => {
     <section id={sectionId} className={css.root}>
       {is404 ? (
         <div className={css.content}>
-          <h2>Oops, something went wrong!</h2>
+          <h2>
+            <FormattedMessage id="LandingPage.maintenance.title" />
+          </h2>
           <p>
-            The marketplace is not fully operational at the moment.
-            <br />
-            Try refreshing the page and if that does not solve the issue, contact the marketplace
-            admins.
+            <FormattedMessage
+              id="LandingPage.maintenance.description"
+              values={{ br: <br /> }}
+            />
           </p>
         </div>
       ) : (
         <div className={css.content}>
-          <h2>Oops, something went wrong!</h2>
+          <h2>
+            <FormattedMessage id="LandingPage.maintenance.title" />
+          </h2>
           <p>{error?.message}</p>
         </div>
       )}

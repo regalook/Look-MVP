@@ -51,7 +51,7 @@ const SectionHero = props => {
   // If external mapping has been included for fields
   // E.g. { h1: { component: MyAwesomeHeader } }
   const fieldComponents = options?.fieldComponents;
-  const fieldOptions = { fieldComponents };
+  const fieldOptions = { fieldComponents, locale: options?.locale };
 
   const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
 

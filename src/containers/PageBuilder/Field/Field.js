@@ -19,6 +19,7 @@ import renderMarkdown from '../markdownProcessor';
 
 import {
   hasContent,
+  resolveLocalizedString,
   exposeContentAsChildren,
   exposeContentString,
   exposeLinkProps,
@@ -123,8 +124,11 @@ const defaultFieldComponents = {
 const hasExactNumKeys = (obj, num) => Object.keys(obj).length === num;
 const isEmptyObject = obj => hasExactNumKeys(obj, 0);
 const hasOnlyProp = (obj, key) => hasExactNumKeys(obj, 1) && obj[key];
-const hasEmptyTextContent = obj =>
-  hasExactNumKeys(obj, 2) && TEXT_CONTENT.includes(obj?.fieldType) && obj?.content?.length === 0;
+const hasEmptyTextContent = (obj, options) => {
+  if (!hasExactNumKeys(obj, 2) || !TEXT_CONTENT.includes(obj?.fieldType)) return false;
+  const content = resolveLocalizedString(obj?.content, options?.locale, true);
+  return typeof content === 'string' && content.length === 0;
+};
 
 const getFieldConfig = (data, defaultFieldComponents, options) => {
   const customFieldComponents = options?.fieldComponents || {};
@@ -139,7 +143,7 @@ export const validProps = (data, options) => {
     !data ||
     isEmptyObject(data) ||
     hasOnlyProp(data, 'fieldType') ||
-    hasEmptyTextContent(data) ||
+    hasEmptyTextContent(data, options) ||
     ['none'].includes(data?.fieldType)
   ) {
     // If there's no data, the (optional) field in Console has been left untouched or it's removed.
@@ -149,7 +153,7 @@ export const validProps = (data, options) => {
   const config = getFieldConfig(data, defaultFieldComponents, options);
   const pickValidProps = config?.pickValidProps;
   if (data && pickValidProps) {
-    const validProps = pickValidProps(data);
+    const validProps = pickValidProps(data, options);
     const omitWarning = config?.omitInvalidPropsWarning && config?.omitInvalidPropsWarning(data);
 
     // If picker returns an empty object, data was invalid.

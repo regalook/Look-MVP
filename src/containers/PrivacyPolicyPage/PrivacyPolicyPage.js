@@ -9,6 +9,8 @@ import { camelize } from '../../util/string';
 import { propTypes } from '../../util/types';
 
 import { H1 } from '../PageBuilder/Primitives/Heading';
+import { resolveLocalizedString } from '../PageBuilder/Field/Field.helpers';
+import { useIntl } from '../../util/reactIntl';
 import FallbackPage, { fallbackSections } from './FallbackPage';
 import { ASSET_NAME } from './PrivacyPolicyPage.duck';
 
@@ -25,12 +27,13 @@ const SectionBuilder = loadable(
 // This "content-only" component can be used in modals etc.
 const PrivacyPolicyContent = props => {
   const { inProgress, error, data } = props;
+  const intl = useIntl();
 
   // We don't want to add h1 heading twice to the HTML (SEO issue).
   // Modal's header is mapped as h2
-  const hasContent = data => typeof data?.content === 'string';
-  const exposeContentAsChildren = data => {
-    return hasContent(data) ? { children: data.content } : {};
+  const exposeContentAsChildren = (data, options) => {
+    const content = resolveLocalizedString(data?.content, options?.locale);
+    return typeof content === 'string' && content.length > 0 ? { children: content } : {};
   };
 
   if (!hasContent && inProgress) {
@@ -50,6 +53,7 @@ const PrivacyPolicyContent = props => {
           heading1: { component: CustomHeading1, pickValidProps: exposeContentAsChildren },
         },
         isInsideContainer: true,
+        locale: intl?.locale,
       }}
     />
   );
