@@ -8,6 +8,7 @@ import {
   getLocaleFromPath,
   replaceLocaleInPath,
 } from '../../context/localeContext';
+import { useConfiguration } from '../../context/configurationContext';
 
 import css from './LanguageSwitcher.module.css';
 
@@ -22,7 +23,10 @@ import css from './LanguageSwitcher.module.css';
  * @returns {JSX.Element}
  */
 const LanguageSwitcher = props => {
-  const { className, rootClassName, variant = 'buttons' } = props;
+  const { className, rootClassName, variant = 'buttons', locales: localesProp } = props;
+  const config = useConfiguration();
+  const locales = localesProp || config?.localization?.availableLocales || SUPPORTED_LOCALES;
+  const hasMultipleLocales = Array.isArray(locales) && locales.length > 1;
 
   const location = useLocation();
   const history = useHistory();
@@ -40,6 +44,12 @@ const LanguageSwitcher = props => {
 
   const classes = classNames(rootClassName || css.root, className);
 
+  if (!hasMultipleLocales) {
+    return null;
+  }
+
+  const labelForLocale = locale => LOCALE_LABELS[locale] || locale;
+
   if (variant === 'dropdown') {
     return (
       <div className={classes}>
@@ -49,9 +59,9 @@ const LanguageSwitcher = props => {
           onChange={e => handleLocaleChange(e.target.value)}
           aria-label="Select language"
         >
-          {SUPPORTED_LOCALES.map(locale => (
+          {locales.map(locale => (
             <option key={locale} value={locale}>
-              {LOCALE_LABELS[locale]}
+              {labelForLocale(locale)}
             </option>
           ))}
         </select>
@@ -62,7 +72,7 @@ const LanguageSwitcher = props => {
   if (variant === 'links') {
     return (
       <div className={classes}>
-        {SUPPORTED_LOCALES.map((locale, index) => (
+        {locales.map((locale, index) => (
           <React.Fragment key={locale}>
             {index > 0 && <span className={css.separator}>|</span>}
             <button
@@ -84,7 +94,7 @@ const LanguageSwitcher = props => {
   // Default: buttons variant
   return (
     <div className={classes}>
-      {SUPPORTED_LOCALES.map(locale => (
+      {locales.map(locale => (
         <button
           key={locale}
           type="button"
@@ -93,7 +103,7 @@ const LanguageSwitcher = props => {
           })}
           onClick={() => handleLocaleChange(locale)}
           aria-current={locale === currentLocale ? 'true' : undefined}
-          aria-label={`Switch to ${LOCALE_LABELS[locale]}`}
+          aria-label={`Switch to ${labelForLocale(locale)}`}
         >
           {locale.toUpperCase()}
         </button>

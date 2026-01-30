@@ -1444,8 +1444,11 @@ const hasMandatoryConfigs = hostedConfig => {
 export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
   // Remove trailing slash from marketplaceRootURL if any
   const marketplaceRootURL = defaultConfigs.marketplaceRootURL;
+  const canonicalRootURL = defaultConfigs.canonicalRootURL || defaultConfigs.marketplaceRootURL;
   const cleanedRootURL =
     typeof marketplaceRootURL === 'string' ? marketplaceRootURL.replace(/\/$/, '') : '';
+  const cleanedCanonicalRootURL =
+    typeof canonicalRootURL === 'string' ? canonicalRootURL.replace(/\/$/, '') : cleanedRootURL;
 
   // By default, always try to take the value of listingMinimumPriceSubUnits from the transaction-size.json asset.
   // - If there is no value, we use the defaultConfigs.listingMinimumPriceSubUnits
@@ -1470,6 +1473,7 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     ...defaultConfigs,
 
     marketplaceRootURL: cleanedRootURL,
+    canonicalRootURL: cleanedCanonicalRootURL,
 
     // AccessControl config contains a flag whether the marketplace is private.
     accessControl: validAccessControl(configAsset.accessControl),

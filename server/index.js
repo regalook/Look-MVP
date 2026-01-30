@@ -49,6 +49,8 @@ const sdkUtils = require('./api-util/sdk');
 const buildPath = path.resolve(__dirname, '..', 'build');
 const dev = process.env.REACT_APP_ENV === 'development';
 const PORT = parseInt(process.env.PORT, 10);
+const CLIENT_ID =
+  process.env.SHARETRIBE_SDK_CLIENT_ID || process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID;
 const redirectSSL =
   process.env.SERVER_SHARETRIBE_REDIRECT_SSL != null
     ? process.env.SERVER_SHARETRIBE_REDIRECT_SSL
@@ -61,20 +63,28 @@ const cspEnabled = CSP === 'block' || CSP === 'report';
 
 // Without these, something will break for sure
 const MANDATORY_ENV_VARIABLES = [
-  'REACT_APP_SHARETRIBE_SDK_CLIENT_ID',
-  'SHARETRIBE_SDK_CLIENT_SECRET',
-  'REACT_APP_MARKETPLACE_NAME',
-  'REACT_APP_MARKETPLACE_ROOT_URL',
+  { key: 'SHARETRIBE_SDK_CLIENT_ID', value: CLIENT_ID },
+  { key: 'SHARETRIBE_SDK_CLIENT_SECRET', value: process.env.SHARETRIBE_SDK_CLIENT_SECRET },
+  { key: 'REACT_APP_MARKETPLACE_NAME', value: process.env.REACT_APP_MARKETPLACE_NAME },
+  { key: 'REACT_APP_MARKETPLACE_ROOT_URL', value: process.env.REACT_APP_MARKETPLACE_ROOT_URL },
 ];
 const isEmpty = value => value == null || (value.hasOwnProperty('length') && value.length === 0);
 const checkEnvVariables = variables => {
-  const missingEnvVariables = variables.filter(v => isEmpty(process.env?.[v]));
+  const missingEnvVariables = variables.filter(v => isEmpty(v.value)).map(v => v.key);
   if (missingEnvVariables.length > 0) {
-    console.error(`Required environment variable is not set: ${missingEnvVariables.join(', ')}`);
+    console.error(
+      `Required environment variable is not set: ${missingEnvVariables.join(', ')}`
+    );
     process.exit(9);
   }
 };
 checkEnvVariables(MANDATORY_ENV_VARIABLES);
+
+if (!process.env.SHARETRIBE_SDK_CLIENT_ID && process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID) {
+  console.warn(
+    'SHARETRIBE_SDK_CLIENT_ID is not set; falling back to REACT_APP_SHARETRIBE_SDK_CLIENT_ID for server-side SDK usage.'
+  );
+}
 
 const app = express();
 

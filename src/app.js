@@ -25,7 +25,12 @@ import routeConfiguration from './routing/routeConfiguration';
 import Routes from './routing/Routes';
 
 // Multi-language support
-import { DEFAULT_LOCALE, LocaleProvider, getLocaleFromPath } from './context/localeContext';
+import {
+  DEFAULT_LOCALE,
+  LocaleProvider,
+  getLocaleFromPath,
+  SUPPORTED_LOCALES,
+} from './context/localeContext';
 import { getMessages } from './translations';
 
 // Sharetribe Web Template uses English translations as default translations.
@@ -176,6 +181,23 @@ const EnvironmentVariableWarning = props => {
 export const ClientApp = props => {
   const { store, hostedTranslations = {}, hostedConfig = {} } = props;
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
+
+  if (typeof window !== 'undefined' && process.env.REACT_APP_DEBUG_I18N === 'true') {
+    // Avoid noisy logs on re-render in production unless explicitly enabled.
+    if (!window.__DEBUG_I18N_LOGGED__) {
+      window.__DEBUG_I18N_LOGGED__ = true;
+      // eslint-disable-next-line no-console
+      console.info('[i18n-debug]', {
+        origin: window.location.origin,
+        envCanonicalRootURL: process.env.REACT_APP_CANONICAL_ROOT_URL,
+        envMarketplaceRootURL: process.env.REACT_APP_MARKETPLACE_ROOT_URL,
+        configCanonicalRootURL: appConfig.canonicalRootURL,
+        configMarketplaceRootURL: appConfig.marketplaceRootURL,
+        supportedLocalesConfig: appConfig.localization?.availableLocales,
+        supportedLocalesContext: SUPPORTED_LOCALES,
+      });
+    }
+  }
 
   // Show warning on the localhost:3000, if the environment variable key contains "SECRET"
   if (appSettings.dev) {

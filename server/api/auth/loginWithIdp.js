@@ -4,7 +4,8 @@ const sharetribeSdk = require('sharetribe-flex-sdk');
 const log = require('../../log.js');
 const sdkUtils = require('../../api-util/sdk');
 
-const CLIENT_ID = process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID;
+const CLIENT_ID =
+  process.env.SHARETRIBE_SDK_CLIENT_ID || process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID;
 const CLIENT_SECRET = process.env.SHARETRIBE_SDK_CLIENT_SECRET;
 const TRANSIT_VERBOSE = process.env.REACT_APP_SHARETRIBE_SDK_TRANSIT_VERBOSE === 'true';
 const USING_SSL = process.env.REACT_APP_SHARETRIBE_USING_SSL === 'true';

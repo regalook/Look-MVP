@@ -315,4 +315,5 @@
   height: 100%;
   padding: 0 12px;
   border-left: 1px solid var(--colorGrey100);
+  flex-shrink: 0;
 }

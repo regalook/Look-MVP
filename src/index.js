@@ -123,17 +123,32 @@ if (typeof window !== 'undefined') {
   // set up logger with Sentry DSN client key and environment
   log.setup();
 
-  const baseUrl = appSettings.sdk.baseUrl ? { baseUrl: appSettings.sdk.baseUrl } : {};
+  const sdkBaseUrl = appSettings.sdk.baseUrl;
+  const clientId = appSettings.sdk.clientId;
+  const baseUrl = sdkBaseUrl ? { baseUrl: sdkBaseUrl } : {};
   const assetCdnBaseUrl = appSettings.sdk.assetCdnBaseUrl
     ? { assetCdnBaseUrl: appSettings.sdk.assetCdnBaseUrl }
     : {};
+
+  if (appSettings.dev) {
+    if (!clientId) {
+      console.error(
+        'Missing REACT_APP_SHARETRIBE_SDK_CLIENT_ID. Marketplace API client ID is required for browser SDK calls (e.g. search).'
+      );
+    }
+    if (sdkBaseUrl && /flex-integ-api/i.test(sdkBaseUrl)) {
+      console.warn(
+        'REACT_APP_SHARETRIBE_SDK_BASE_URL points to the Integration API. The browser SDK must use the Marketplace API base URL (https://flex-api.sharetribe.com).'
+      );
+    }
+  }
 
   // eslint-disable-next-line no-underscore-dangle
   const preloadedState = window.__PRELOADED_STATE__ || '{}';
   const initialState = JSON.parse(preloadedState, sdkTypes.reviver);
   const sdk = createInstance({
     transitVerbose: appSettings.sdk.transitVerbose,
-    clientId: appSettings.sdk.clientId,
+    clientId,
     secure: appSettings.usingSSL,
     typeHandlers: apiUtils.typeHandlers,
     ...baseUrl,

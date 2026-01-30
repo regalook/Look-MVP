@@ -130,9 +130,10 @@ class PageComponent extends Component {
     this.scrollingDisabledChanged(scrollingDisabled);
 
     const marketplaceRootURL = config.marketplaceRootURL;
+    const canonicalRootURL = config.canonicalRootURL || marketplaceRootURL;
     const shouldReturnPathOnly = referrer && referrer !== 'unsafe-url';
     const canonicalPath = canonicalRoutePath(routeConfiguration, location, shouldReturnPathOnly);
-    const canonicalUrl = `${marketplaceRootURL}${canonicalPath}`;
+    const canonicalUrl = `${canonicalRootURL}${canonicalPath}`;
 
     // Generate hreflang URLs for all supported locales
     const currentLocale = getLocaleFromPath(location.pathname);
@@ -140,7 +141,7 @@ class PageComponent extends Component {
       const localePath = replaceLocaleInPath(canonicalPath, currentLocale, locale);
       return {
         locale,
-        url: `${marketplaceRootURL}${localePath}`,
+        url: `${canonicalRootURL}${localePath}`,
       };
     });
 
@@ -220,8 +221,8 @@ class PageComponent extends Component {
         {
           '@context': 'http://schema.org',
           '@type': 'Organization',
-          '@id': `${marketplaceRootURL}#organization`,
-          url: marketplaceRootURL,
+          '@id': `${canonicalRootURL}#organization`,
+          url: canonicalRootURL,
           name: marketplaceName,
           sameAs: sameOrganizationAs,
           logo: config.branding.logoImageMobileURL,
@@ -230,7 +231,7 @@ class PageComponent extends Component {
         {
           '@context': 'http://schema.org',
           '@type': 'WebSite',
-          url: marketplaceRootURL,
+          url: canonicalRootURL,
           description: schemaDescription,
           name: schemaTitle,
         },
