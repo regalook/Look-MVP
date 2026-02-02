@@ -104,8 +104,6 @@ export const pickInitialValuesForFieldSelectTree = (prefix, values, isNestedEnum
  * @param {Array} categories contain objects with props: _id_, _name_, potentially _subcategories_.
  * @returns an array that contains objects with props: _option_, _label_ and potentially _suboptions_.
  */
-import { getCategoryLabel } from './categoryI18n';
-
 export const convertCategoriesToSelectTreeOptions = (categories, intl) => {
   const convertSubcategoryData = (params, level = 1) => {
     const { id, name, subcategories } = params;
