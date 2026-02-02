@@ -1,13 +1,15 @@
 import React, { useState, useRef } from 'react';
 import { Field } from 'react-final-form';
 import classNames from 'classnames';
-import { FormattedMessage } from '../../../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../../../util/reactIntl';
+import { getCategoryLabel } from '../../../../../util/categoryI18n';
 
 import { OutsideClickHandler } from '../../../../../components';
 
 import css from './FilterCategories.module.css';
 
 const CategoryDropdown = ({ input, className, rootClassName, categories, alignLeft }) => {
+  const intl = useIntl();
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const [hasSelected, setHasSelected] = useState(false);
@@ -67,7 +69,7 @@ const CategoryDropdown = ({ input, className, rootClassName, categories, alignLe
   const selectedCategory = categories.find(category => category.id === input.value);
 
   const labelText = selectedCategory ? (
-    selectedCategory.name
+    getCategoryLabel({ id: selectedCategory.id, name: selectedCategory.name, level: 1 }, intl)
   ) : hasSelected && input.value === '' ? (
     <FormattedMessage id="PageBuilder.SearchCTA.CategoryFilter.selectAll" />
   ) : (
@@ -83,7 +85,10 @@ const CategoryDropdown = ({ input, className, rootClassName, categories, alignLe
       id: 'all-categories',
       name: <FormattedMessage id="PageBuilder.SearchCTA.CategoryFilter.selectAll" />,
     },
-    ...categories,
+    ...categories.map(category => ({
+      ...category,
+      name: getCategoryLabel({ id: category.id, name: category.name, level: 1 }, intl),
+    })),
   ];
 
   const optionRefs = useRef([]);

@@ -11,6 +11,7 @@ import {
   isFieldForListingType,
   isValidCurrencyForTransactionProcess,
 } from '../../../../util/fieldHelpers';
+import { getCategoryLabel } from '../../../../util/categoryI18n';
 import { maxLength, required, composeValidators } from '../../../../util/validators';
 
 // Import shared components
@@ -178,7 +179,7 @@ const CategoryField = props => {
 
           {currentCategoryOptions.map(option => (
             <option key={option.id} value={option.id}>
-              {option.name}
+              {getCategoryLabel({ id: option.id, name: option.name, level }, intl)}
             </option>
           ))}
         </FieldSelect>

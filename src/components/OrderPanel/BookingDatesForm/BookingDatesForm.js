@@ -256,8 +256,10 @@ const isDayBlockedFn = params => {
     timeZone,
     installationDaysBefore,
     installationDaysAfter,
-    includeInstallation,
   } = params || {};
+
+  // Test note (dev): set installationDaysBefore/After in listing publicData, create a booking,
+  // then verify the calendar blocks the first N days from today and N days after the booking.
 
   const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, timeZone);
   const timeSlotsData = timeSlotsPerDate(startMonth, endMonth, allTimeSlots, timeZone);
@@ -270,12 +272,7 @@ const isDayBlockedFn = params => {
     const hasAvailabilityOnDay = timeSlotsData[dayIdString]?.hasAvailability === true;
 
     // Check if day is within lead time period (only when installation is selected)
-    const isInLeadTime = isDayInLeadTimePeriod(
-      dayInListingTZ,
-      installationDaysBefore,
-      includeInstallation,
-      timeZone
-    );
+    const isInLeadTime = isDayInLeadTimePeriod(dayInListingTZ, installationDaysBefore, timeZone);
     if (isInLeadTime) {
       return true; // Block this day
     }
@@ -721,7 +718,6 @@ export const BookingDatesForm = props => {
           listingId,
           onFetchTimeSlots
         );
-        const includeInstallation = values?.includeInstallation?.[0] === 'include';
         const isDayBlocked = isDayBlockedFn({
           allTimeSlots: relevantTimeSlots,
           monthlyTimeSlots,
@@ -731,7 +727,6 @@ export const BookingDatesForm = props => {
           timeZone,
           installationDaysBefore,
           installationDaysAfter,
-          includeInstallation,
         });
         const isOutsideRange = isOutsideRangeFn(
           relevantTimeSlots,
@@ -902,7 +897,7 @@ export const BookingDatesForm = props => {
                     // Check if selected start date is within lead time period
                     const startDateInLeadTime =
                       isChecked && startDate
-                        ? isDayInLeadTimePeriod(startDate, installationDaysBefore, true, timeZone)
+                        ? isDayInLeadTimePeriod(startDate, installationDaysBefore, timeZone)
                         : false;
 
                     // If start date is in lead time, clear the dates

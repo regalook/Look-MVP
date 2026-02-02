@@ -59,7 +59,7 @@ const FilterComponent = props => {
           queryParamNames={queryParamNames}
           initialValues={initialValues(queryParamNames, liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
-          options={convertCategoriesToSelectTreeOptions(listingCategories)}
+          options={convertCategoriesToSelectTreeOptions(listingCategories, intl)}
           isNestedEnum={isNestedEnum}
           getAriaLabel={getAriaLabel}
           {...rest}

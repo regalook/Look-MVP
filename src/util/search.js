@@ -1,3 +1,5 @@
+import { getCategoryLabel } from './categoryI18n';
+
 /**
  * SelectMultipleFilter needs to parse values from format
  * "has_all:a,b,c,d" or "a,b,c,d"
@@ -102,13 +104,16 @@ export const pickInitialValuesForFieldSelectTree = (prefix, values, isNestedEnum
  * @param {Array} categories contain objects with props: _id_, _name_, potentially _subcategories_.
  * @returns an array that contains objects with props: _option_, _label_ and potentially _suboptions_.
  */
-export const convertCategoriesToSelectTreeOptions = categories => {
-  const convertSubcategoryData = params => {
+import { getCategoryLabel } from './categoryI18n';
+
+export const convertCategoriesToSelectTreeOptions = (categories, intl) => {
+  const convertSubcategoryData = (params, level = 1) => {
     const { id, name, subcategories } = params;
+    const label = getCategoryLabel({ id, name, level }, intl);
     const suboptionsMaybe = subcategories
-      ? { suboptions: subcategories.map(cat => convertSubcategoryData(cat)) }
+      ? { suboptions: subcategories.map(cat => convertSubcategoryData(cat, level + 1)) }
       : {};
-    return { option: id, label: name, ...suboptionsMaybe };
+    return { option: id, label, ...suboptionsMaybe };
   };
 
   const categoriesArray = Array.isArray(categories) ? categories : [];

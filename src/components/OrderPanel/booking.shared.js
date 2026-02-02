@@ -225,21 +225,19 @@ export const isDayInInstallationBuffer = (day, allTimeSlots, installationDaysAft
 
 /**
  * Check if a day is within the lead time period (installationDaysBefore).
- * This blocks booking from today until X days in the future when installation is selected.
+ * This blocks booking from today until X days in the future.
  *
  * @param {Date} day - The day to check (in listing timezone)
  * @param {number} installationDaysBefore - Number of lead time days required
- * @param {boolean} includeInstallation - Whether installation is selected
  * @param {string} timeZone - The time zone
  * @returns {boolean} - True if the day is within the lead time period
  */
 export const isDayInLeadTimePeriod = (
   day,
   installationDaysBefore,
-  includeInstallation,
   timeZone
 ) => {
-  if (!includeInstallation || !installationDaysBefore || installationDaysBefore <= 0) {
+  if (!installationDaysBefore || installationDaysBefore <= 0) {
     return false;
   }
 

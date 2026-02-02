@@ -30,6 +30,7 @@ import {
   getTimeSlotsOnDate,
   getTimeSlotsOnSelectedDate,
   isDayInInstallationBuffer,
+  isDayInLeadTimePeriod,
   isToday,
   nextMonthFn,
   prevMonthFn,
@@ -572,6 +573,7 @@ const FieldDateAndTimeInput = props => {
     intl,
     dayCountAvailableForBooking,
     installationDaysAfter,
+    installationDaysBefore,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
@@ -727,6 +729,11 @@ const FieldDateAndTimeInput = props => {
     if (
       isDayInInstallationBuffer(dayInListingTZ, pickerTimeSlots, installationDaysAfter, timeZone)
     ) {
+      return true;
+    }
+
+    // Check if day is within lead time period
+    if (isDayInLeadTimePeriod(dayInListingTZ, installationDaysBefore, timeZone)) {
       return true;
     }
 

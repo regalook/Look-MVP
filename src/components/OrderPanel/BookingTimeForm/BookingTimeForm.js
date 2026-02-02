@@ -108,6 +108,7 @@ export const BookingTimeForm = props => {
     preselectedPriceVariant,
     isPublishedListing,
     installationDaysAfter,
+    installationDaysBefore,
     ...rest
   } = props;
 
@@ -207,6 +208,7 @@ export const BookingTimeForm = props => {
                 dayCountAvailableForBooking={dayCountAvailableForBooking}
                 handleFetchLineItems={onHandleFetchLineItems}
                 installationDaysAfter={installationDaysAfter}
+                installationDaysBefore={installationDaysBefore}
               />
             ) : null}
             {seatsEnabled ? (
