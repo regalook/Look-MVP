@@ -32,8 +32,11 @@ const getLabel = (fieldConfig, intl) => {
   const label = fieldConfig?.saveConfig?.label || fieldConfig?.label;
   const key = fieldConfig?.key;
   if (!intl) return label;
-  if (typeof label === 'string' && label.startsWith('EditListingDetailsForm.')) {
-    return intl.formatMessage({ id: label, defaultMessage: label });
+  if (typeof label === 'string') {
+    const hasMessage = intl?.messages && Object.prototype.hasOwnProperty.call(intl.messages, label);
+    if (label.startsWith('EditListingDetailsForm.') || hasMessage) {
+      return intl.formatMessage({ id: label, defaultMessage: label });
+    }
   }
   if (!key) return label;
   return intl.formatMessage({ id: `ListingFields.${key}.label`, defaultMessage: label });
