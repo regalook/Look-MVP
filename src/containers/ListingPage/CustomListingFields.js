@@ -7,7 +7,11 @@ import {
   pickCategoryFields,
   pickCustomFieldProps,
 } from '../../util/fieldHelpers.js';
-import { getListingFieldLabel } from '../../util/listingFieldI18n';
+import {
+  getAllowedAdTypeLabel,
+  getListingFieldLabel,
+  isAllowedAdTypesField,
+} from '../../util/listingFieldI18n';
 
 import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
@@ -42,10 +46,20 @@ const CustomListingFields = props => {
       'listingType',
       isFieldForSelectedCategories
     ) || [];
-  const propsForCustomFields = propsForCustomFieldsRaw.map(fieldProps => ({
-    ...fieldProps,
-    heading: getListingFieldLabel({ key: fieldProps.key, label: fieldProps.heading }, intl),
-  }));
+  const propsForCustomFields = propsForCustomFieldsRaw.map(fieldProps => {
+    const translatedHeading = getListingFieldLabel(
+      { key: fieldProps.key, label: fieldProps.heading },
+      intl
+    );
+    if (fieldProps.schemaType === SCHEMA_TYPE_MULTI_ENUM && isAllowedAdTypesField(fieldProps.key)) {
+      const translatedOptions = (fieldProps.options || []).map(o => ({
+        ...o,
+        label: getAllowedAdTypeLabel(o.key, o.label, intl),
+      }));
+      return { ...fieldProps, heading: translatedHeading, options: translatedOptions };
+    }
+    return { ...fieldProps, heading: translatedHeading };
+  });
 
   return (
     <>

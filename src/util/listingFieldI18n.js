@@ -28,3 +28,12 @@ export const getListingFieldLabel = ({ key, label }, intl) => {
     LISTING_FIELD_LABEL_IDS_BY_KEY[key] || LISTING_FIELD_LABEL_IDS_BY_LABEL[label] || null;
   return id && intl ? intl.formatMessage({ id }) : label;
 };
+
+export const isAllowedAdTypesField = key =>
+  key === 'allowedAdTypes' || key === 'allowed_ad_types';
+
+export const getAllowedAdTypeLabel = (value, fallbackLabel, intl) => {
+  if (!intl) return fallbackLabel || value;
+  const id = `Listing.allowedAdTypes.${value}`;
+  return intl.formatMessage({ id, defaultMessage: fallbackLabel || value });
+};
