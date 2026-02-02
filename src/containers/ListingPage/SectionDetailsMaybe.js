@@ -2,6 +2,7 @@ import React from 'react';
 
 import { FormattedMessage } from '../../util/reactIntl';
 import { isFieldForListingType } from '../../util/fieldHelpers';
+import { getListingFieldLabel } from '../../util/listingFieldI18n';
 
 import { Heading } from '../../components';
 
@@ -33,12 +34,14 @@ const SectionDetailsMaybe = props => {
           : intl.formatMessage({ id: 'SearchPage.detailNo' });
       const optionConfig = findSelectedOption(value);
 
+      const resolvedLabel = getListingFieldLabel({ key, label }, intl);
+
       return schemaType === 'enum'
-        ? filteredConfigs.concat({ key, value: optionConfig?.label, label })
+        ? filteredConfigs.concat({ key, value: optionConfig?.label, label: resolvedLabel })
         : schemaType === 'boolean'
-        ? filteredConfigs.concat({ key, value: getBooleanMessage(value), label })
+        ? filteredConfigs.concat({ key, value: getBooleanMessage(value), label: resolvedLabel })
         : schemaType === 'long'
-        ? filteredConfigs.concat({ key, value, label })
+        ? filteredConfigs.concat({ key, value, label: resolvedLabel })
         : filteredConfigs;
     }
     return filteredConfigs;

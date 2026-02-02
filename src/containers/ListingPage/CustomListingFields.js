@@ -7,6 +7,7 @@ import {
   pickCategoryFields,
   pickCustomFieldProps,
 } from '../../util/fieldHelpers.js';
+import { getListingFieldLabel } from '../../util/listingFieldI18n';
 
 import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
@@ -23,7 +24,7 @@ import SectionYoutubeVideoMaybe from './SectionYoutubeVideoMaybe';
  * @returns React.Fragment containing aforementioned components
  */
 const CustomListingFields = props => {
-  const { publicData, metadata, listingFieldConfigs, categoryConfiguration } = props;
+  const { publicData, metadata, listingFieldConfigs, categoryConfiguration, intl } = props;
 
   const { key: categoryPrefix, categories: listingCategoriesConfig } = categoryConfiguration;
   const categoriesObj = pickCategoryFields(publicData, categoryPrefix, 1, listingCategoriesConfig);
@@ -33,7 +34,7 @@ const CustomListingFields = props => {
     const isTargetCategory = isFieldForCategory(currentCategories, fieldConfig);
     return isTargetCategory;
   };
-  const propsForCustomFields =
+  const propsForCustomFieldsRaw =
     pickCustomFieldProps(
       publicData,
       metadata,
@@ -41,6 +42,10 @@ const CustomListingFields = props => {
       'listingType',
       isFieldForSelectedCategories
     ) || [];
+  const propsForCustomFields = propsForCustomFieldsRaw.map(fieldProps => ({
+    ...fieldProps,
+    heading: getListingFieldLabel({ key: fieldProps.key, label: fieldProps.heading }, intl),
+  }));
 
   return (
     <>
