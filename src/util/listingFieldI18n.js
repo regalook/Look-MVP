@@ -32,8 +32,16 @@ export const getListingFieldLabel = ({ key, label }, intl) => {
 export const isAllowedAdTypesField = key =>
   key === 'allowedAdTypes' || key === 'allowed_ad_types';
 
+export const isAllowedAdsField = key => key === 'allowedAds' || key === 'allowed_ads';
+
 export const getAllowedAdTypeLabel = (value, fallbackLabel, intl) => {
   if (!intl) return fallbackLabel || value;
   const id = `Listing.allowedAdTypes.${value}`;
+  return intl.formatMessage({ id, defaultMessage: fallbackLabel || value });
+};
+
+export const getAllowedAdsLabel = (value, fallbackLabel, intl) => {
+  if (!intl) return fallbackLabel || value;
+  const id = `Listing.allowedAds.${value}`;
   return intl.formatMessage({ id, defaultMessage: fallbackLabel || value });
 };

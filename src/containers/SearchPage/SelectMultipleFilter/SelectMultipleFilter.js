@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { useIntl } from '../../../util/reactIntl';
 import { parseSelectFilterOptions } from '../../../util/search';
 import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from '../../../util/types';
+import { getAllowedAdTypeLabel, getAllowedAdsLabel } from '../../../util/listingFieldI18n';
 
 import { FieldCheckbox } from '../../../components';
 
@@ -96,6 +97,19 @@ const SelectMultipleFilter = props => {
     ? parseSelectFilterOptions(initialValues[queryParamName])
     : [];
 
+  const translatedOptions =
+    name === 'allowedAds' || name === 'allowed_ads'
+      ? options.map(o => ({
+          ...o,
+          label: getAllowedAdsLabel(o.option, o.label, intl),
+        }))
+      : name === 'allowedAdTypes' || name === 'allowed_ad_types'
+      ? options.map(o => ({
+          ...o,
+          label: getAllowedAdTypeLabel(o.option, o.label, intl),
+        }))
+      : options;
+
   const labelForPopup = hasInitialValues
     ? intl.formatMessage(
         { id: 'SelectMultipleFilter.labelSelected' },
@@ -138,7 +152,7 @@ const SelectMultipleFilter = props => {
         className={css.fieldGroup}
         name={name}
         id={`${id}-checkbox-group`}
-        options={options}
+        options={translatedOptions}
       />
     </FilterPopup>
   ) : (
@@ -159,7 +173,7 @@ const SelectMultipleFilter = props => {
         className={css.fieldGroupPlain}
         name={name}
         id={`${id}-checkbox-group`}
-        options={options}
+        options={translatedOptions}
       />
     </FilterPlain>
   );

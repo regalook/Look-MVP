@@ -9,8 +9,10 @@ import {
 } from '../../util/fieldHelpers.js';
 import {
   getAllowedAdTypeLabel,
+  getAllowedAdsLabel,
   getListingFieldLabel,
   isAllowedAdTypesField,
+  isAllowedAdsField,
 } from '../../util/listingFieldI18n';
 
 import SectionDetailsMaybe from './SectionDetailsMaybe';
@@ -51,10 +53,15 @@ const CustomListingFields = props => {
       { key: fieldProps.key, label: fieldProps.heading },
       intl
     );
-    if (fieldProps.schemaType === SCHEMA_TYPE_MULTI_ENUM && isAllowedAdTypesField(fieldProps.key)) {
+    if (
+      fieldProps.schemaType === SCHEMA_TYPE_MULTI_ENUM &&
+      (isAllowedAdTypesField(fieldProps.key) || isAllowedAdsField(fieldProps.key))
+    ) {
       const translatedOptions = (fieldProps.options || []).map(o => ({
         ...o,
-        label: getAllowedAdTypeLabel(o.key, o.label, intl),
+        label: isAllowedAdsField(fieldProps.key)
+          ? getAllowedAdsLabel(o.key, o.label, intl)
+          : getAllowedAdTypeLabel(o.key, o.label, intl),
       }));
       return { ...fieldProps, heading: translatedHeading, options: translatedOptions };
     }
