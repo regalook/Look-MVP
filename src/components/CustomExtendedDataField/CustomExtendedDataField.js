@@ -33,9 +33,13 @@ const getLabel = (fieldConfig, intl) => {
   const key = fieldConfig?.key;
   if (!intl) return label;
   if (typeof label === 'string') {
-    const hasMessage = intl?.messages && Object.prototype.hasOwnProperty.call(intl.messages, label);
-    if (label.startsWith('EditListingDetailsForm.') || hasMessage) {
-      return intl.formatMessage({ id: label, defaultMessage: label });
+    // Hosted config labels sometimes contain accidental leading/trailing whitespace,
+    // which would prevent matching translation keys. Normalize before lookup.
+    const normalizedId = label.trim().replace(/\s+/g, ' ');
+    const hasMessage =
+      intl?.messages && Object.prototype.hasOwnProperty.call(intl.messages, normalizedId);
+    if (normalizedId.startsWith('EditListingDetailsForm.') || hasMessage) {
+      return intl.formatMessage({ id: normalizedId, defaultMessage: label });
     }
   }
   if (!key) return label;
