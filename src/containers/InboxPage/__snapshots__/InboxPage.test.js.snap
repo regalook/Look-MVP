@@ -9,7 +9,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -21,7 +21,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   </div>
   <a
     class="itemLink"
-    href="/sale/id-booking-ACCEPT-sale"
+    href="/en/sale/id-booking-ACCEPT-sale"
   >
     <div
       class="rowNotificationDot"
@@ -77,7 +77,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -89,7 +89,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   </div>
   <a
     class="itemLink"
-    href="/sale/id-booking-CANCEL-sale"
+    href="/en/sale/id-booking-CANCEL-sale"
   >
     <div
       class="rowNotificationDot"
@@ -145,7 +145,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -157,7 +157,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   </div>
   <a
     class="itemLink"
-    href="/sale/id-booking-COMPLETE-sale"
+    href="/en/sale/id-booking-COMPLETE-sale"
   >
     <div
       class="rowNotificationDot"
@@ -213,7 +213,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -225,7 +225,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   </div>
   <a
     class="itemLink"
-    href="/sale/id-booking-CONFIRM_PAYMENT-sale"
+    href="/en/sale/id-booking-CONFIRM_PAYMENT-sale"
   >
     <div
       class="rowNotificationDot"
@@ -285,7 +285,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -297,7 +297,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   </div>
   <a
     class="itemLink"
-    href="/sale/id-booking-DECLINE-sale"
+    href="/en/sale/id-booking-DECLINE-sale"
   >
     <div
       class="rowNotificationDot"
@@ -353,7 +353,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -365,7 +365,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   </div>
   <a
     class="itemLink"
-    href="/sale/id-booking-EXPIRE-sale"
+    href="/en/sale/id-booking-EXPIRE-sale"
   >
     <div
       class="rowNotificationDot"
@@ -421,7 +421,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -433,7 +433,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   </div>
   <a
     class="itemLink"
-    href="/sale/id-booking-EXPIRE_CUSTOMER_REVIEW_PERIOD-sale"
+    href="/en/sale/id-booking-EXPIRE_CUSTOMER_REVIEW_PERIOD-sale"
   >
     <div
       class="rowNotificationDot"
@@ -489,7 +489,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -501,7 +501,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   </div>
   <a
     class="itemLink"
-    href="/sale/id-booking-EXPIRE_PAYMENT-sale"
+    href="/en/sale/id-booking-EXPIRE_PAYMENT-sale"
   >
     <div
       class="rowNotificationDot"
@@ -557,7 +557,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -569,7 +569,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   </div>
   <a
     class="itemLink"
-    href="/sale/id-booking-EXPIRE_PROVIDER_REVIEW_PERIOD-sale"
+    href="/en/sale/id-booking-EXPIRE_PROVIDER_REVIEW_PERIOD-sale"
   >
     <div
       class="rowNotificationDot"
@@ -625,7 +625,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -637,7 +637,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   </div>
   <a
     class="itemLink"
-    href="/sale/id-booking-EXPIRE_REVIEW_PERIOD-sale"
+    href="/en/sale/id-booking-EXPIRE_REVIEW_PERIOD-sale"
   >
     <div
       class="rowNotificationDot"
@@ -693,7 +693,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -705,7 +705,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   </div>
   <a
     class="itemLink"
-    href="/sale/id-booking-INQUIRE-sale"
+    href="/en/sale/id-booking-INQUIRE-sale"
   >
     <div
       class="rowNotificationDot"
@@ -751,7 +751,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -763,7 +763,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   </div>
   <a
     class="itemLink"
-    href="/sale/id-booking-OPERATOR_ACCEPT-sale"
+    href="/en/sale/id-booking-OPERATOR_ACCEPT-sale"
   >
     <div
       class="rowNotificationDot"
@@ -819,7 +819,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -831,7 +831,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   </div>
   <a
     class="itemLink"
-    href="/sale/id-booking-OPERATOR_COMPLETE-sale"
+    href="/en/sale/id-booking-OPERATOR_COMPLETE-sale"
   >
     <div
       class="rowNotificationDot"
@@ -887,7 +887,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -899,7 +899,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   </div>
   <a
     class="itemLink"
-    href="/sale/id-booking-OPERATOR_DECLINE-sale"
+    href="/en/sale/id-booking-OPERATOR_DECLINE-sale"
   >
     <div
       class="rowNotificationDot"
@@ -955,7 +955,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -967,7 +967,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   </div>
   <a
     class="itemLink"
-    href="/sale/id-booking-REQUEST_PAYMENT-sale"
+    href="/en/sale/id-booking-REQUEST_PAYMENT-sale"
   >
     <div
       class="rowNotificationDot"
@@ -1023,7 +1023,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -1035,7 +1035,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   </div>
   <a
     class="itemLink"
-    href="/sale/id-booking-REQUEST_PAYMENT_AFTER_INQUIRY-sale"
+    href="/en/sale/id-booking-REQUEST_PAYMENT_AFTER_INQUIRY-sale"
   >
     <div
       class="rowNotificationDot"
@@ -1091,7 +1091,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -1103,7 +1103,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   </div>
   <a
     class="itemLink"
-    href="/sale/id-booking-REVIEW_1_BY_CUSTOMER-sale"
+    href="/en/sale/id-booking-REVIEW_1_BY_CUSTOMER-sale"
   >
     <div
       class="rowNotificationDot"
@@ -1159,7 +1159,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -1171,7 +1171,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   </div>
   <a
     class="itemLink"
-    href="/sale/id-booking-REVIEW_1_BY_PROVIDER-sale"
+    href="/en/sale/id-booking-REVIEW_1_BY_PROVIDER-sale"
   >
     <div
       class="rowNotificationDot"
@@ -1227,7 +1227,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -1239,7 +1239,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   </div>
   <a
     class="itemLink"
-    href="/sale/id-booking-REVIEW_2_BY_CUSTOMER-sale"
+    href="/en/sale/id-booking-REVIEW_2_BY_CUSTOMER-sale"
   >
     <div
       class="rowNotificationDot"
@@ -1295,7 +1295,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -1307,7 +1307,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
   </div>
   <a
     class="itemLink"
-    href="/sale/id-booking-REVIEW_2_BY_PROVIDER-sale"
+    href="/en/sale/id-booking-REVIEW_2_BY_PROVIDER-sale"
   >
     <div
       class="rowNotificationDot"
@@ -1363,7 +1363,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -1375,7 +1375,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   </div>
   <a
     class="itemLink"
-    href="/order/id-booking-ACCEPT-order"
+    href="/en/order/id-booking-ACCEPT-order"
   >
     <div
       class="rowNotificationDot"
@@ -1431,7 +1431,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -1443,7 +1443,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   </div>
   <a
     class="itemLink"
-    href="/order/id-booking-CANCEL-order"
+    href="/en/order/id-booking-CANCEL-order"
   >
     <div
       class="rowNotificationDot"
@@ -1499,7 +1499,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -1511,7 +1511,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   </div>
   <a
     class="itemLink"
-    href="/order/id-booking-COMPLETE-order"
+    href="/en/order/id-booking-COMPLETE-order"
   >
     <div
       class="rowNotificationDot"
@@ -1567,7 +1567,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -1579,7 +1579,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   </div>
   <a
     class="itemLink"
-    href="/order/id-booking-CONFIRM_PAYMENT-order"
+    href="/en/order/id-booking-CONFIRM_PAYMENT-order"
   >
     <div
       class="rowNotificationDot"
@@ -1635,7 +1635,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -1647,7 +1647,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   </div>
   <a
     class="itemLink"
-    href="/order/id-booking-DECLINE-order"
+    href="/en/order/id-booking-DECLINE-order"
   >
     <div
       class="rowNotificationDot"
@@ -1703,7 +1703,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -1715,7 +1715,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   </div>
   <a
     class="itemLink"
-    href="/order/id-booking-EXPIRE-order"
+    href="/en/order/id-booking-EXPIRE-order"
   >
     <div
       class="rowNotificationDot"
@@ -1771,7 +1771,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -1783,7 +1783,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   </div>
   <a
     class="itemLink"
-    href="/order/id-booking-EXPIRE_CUSTOMER_REVIEW_PERIOD-order"
+    href="/en/order/id-booking-EXPIRE_CUSTOMER_REVIEW_PERIOD-order"
   >
     <div
       class="rowNotificationDot"
@@ -1839,7 +1839,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -1851,7 +1851,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   </div>
   <a
     class="itemLink"
-    href="/order/id-booking-EXPIRE_PAYMENT-order"
+    href="/en/order/id-booking-EXPIRE_PAYMENT-order"
   >
     <div
       class="rowNotificationDot"
@@ -1907,7 +1907,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -1919,7 +1919,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   </div>
   <a
     class="itemLink"
-    href="/order/id-booking-EXPIRE_PROVIDER_REVIEW_PERIOD-order"
+    href="/en/order/id-booking-EXPIRE_PROVIDER_REVIEW_PERIOD-order"
   >
     <div
       class="rowNotificationDot"
@@ -1975,7 +1975,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -1987,7 +1987,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   </div>
   <a
     class="itemLink"
-    href="/order/id-booking-EXPIRE_REVIEW_PERIOD-order"
+    href="/en/order/id-booking-EXPIRE_REVIEW_PERIOD-order"
   >
     <div
       class="rowNotificationDot"
@@ -2043,7 +2043,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -2055,7 +2055,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   </div>
   <a
     class="itemLink"
-    href="/order/id-booking-INQUIRE-order"
+    href="/en/order/id-booking-INQUIRE-order"
   >
     <div
       class="rowNotificationDot"
@@ -2101,7 +2101,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -2113,7 +2113,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   </div>
   <a
     class="itemLink"
-    href="/order/id-booking-OPERATOR_ACCEPT-order"
+    href="/en/order/id-booking-OPERATOR_ACCEPT-order"
   >
     <div
       class="rowNotificationDot"
@@ -2169,7 +2169,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -2181,7 +2181,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   </div>
   <a
     class="itemLink"
-    href="/order/id-booking-OPERATOR_COMPLETE-order"
+    href="/en/order/id-booking-OPERATOR_COMPLETE-order"
   >
     <div
       class="rowNotificationDot"
@@ -2237,7 +2237,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -2249,7 +2249,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   </div>
   <a
     class="itemLink"
-    href="/order/id-booking-OPERATOR_DECLINE-order"
+    href="/en/order/id-booking-OPERATOR_DECLINE-order"
   >
     <div
       class="rowNotificationDot"
@@ -2305,7 +2305,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -2317,7 +2317,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   </div>
   <a
     class="itemLink"
-    href="/order/id-booking-REQUEST_PAYMENT-order"
+    href="/en/order/id-booking-REQUEST_PAYMENT-order"
   >
     <div
       class="rowNotificationDot"
@@ -2373,7 +2373,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -2385,7 +2385,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   </div>
   <a
     class="itemLink"
-    href="/order/id-booking-REQUEST_PAYMENT_AFTER_INQUIRY-order"
+    href="/en/order/id-booking-REQUEST_PAYMENT_AFTER_INQUIRY-order"
   >
     <div
       class="rowNotificationDot"
@@ -2441,7 +2441,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -2453,7 +2453,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   </div>
   <a
     class="itemLink"
-    href="/order/id-booking-REVIEW_1_BY_CUSTOMER-order"
+    href="/en/order/id-booking-REVIEW_1_BY_CUSTOMER-order"
   >
     <div
       class="rowNotificationDot"
@@ -2509,7 +2509,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -2521,7 +2521,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   </div>
   <a
     class="itemLink"
-    href="/order/id-booking-REVIEW_1_BY_PROVIDER-order"
+    href="/en/order/id-booking-REVIEW_1_BY_PROVIDER-order"
   >
     <div
       class="rowNotificationDot"
@@ -2577,7 +2577,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -2589,7 +2589,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   </div>
   <a
     class="itemLink"
-    href="/order/id-booking-REVIEW_2_BY_CUSTOMER-order"
+    href="/en/order/id-booking-REVIEW_2_BY_CUSTOMER-order"
   >
     <div
       class="rowNotificationDot"
@@ -2645,7 +2645,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -2657,7 +2657,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
   </div>
   <a
     class="itemLink"
-    href="/order/id-booking-REVIEW_2_BY_PROVIDER-order"
+    href="/en/order/id-booking-REVIEW_2_BY_PROVIDER-order"
   >
     <div
       class="rowNotificationDot"
@@ -2713,7 +2713,7 @@ exports[`InboxPage InboxItem: default-inquiry process with "inquiry" item check 
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -2725,7 +2725,7 @@ exports[`InboxPage InboxItem: default-inquiry process with "inquiry" item check 
   </div>
   <a
     class="itemLink"
-    href="/sale/id-inquiry-INQUIRE_WITHOUT_PAYMENT-sale"
+    href="/en/sale/id-inquiry-INQUIRE_WITHOUT_PAYMENT-sale"
   >
     <div
       class="rowNotificationDot"
@@ -2771,7 +2771,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -2783,7 +2783,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-ACCEPT_DELIVERABLE-request"
+    href="/en/order/id-negotiation-ACCEPT_DELIVERABLE-request"
   >
     <div
       class="rowNotificationDot"
@@ -2829,7 +2829,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -2841,7 +2841,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-ACCEPT_OFFER-request"
+    href="/en/order/id-negotiation-ACCEPT_OFFER-request"
   >
     <div
       class="rowNotificationDot"
@@ -2887,7 +2887,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -2899,7 +2899,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-AUTO_ACCEPT_DELIVERABLE-request"
+    href="/en/order/id-negotiation-AUTO_ACCEPT_DELIVERABLE-request"
   >
     <div
       class="rowNotificationDot"
@@ -2945,7 +2945,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -2957,7 +2957,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-AUTO_CANCEL-request"
+    href="/en/order/id-negotiation-AUTO_CANCEL-request"
   >
     <div
       class="rowNotificationDot"
@@ -3003,7 +3003,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -3015,7 +3015,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-AUTO_CANCEL_FROM_CHANGES_REQUESTED-request"
+    href="/en/order/id-negotiation-AUTO_CANCEL_FROM_CHANGES_REQUESTED-request"
   >
     <div
       class="rowNotificationDot"
@@ -3061,7 +3061,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -3073,7 +3073,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-CONFIRM_PAYMENT-request"
+    href="/en/order/id-negotiation-CONFIRM_PAYMENT-request"
   >
     <div
       class="rowNotificationDot"
@@ -3119,7 +3119,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -3131,7 +3131,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-CUSTOMER_MAKE_COUNTER_OFFER-request"
+    href="/en/order/id-negotiation-CUSTOMER_MAKE_COUNTER_OFFER-request"
   >
     <div
       class="rowNotificationDot"
@@ -3177,7 +3177,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -3189,7 +3189,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-CUSTOMER_REJECT_FROM_UPDATE_PENDING-request"
+    href="/en/order/id-negotiation-CUSTOMER_REJECT_FROM_UPDATE_PENDING-request"
   >
     <div
       class="rowNotificationDot"
@@ -3235,7 +3235,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -3247,7 +3247,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-CUSTOMER_REJECT_OFFER-request"
+    href="/en/order/id-negotiation-CUSTOMER_REJECT_OFFER-request"
   >
     <div
       class="rowNotificationDot"
@@ -3293,7 +3293,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -3305,7 +3305,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-CUSTOMER_WITHDRAW_COUNTER_OFFER-request"
+    href="/en/order/id-negotiation-CUSTOMER_WITHDRAW_COUNTER_OFFER-request"
   >
     <div
       class="rowNotificationDot"
@@ -3351,7 +3351,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -3363,7 +3363,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-DELIVER-request"
+    href="/en/order/id-negotiation-DELIVER-request"
   >
     <div
       class="rowNotificationDot"
@@ -3409,7 +3409,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -3421,7 +3421,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-DELIVER_CHANGES-request"
+    href="/en/order/id-negotiation-DELIVER_CHANGES-request"
   >
     <div
       class="rowNotificationDot"
@@ -3467,7 +3467,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -3479,7 +3479,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-EXPIRE_CUSTOMER_REVIEW_PERIOD-request"
+    href="/en/order/id-negotiation-EXPIRE_CUSTOMER_REVIEW_PERIOD-request"
   >
     <div
       class="rowNotificationDot"
@@ -3525,7 +3525,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -3537,7 +3537,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-EXPIRE_PAYMENT-request"
+    href="/en/order/id-negotiation-EXPIRE_PAYMENT-request"
   >
     <div
       class="rowNotificationDot"
@@ -3583,7 +3583,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -3595,7 +3595,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-EXPIRE_PROVIDER_REVIEW_PERIOD-request"
+    href="/en/order/id-negotiation-EXPIRE_PROVIDER_REVIEW_PERIOD-request"
   >
     <div
       class="rowNotificationDot"
@@ -3641,7 +3641,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -3653,7 +3653,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-EXPIRE_REVIEW_PERIOD-request"
+    href="/en/order/id-negotiation-EXPIRE_REVIEW_PERIOD-request"
   >
     <div
       class="rowNotificationDot"
@@ -3699,7 +3699,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -3711,7 +3711,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-INQUIRE-request"
+    href="/en/order/id-negotiation-INQUIRE-request"
   >
     <div
       class="rowNotificationDot"
@@ -3757,7 +3757,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -3769,7 +3769,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-MAKE_OFFER-request"
+    href="/en/order/id-negotiation-MAKE_OFFER-request"
   >
     <div
       class="rowNotificationDot"
@@ -3815,7 +3815,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -3827,7 +3827,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-MAKE_OFFER_AFTER_INQUIRY-request"
+    href="/en/order/id-negotiation-MAKE_OFFER_AFTER_INQUIRY-request"
   >
     <div
       class="rowNotificationDot"
@@ -3873,7 +3873,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -3885,7 +3885,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-MAKE_OFFER_FROM_REQUEST-request"
+    href="/en/order/id-negotiation-MAKE_OFFER_FROM_REQUEST-request"
   >
     <div
       class="rowNotificationDot"
@@ -3931,7 +3931,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -3943,7 +3943,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-OPERATOR_ACCEPT_DELIVERABLE-request"
+    href="/en/order/id-negotiation-OPERATOR_ACCEPT_DELIVERABLE-request"
   >
     <div
       class="rowNotificationDot"
@@ -3989,7 +3989,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -4001,7 +4001,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-OPERATOR_ACCEPT_OFFER-request"
+    href="/en/order/id-negotiation-OPERATOR_ACCEPT_OFFER-request"
   >
     <div
       class="rowNotificationDot"
@@ -4047,7 +4047,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -4059,7 +4059,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-OPERATOR_CANCEL-request"
+    href="/en/order/id-negotiation-OPERATOR_CANCEL-request"
   >
     <div
       class="rowNotificationDot"
@@ -4105,7 +4105,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -4117,7 +4117,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-OPERATOR_CANCEL_FROM_CHANGES_REQUESTED-request"
+    href="/en/order/id-negotiation-OPERATOR_CANCEL_FROM_CHANGES_REQUESTED-request"
   >
     <div
       class="rowNotificationDot"
@@ -4163,7 +4163,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -4175,7 +4175,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-OPERATOR_CANCEL_FROM_DELIVERED-request"
+    href="/en/order/id-negotiation-OPERATOR_CANCEL_FROM_DELIVERED-request"
   >
     <div
       class="rowNotificationDot"
@@ -4221,7 +4221,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -4233,7 +4233,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-OPERATOR_MARK_CHANGES_DELIVERED-request"
+    href="/en/order/id-negotiation-OPERATOR_MARK_CHANGES_DELIVERED-request"
   >
     <div
       class="rowNotificationDot"
@@ -4279,7 +4279,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -4291,7 +4291,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-OPERATOR_MARK_DELIVERED-request"
+    href="/en/order/id-negotiation-OPERATOR_MARK_DELIVERED-request"
   >
     <div
       class="rowNotificationDot"
@@ -4337,7 +4337,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -4349,7 +4349,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-OPERATOR_REJECT_FROM_CUSTOMER_COUNTER_OFFER-request"
+    href="/en/order/id-negotiation-OPERATOR_REJECT_FROM_CUSTOMER_COUNTER_OFFER-request"
   >
     <div
       class="rowNotificationDot"
@@ -4395,7 +4395,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -4407,7 +4407,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-OPERATOR_REJECT_OFFER-request"
+    href="/en/order/id-negotiation-OPERATOR_REJECT_OFFER-request"
   >
     <div
       class="rowNotificationDot"
@@ -4453,7 +4453,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -4465,7 +4465,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-OPERATOR_REJECT_REQUEST-request"
+    href="/en/order/id-negotiation-OPERATOR_REJECT_REQUEST-request"
   >
     <div
       class="rowNotificationDot"
@@ -4511,7 +4511,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -4523,7 +4523,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-OPERATOR_REQUEST_CHANGES-request"
+    href="/en/order/id-negotiation-OPERATOR_REQUEST_CHANGES-request"
   >
     <div
       class="rowNotificationDot"
@@ -4569,7 +4569,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -4581,7 +4581,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-PROVIDER_ACCEPT_COUNTER_OFFER-request"
+    href="/en/order/id-negotiation-PROVIDER_ACCEPT_COUNTER_OFFER-request"
   >
     <div
       class="rowNotificationDot"
@@ -4627,7 +4627,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -4639,7 +4639,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-PROVIDER_MAKE_COUNTER_OFFER-request"
+    href="/en/order/id-negotiation-PROVIDER_MAKE_COUNTER_OFFER-request"
   >
     <div
       class="rowNotificationDot"
@@ -4685,7 +4685,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -4697,7 +4697,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-PROVIDER_REJECT_COUNTER_OFFER-request"
+    href="/en/order/id-negotiation-PROVIDER_REJECT_COUNTER_OFFER-request"
   >
     <div
       class="rowNotificationDot"
@@ -4743,7 +4743,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -4755,7 +4755,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-PROVIDER_WITHDRAW_FROM_UPDATE_PENDING-request"
+    href="/en/order/id-negotiation-PROVIDER_WITHDRAW_FROM_UPDATE_PENDING-request"
   >
     <div
       class="rowNotificationDot"
@@ -4801,7 +4801,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -4813,7 +4813,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-PROVIDER_WITHDRAW_OFFER-request"
+    href="/en/order/id-negotiation-PROVIDER_WITHDRAW_OFFER-request"
   >
     <div
       class="rowNotificationDot"
@@ -4859,7 +4859,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -4871,7 +4871,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-REJECT_REQUEST-request"
+    href="/en/order/id-negotiation-REJECT_REQUEST-request"
   >
     <div
       class="rowNotificationDot"
@@ -4917,7 +4917,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -4929,7 +4929,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-REQUEST_CHANGES-request"
+    href="/en/order/id-negotiation-REQUEST_CHANGES-request"
   >
     <div
       class="rowNotificationDot"
@@ -4975,7 +4975,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -4987,7 +4987,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-REQUEST_PAYMENT_TO_ACCEPT_OFFER-request"
+    href="/en/order/id-negotiation-REQUEST_PAYMENT_TO_ACCEPT_OFFER-request"
   >
     <div
       class="rowNotificationDot"
@@ -5033,7 +5033,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -5045,7 +5045,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-REQUEST_QUOTE-request"
+    href="/en/order/id-negotiation-REQUEST_QUOTE-request"
   >
     <div
       class="rowNotificationDot"
@@ -5091,7 +5091,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -5103,7 +5103,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-REVIEW_1_BY_CUSTOMER-request"
+    href="/en/order/id-negotiation-REVIEW_1_BY_CUSTOMER-request"
   >
     <div
       class="rowNotificationDot"
@@ -5149,7 +5149,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -5161,7 +5161,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-REVIEW_1_BY_PROVIDER-request"
+    href="/en/order/id-negotiation-REVIEW_1_BY_PROVIDER-request"
   >
     <div
       class="rowNotificationDot"
@@ -5207,7 +5207,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -5219,7 +5219,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-REVIEW_2_BY_CUSTOMER-request"
+    href="/en/order/id-negotiation-REVIEW_2_BY_CUSTOMER-request"
   >
     <div
       class="rowNotificationDot"
@@ -5265,7 +5265,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -5277,7 +5277,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-REVIEW_2_BY_PROVIDER-request"
+    href="/en/order/id-negotiation-REVIEW_2_BY_PROVIDER-request"
   >
     <div
       class="rowNotificationDot"
@@ -5323,7 +5323,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -5335,7 +5335,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-UPDATE_FROM_UPDATE_PENDING-request"
+    href="/en/order/id-negotiation-UPDATE_FROM_UPDATE_PENDING-request"
   >
     <div
       class="rowNotificationDot"
@@ -5381,7 +5381,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -5393,7 +5393,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-UPDATE_OFFER-request"
+    href="/en/order/id-negotiation-UPDATE_OFFER-request"
   >
     <div
       class="rowNotificationDot"
@@ -5439,7 +5439,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   >
     <a
       class="root"
-      href="/u/provider"
+      href="/en/u/provider"
       title="provider display name"
     >
       <span
@@ -5451,7 +5451,7 @@ exports[`InboxPage InboxItem: default-negotiation process with "request" check n
   </div>
   <a
     class="itemLink"
-    href="/order/id-negotiation-WITHDRAW_REQUEST-request"
+    href="/en/order/id-negotiation-WITHDRAW_REQUEST-request"
   >
     <div
       class="rowNotificationDot"
@@ -5497,7 +5497,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" InboxItem wit
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -5509,7 +5509,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" InboxItem wit
   </div>
   <a
     class="itemLink"
-    href="/sale/oneItem-sale"
+    href="/en/sale/oneItem-sale"
   >
     <div
       class="rowNotificationDot"
@@ -5559,7 +5559,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -5571,7 +5571,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-AUTO_CANCEL-sale"
+    href="/en/sale/id-purchase-AUTO_CANCEL-sale"
   >
     <div
       class="rowNotificationDot"
@@ -5621,7 +5621,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -5633,7 +5633,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-AUTO_CANCEL_FROM_DISPUTED-sale"
+    href="/en/sale/id-purchase-AUTO_CANCEL_FROM_DISPUTED-sale"
   >
     <div
       class="rowNotificationDot"
@@ -5683,7 +5683,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -5695,7 +5695,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-AUTO_COMPLETE-sale"
+    href="/en/sale/id-purchase-AUTO_COMPLETE-sale"
   >
     <div
       class="rowNotificationDot"
@@ -5745,7 +5745,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -5757,7 +5757,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-AUTO_MARK_RECEIVED-sale"
+    href="/en/sale/id-purchase-AUTO_MARK_RECEIVED-sale"
   >
     <div
       class="rowNotificationDot"
@@ -5807,7 +5807,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -5819,7 +5819,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-CANCEL-sale"
+    href="/en/sale/id-purchase-CANCEL-sale"
   >
     <div
       class="rowNotificationDot"
@@ -5869,7 +5869,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -5881,7 +5881,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-CANCEL_FROM_DISPUTED-sale"
+    href="/en/sale/id-purchase-CANCEL_FROM_DISPUTED-sale"
   >
     <div
       class="rowNotificationDot"
@@ -5931,7 +5931,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -5943,7 +5943,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-CONFIRM_PAYMENT-sale"
+    href="/en/sale/id-purchase-CONFIRM_PAYMENT-sale"
   >
     <div
       class="rowNotificationDot"
@@ -5997,7 +5997,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -6009,7 +6009,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-DISPUTE-sale"
+    href="/en/sale/id-purchase-DISPUTE-sale"
   >
     <div
       class="rowNotificationDot"
@@ -6059,7 +6059,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -6071,7 +6071,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-EXPIRE_CUSTOMER_REVIEW_PERIOD-sale"
+    href="/en/sale/id-purchase-EXPIRE_CUSTOMER_REVIEW_PERIOD-sale"
   >
     <div
       class="rowNotificationDot"
@@ -6121,7 +6121,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -6133,7 +6133,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-EXPIRE_PAYMENT-sale"
+    href="/en/sale/id-purchase-EXPIRE_PAYMENT-sale"
   >
     <div
       class="rowNotificationDot"
@@ -6183,7 +6183,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -6195,7 +6195,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-EXPIRE_PROVIDER_REVIEW_PERIOD-sale"
+    href="/en/sale/id-purchase-EXPIRE_PROVIDER_REVIEW_PERIOD-sale"
   >
     <div
       class="rowNotificationDot"
@@ -6245,7 +6245,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -6257,7 +6257,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-EXPIRE_REVIEW_PERIOD-sale"
+    href="/en/sale/id-purchase-EXPIRE_REVIEW_PERIOD-sale"
   >
     <div
       class="rowNotificationDot"
@@ -6307,7 +6307,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -6319,7 +6319,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-INQUIRE-sale"
+    href="/en/sale/id-purchase-INQUIRE-sale"
   >
     <div
       class="rowNotificationDot"
@@ -6365,7 +6365,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -6377,7 +6377,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-MARK_DELIVERED-sale"
+    href="/en/sale/id-purchase-MARK_DELIVERED-sale"
   >
     <div
       class="rowNotificationDot"
@@ -6427,7 +6427,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -6439,7 +6439,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-MARK_RECEIVED-sale"
+    href="/en/sale/id-purchase-MARK_RECEIVED-sale"
   >
     <div
       class="rowNotificationDot"
@@ -6489,7 +6489,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -6501,7 +6501,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-MARK_RECEIVED_FROM_DISPUTED-sale"
+    href="/en/sale/id-purchase-MARK_RECEIVED_FROM_DISPUTED-sale"
   >
     <div
       class="rowNotificationDot"
@@ -6551,7 +6551,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -6563,7 +6563,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-MARK_RECEIVED_FROM_PURCHASED-sale"
+    href="/en/sale/id-purchase-MARK_RECEIVED_FROM_PURCHASED-sale"
   >
     <div
       class="rowNotificationDot"
@@ -6613,7 +6613,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -6625,7 +6625,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-OPERATOR_DISPUTE-sale"
+    href="/en/sale/id-purchase-OPERATOR_DISPUTE-sale"
   >
     <div
       class="rowNotificationDot"
@@ -6675,7 +6675,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -6687,7 +6687,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-OPERATOR_MARK_DELIVERED-sale"
+    href="/en/sale/id-purchase-OPERATOR_MARK_DELIVERED-sale"
   >
     <div
       class="rowNotificationDot"
@@ -6737,7 +6737,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -6749,7 +6749,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-REQUEST_PAYMENT-sale"
+    href="/en/sale/id-purchase-REQUEST_PAYMENT-sale"
   >
     <div
       class="rowNotificationDot"
@@ -6799,7 +6799,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -6811,7 +6811,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-REQUEST_PAYMENT_AFTER_INQUIRY-sale"
+    href="/en/sale/id-purchase-REQUEST_PAYMENT_AFTER_INQUIRY-sale"
   >
     <div
       class="rowNotificationDot"
@@ -6861,7 +6861,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -6873,7 +6873,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-REVIEW_1_BY_CUSTOMER-sale"
+    href="/en/sale/id-purchase-REVIEW_1_BY_CUSTOMER-sale"
   >
     <div
       class="rowNotificationDot"
@@ -6923,7 +6923,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -6935,7 +6935,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-REVIEW_1_BY_PROVIDER-sale"
+    href="/en/sale/id-purchase-REVIEW_1_BY_PROVIDER-sale"
   >
     <div
       class="rowNotificationDot"
@@ -6985,7 +6985,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -6997,7 +6997,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-REVIEW_2_BY_CUSTOMER-sale"
+    href="/en/sale/id-purchase-REVIEW_2_BY_CUSTOMER-sale"
   >
     <div
       class="rowNotificationDot"
@@ -7047,7 +7047,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   >
     <a
       class="root"
-      href="/u/customer"
+      href="/en/u/customer"
       title="customer display name"
     >
       <span
@@ -7059,7 +7059,7 @@ exports[`InboxPage InboxItem: default-purchase process with "item" check purchas
   </div>
   <a
     class="itemLink"
-    href="/sale/id-purchase-REVIEW_2_BY_PROVIDER-sale"
+    href="/en/sale/id-purchase-REVIEW_2_BY_PROVIDER-sale"
   >
     <div
       class="rowNotificationDot"

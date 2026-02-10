@@ -17,32 +17,41 @@ describe('util/routes.js', () => {
   describe('createResourceLocatorString', () => {
     it('should return meaningful strings if parameters are not needed', () => {
       // default links without params in path or search query
-      expect(createResourceLocatorString('SearchPage', routes, undefined, undefined)).toEqual('/s');
-      expect(createResourceLocatorString('SearchPage', routes, {}, {})).toEqual('/s');
+      expect(
+        createResourceLocatorString('SearchPage', routes, { locale: 'en' }, undefined)
+      ).toEqual('/en/s');
+      expect(createResourceLocatorString('SearchPage', routes, { locale: 'en' }, {})).toEqual(
+        '/en/s'
+      );
     });
 
     it('should return meaningful strings with path parameters', () => {
       expect(
-        createResourceLocatorString('ListingPage', routes, { id: '1234', slug: 'nice-listing' }, {})
-      ).toEqual('/l/nice-listing/1234');
+        createResourceLocatorString(
+          'ListingPage',
+          routes,
+          { locale: 'en', id: '1234', slug: 'nice-listing' },
+          {}
+        )
+      ).toEqual('/en/l/nice-listing/1234');
       expect(() => createResourceLocatorString('ListingPage', routes, {}, {})).toThrowError(
-        TypeError('Missing parameters: slug, id')
+        TypeError('Missing parameters: locale, slug, id')
       );
       expect(() =>
-        createResourceLocatorString('ListingPage', routes, { id: '1234' }, {})
+        createResourceLocatorString('ListingPage', routes, { locale: 'en', id: '1234' }, {})
       ).toThrowError(TypeError('Missing parameters: slug'));
       expect(() =>
-        createResourceLocatorString('ListingPage', routes, { slug: 'nice-listing' }, {})
+        createResourceLocatorString('ListingPage', routes, { locale: 'en', slug: 'nice-listing' }, {})
       ).toThrowError(TypeError('Missing parameters: id'));
     });
 
     it('should return meaningful strings with search parameters', () => {
-      expect(createResourceLocatorString('SearchPage', routes, {}, { page: 2 })).toEqual(
-        '/s?page=2'
+      expect(createResourceLocatorString('SearchPage', routes, { locale: 'en' }, { page: 2 })).toEqual(
+        '/en/s?page=2'
       );
       expect(
-        createResourceLocatorString('SearchPage', routes, {}, { address: 'Helsinki', page: 2 })
-      ).toEqual('/s?address=Helsinki&page=2');
+        createResourceLocatorString('SearchPage', routes, { locale: 'en' }, { address: 'Helsinki', page: 2 })
+      ).toEqual('/en/s?address=Helsinki&page=2');
     });
 
     it('should return meaningful strings with path and search parameters', () => {
@@ -50,10 +59,10 @@ describe('util/routes.js', () => {
         createResourceLocatorString(
           'ListingPage',
           routes,
-          { id: '1234', slug: 'nice-listing' },
+          { locale: 'en', id: '1234', slug: 'nice-listing' },
           { extrainfo: true }
         )
-      ).toEqual('/l/nice-listing/1234?extrainfo=true');
+      ).toEqual('/en/l/nice-listing/1234?extrainfo=true');
     });
   });
 
@@ -82,58 +91,58 @@ describe('util/routes.js', () => {
     });
     it('handles ListingPage', () => {
       const location = {
-        pathname: '/l/some-slug-here/00000000-0000-0000-0000-000000000000',
+        pathname: '/en/l/some-slug-here/00000000-0000-0000-0000-000000000000',
         search: '',
         hash: '',
       };
       expect(canonicalRoutePath(routes, location)).toEqual(
-        '/l/00000000-0000-0000-0000-000000000000'
+        '/en/l/00000000-0000-0000-0000-000000000000'
       );
     });
     it('handles ListingPage book', () => {
       const location = {
-        pathname: '/l/some-slug-here/00000000-0000-0000-0000-000000000000?book=true',
-        search: '',
+        pathname: '/en/l/some-slug-here/00000000-0000-0000-0000-000000000000',
+        search: '?book=true',
         hash: '',
       };
       expect(canonicalRoutePath(routes, location)).toEqual(
-        '/l/00000000-0000-0000-0000-000000000000?book=true'
+        '/en/l/00000000-0000-0000-0000-000000000000?book=true'
       );
     });
     it('handles ListingBasePage', () => {
       const location = {
-        pathname: '/l',
+        pathname: '/en/l',
         search: '',
         hash: '',
       };
-      expect(canonicalRoutePath(routes, location)).toEqual('/l');
+      expect(canonicalRoutePath(routes, location)).toEqual('/en/l');
     });
     it('handles CheckoutPage', () => {
       const location = {
-        pathname: '/l/some-slug-here/00000000-0000-0000-0000-000000000000/checkout',
+        pathname: '/en/l/some-slug-here/00000000-0000-0000-0000-000000000000/checkout',
         search: '',
         hash: '',
       };
       expect(canonicalRoutePath(routes, location)).toEqual(
-        '/l/some-slug-here/00000000-0000-0000-0000-000000000000/checkout'
+        '/en/l/some-slug-here/00000000-0000-0000-0000-000000000000/checkout'
       );
     });
     it('handles NewListingPage', () => {
       const location = {
-        pathname: '/l/new',
+        pathname: '/en/l/new',
         search: '',
         hash: '',
       };
-      expect(canonicalRoutePath(routes, location)).toEqual('/l/new');
+      expect(canonicalRoutePath(routes, location)).toEqual('/en/l/new');
     });
     it('handles ListingPageCanonical', () => {
       const location = {
-        pathname: '/l/00000000-0000-0000-0000-000000000000',
+        pathname: '/en/l/00000000-0000-0000-0000-000000000000',
         search: '',
         hash: '',
       };
       expect(canonicalRoutePath(routes, location)).toEqual(
-        '/l/00000000-0000-0000-0000-000000000000'
+        '/en/l/00000000-0000-0000-0000-000000000000'
       );
     });
   });

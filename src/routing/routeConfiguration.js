@@ -110,6 +110,40 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       name: 'LocaleRedirect',
       component: LocaleRedirect,
     },
+    // Legacy/non-localized CMS page route.
+    //
+    // Some hosted content (e.g. footer markdown) may link to `/p/:pageId` without a locale prefix.
+    // Our localized routes use `/:locale/p/:pageId`, so without this alias those links fall back
+    // to a full page load and end up as NotFound in SSR.
+    {
+      path: '/p/:pageId',
+      name: 'CMSPageLegacy',
+      component: CMSPage,
+      loadData: pageDataLoadingAPI.CMSPage.loadData,
+    },
+    // Do not change these paths!
+    //
+    // The API expects that the application implements these endpoints without locale prefix.
+    // NOTE: These must be defined before the localized landing page route (`/:locale`) because
+    // otherwise `/verify-email` etc. would be treated as an invalid locale and redirected.
+    {
+      path: '/reset-password',
+      name: 'PasswordResetPage',
+      component: PasswordResetPage,
+    },
+    {
+      path: '/verify-email',
+      name: 'EmailVerificationPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: EmailVerificationPage,
+      loadData: pageDataLoadingAPI.EmailVerificationPage.loadData,
+    },
+    {
+      path: '/preview',
+      name: 'PreviewResolverPage',
+      component: PreviewResolverPage,
+    },
     // Localized landing page
     {
       path: withLocale('/'),
@@ -448,35 +482,6 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       path: withLocale('/notfound'),
       name: 'NotFoundPage',
       component: props => <NotFoundPage {...props} />,
-    },
-
-    // Do not change this path!
-    //
-    // The API expects that the application implements /reset-password endpoint
-    {
-      path: '/reset-password',
-      name: 'PasswordResetPage',
-      component: PasswordResetPage ,
-    },
-
-    // Do not change this path!
-    //
-    // The API expects that the application implements /verify-email endpoint
-    {
-      path: '/verify-email',
-      name: 'EmailVerificationPage',
-      auth: true,
-      authPage: 'LoginPage',
-      component: EmailVerificationPage,
-      loadData: pageDataLoadingAPI.EmailVerificationPage.loadData,
-    },
-    // Do not change this path!
-    //
-    // The API expects that the application implements /preview endpoint
-    {
-      path: '/preview',
-      name: 'PreviewResolverPage',
-      component: PreviewResolverPage ,
     },
   ];
 };

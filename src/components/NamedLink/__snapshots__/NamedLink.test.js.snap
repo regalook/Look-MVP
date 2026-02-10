@@ -4,13 +4,13 @@ exports[`NamedLink matches snapshot 1`] = `
 <div>
   <a
     class="my-active-class"
-    href="/"
+    href="/en"
   >
     link to a
   </a>
   <a
     class=""
-    href="/s"
+    href="/en/s"
   >
     link to b
   </a>

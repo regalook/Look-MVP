@@ -9,6 +9,25 @@ import { getHostedConfiguration } from './util/testHelpers';
 import { ServerApp } from './app';
 import configureStore from './store';
 
+const originalConsoleError = console.error;
+
+beforeAll(() => {
+  // SSR tests exercise config merging. In this repo `.env` does not provide map tokens,
+  // and config helpers log an error when map provider credentials are missing.
+  // Suppress only that one expected message to keep the test signal clean.
+  jest.spyOn(console, 'error').mockImplementation((...args) => {
+    const msg = String(args[0] ?? '');
+    if (msg.includes('The access tokens are not in place for the selected map provider')) {
+      return;
+    }
+    originalConsoleError(...args);
+  });
+});
+
+afterAll(() => {
+  console.error.mockRestore?.();
+});
+
 const render = (url, context) => {
   const store = configureStore({});
 
@@ -34,27 +53,27 @@ describe('Application - node environment', () => {
   });
 
   it('renders the styleguide without crashing', () => {
-    render('/styleguide', {});
+    render('/en/styleguide', {});
   });
 
   it('server renders redirects for pages that require authentication', () => {
-    const loginPath = '/login';
-    const signupPath = '/signup';
+    const loginPath = '/en/login';
+    const signupPath = '/en/signup';
     const urlRedirects = {
-      '/l/new': signupPath,
-      '/l/listing-title-slug/1234/new/description': signupPath,
-      '/l/listing-title-slug/1234/checkout': signupPath,
-      '/profile-settings': loginPath,
-      '/inbox': loginPath,
-      '/inbox/orders': loginPath,
-      '/inbox/sales': loginPath,
-      '/order/1234': loginPath,
-      '/sale/1234': loginPath,
-      '/listings': loginPath,
-      '/account': loginPath,
-      '/account/contact-details': loginPath,
-      '/account/change-password': loginPath,
-      '/account/payments': loginPath,
+      '/en/l/new': signupPath,
+      '/en/l/listing-title-slug/1234/new/description': signupPath,
+      '/en/l/listing-title-slug/1234/checkout': signupPath,
+      '/en/profile-settings': loginPath,
+      '/en/inbox': loginPath,
+      '/en/inbox/orders': loginPath,
+      '/en/inbox/sales': loginPath,
+      '/en/order/1234': loginPath,
+      '/en/sale/1234': loginPath,
+      '/en/listings': loginPath,
+      '/en/account': loginPath,
+      '/en/account/contact-details': loginPath,
+      '/en/account/change-password': loginPath,
+      '/en/account/payments': loginPath,
       '/verify-email': loginPath,
     };
     forEach(urlRedirects, (redirectPath, url) => {
@@ -65,7 +84,7 @@ describe('Application - node environment', () => {
   });
 
   it('redirects to correct URLs', () => {
-    const urlRedirects = { '/l': '/', '/u': '/' };
+    const urlRedirects = { '/en/l': '/en', '/en/u': '/en' };
     forEach(urlRedirects, (redirectPath, url) => {
       const context = {};
       render(url, context);

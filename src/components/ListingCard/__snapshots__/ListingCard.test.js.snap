@@ -3,7 +3,7 @@
 exports[`ListingCard matches snapshot 1`] = `
 <a
   class="root"
-  href="/l/listing1-title/listing1"
+  href="/en/l/listing1-title/listing1"
 >
   <div
     class="root aspectRatioWrapper"
@@ -55,7 +55,7 @@ exports[`ListingCard matches snapshot 1`] = `
 exports[`ListingCard matches snapshot without price 1`] = `
 <a
   class="root"
-  href="/l/listing1-title/listing1"
+  href="/en/l/listing1-title/listing1"
 >
   <div
     class="root aspectRatioWrapper"

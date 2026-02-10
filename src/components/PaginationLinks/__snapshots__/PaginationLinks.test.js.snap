@@ -26,7 +26,7 @@ exports[`PaginationLinks should match snapshot with both links disabled 1`] = `
   >
     <a
       class="toPageLink currentPage"
-      href="/s?page=1&param=foobar"
+      href="/en/s?page=1&param=foobar"
       title="PaginationLinks.toPage"
     >
       1
@@ -58,7 +58,7 @@ exports[`PaginationLinks should match snapshot with both links enabled 1`] = `
 >
   <a
     class="prev"
-    href="/s?page=1&param=foobar"
+    href="/en/s?page=1&param=foobar"
     title="PaginationLinks.previous"
   >
     <svg
@@ -80,21 +80,21 @@ exports[`PaginationLinks should match snapshot with both links enabled 1`] = `
   >
     <a
       class="toPageLink"
-      href="/s?page=1&param=foobar"
+      href="/en/s?page=1&param=foobar"
       title="PaginationLinks.toPage"
     >
       1
     </a>
     <a
       class="toPageLink currentPage"
-      href="/s?page=2&param=foobar"
+      href="/en/s?page=2&param=foobar"
       title="PaginationLinks.toPage"
     >
       2
     </a>
     <a
       class="toPageLink"
-      href="/s?page=3&param=foobar"
+      href="/en/s?page=3&param=foobar"
       title="PaginationLinks.toPage"
     >
       3
@@ -102,7 +102,7 @@ exports[`PaginationLinks should match snapshot with both links enabled 1`] = `
   </div>
   <a
     class="next"
-    href="/s?page=3&param=foobar"
+    href="/en/s?page=3&param=foobar"
     title="PaginationLinks.next"
   >
     <svg
@@ -148,21 +148,21 @@ exports[`PaginationLinks should match snapshot with prev disabled and next enabl
   >
     <a
       class="toPageLink currentPage"
-      href="/s?page=1&param=foobar"
+      href="/en/s?page=1&param=foobar"
       title="PaginationLinks.toPage"
     >
       1
     </a>
     <a
       class="toPageLink"
-      href="/s?page=2&param=foobar"
+      href="/en/s?page=2&param=foobar"
       title="PaginationLinks.toPage"
     >
       2
     </a>
     <a
       class="toPageLink"
-      href="/s?page=3&param=foobar"
+      href="/en/s?page=3&param=foobar"
       title="PaginationLinks.toPage"
     >
       3
@@ -170,7 +170,7 @@ exports[`PaginationLinks should match snapshot with prev disabled and next enabl
   </div>
   <a
     class="next"
-    href="/s?page=2&param=foobar"
+    href="/en/s?page=2&param=foobar"
     title="PaginationLinks.next"
   >
     <svg
@@ -196,7 +196,7 @@ exports[`PaginationLinks should match snapshot with prev enabled and next disabl
 >
   <a
     class="prev"
-    href="/s?page=2&param=foobar"
+    href="/en/s?page=2&param=foobar"
     title="PaginationLinks.previous"
   >
     <svg
@@ -218,21 +218,21 @@ exports[`PaginationLinks should match snapshot with prev enabled and next disabl
   >
     <a
       class="toPageLink"
-      href="/s?page=1&param=foobar"
+      href="/en/s?page=1&param=foobar"
       title="PaginationLinks.toPage"
     >
       1
     </a>
     <a
       class="toPageLink"
-      href="/s?page=2&param=foobar"
+      href="/en/s?page=2&param=foobar"
       title="PaginationLinks.toPage"
     >
       2
     </a>
     <a
       class="toPageLink currentPage"
-      href="/s?page=3&param=foobar"
+      href="/en/s?page=3&param=foobar"
       title="PaginationLinks.toPage"
     >
       3
