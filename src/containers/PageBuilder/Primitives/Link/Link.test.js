@@ -21,7 +21,11 @@ const { render } = testingLibrary;
 
 describe('PageBuilder Link primitive', () => {
   it('treats same-origin absolute URLs as internal links (no target=_blank)', () => {
-    const config = { marketplaceRootURL: 'https://www.lookthesoftware.com', canonicalRootURL: 'https://www.lookthesoftware.com' };
+    // Production config often differs by www vs non-www, while hosted content might use the other.
+    const config = {
+      marketplaceRootURL: 'https://lookthesoftware.com',
+      canonicalRootURL: 'https://lookthesoftware.com',
+    };
     const routes = routeConfiguration({}, {});
     const store = configureStore({ initialState: {} });
 

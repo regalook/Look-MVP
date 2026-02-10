@@ -28,32 +28,45 @@ export const Link = React.forwardRef((props, ref) => {
   const { className, rootClassName, href, title, children } = props;
   const classes = classNames(rootClassName || css.link, className);
   const titleMaybe = title ? { title } : {};
-  const linkProps = { className: classes, href, children, ...titleMaybe };
+  const normalizedHref = typeof href === 'string' ? href.trim() : href;
+  const linkProps = { className: classes, href: normalizedHref, children, ...titleMaybe };
 
   // Markdown parser (rehype-sanitize) might return undefined href
-  if (!href || !children) {
+  if (!normalizedHref || !children) {
     return null;
   }
 
   // Some hosted content uses absolute URLs even for in-app pages.
   // If the absolute URL points to this marketplace, treat it as an internal link
   // to keep navigation in the same tab and preserve SPA routing.
-  const isAbsoluteHttpUrl = href.startsWith('http://') || href.startsWith('https://');
+  const isAbsoluteHttpUrl =
+    typeof normalizedHref === 'string' &&
+    (normalizedHref.startsWith('http://') || normalizedHref.startsWith('https://'));
   if (isAbsoluteHttpUrl) {
     try {
-      const hrefUrl = new URL(href);
-      const marketplaceOrigins = [config?.marketplaceRootURL, config?.canonicalRootURL]
+      const hrefUrl = new URL(normalizedHref);
+
+      const hosts = [config?.marketplaceRootURL, config?.canonicalRootURL]
         .filter(Boolean)
         .map(u => {
           try {
-            return new URL(u).origin;
+            return new URL(u).host;
           } catch (e) {
             return null;
           }
         })
         .filter(Boolean);
 
-      if (marketplaceOrigins.includes(hrefUrl.origin)) {
+      const withWww = h => (h.startsWith('www.') ? h : `www.${h}`);
+      const withoutWww = h => (h.startsWith('www.') ? h.slice(4) : h);
+      const acceptableHosts = new Set([
+        ...hosts,
+        ...hosts.map(withWww),
+        ...hosts.map(withoutWww),
+        typeof window !== 'undefined' ? window.location.host : null,
+      ].filter(Boolean));
+
+      if (acceptableHosts.has(hrefUrl.host)) {
         const matchedRoutes = matchPathname(hrefUrl.pathname, routes);
         if (matchedRoutes.length > 0) {
           const found = matchedRoutes[0];
@@ -74,9 +87,9 @@ export const Link = React.forwardRef((props, ref) => {
     }
   }
 
-  if (href.charAt(0) === '/') {
+  if (normalizedHref.charAt(0) === '/') {
     // Internal link
-    const testURL = new URL('http://my.marketplace.com' + href);
+    const testURL = new URL('http://my.marketplace.com' + normalizedHref);
     const matchedRoutes = matchPathname(testURL.pathname, routes);
     if (matchedRoutes.length > 0) {
       const found = matchedRoutes[0];
@@ -87,9 +100,9 @@ export const Link = React.forwardRef((props, ref) => {
     }
   }
 
-  if (href.charAt(0) === '#') {
+  if (normalizedHref.charAt(0) === '#') {
     if (typeof window !== 'undefined') {
-      const hash = href;
+      const hash = normalizedHref;
       let testURL = new URL(
         `http://my.marketplace.com${location.pathname}${location.hash}${location.search}`
       );
