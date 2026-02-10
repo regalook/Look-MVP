@@ -445,8 +445,9 @@ const savePayoutDetailsPayloadCreator = (
     .then(response => {
       return response;
     })
-    .catch(() => {
-      return rejectWithValue();
+    .catch(err => {
+      // Preserve the underlying error so the UI can show Stripe/Flex details.
+      return rejectWithValue(err);
     });
 };
 

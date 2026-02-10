@@ -55,6 +55,25 @@ const createStripeAccountPayloadCreator = (params, { extra: sdk, rejectWithValue
     })
     .catch(err => {
       const e = storableError(err);
+
+      // Stripe account creation can return 409 if the account already exists
+      // (e.g. if UI state thinks it doesn't). In that case, recover by fetching
+      // the existing account and returning it as the "created" result.
+      if (e.status === 409) {
+        return sdk.stripeAccount
+          .fetch()
+          .then(response => response.data.data)
+          .catch(fetchErr => {
+            const fetchE = storableError(fetchErr);
+            const stripeMessage =
+              fetchE.apiErrors && fetchE.apiErrors.length > 0 && fetchE.apiErrors[0].meta
+                ? fetchE.apiErrors[0].meta.stripeMessage
+                : null;
+            log.error(fetchErr, 'fetch-stripe-account-after-create-409-failed', { stripeMessage });
+            return rejectWithValue(e);
+          });
+      }
+
       const stripeMessage =
         e.apiErrors && e.apiErrors.length > 0 && e.apiErrors[0].meta
           ? e.apiErrors[0].meta.stripeMessage

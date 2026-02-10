@@ -19,8 +19,9 @@ const savePayoutDetailsPayloadCreator = (
     .then(response => {
       return response;
     })
-    .catch(() => {
-      return rejectWithValue('Failed to save payout details');
+    .catch(err => {
+      // Preserve the underlying error so the UI can show Stripe/Flex details.
+      return rejectWithValue(err);
     });
 };
 export const savePayoutDetailsThunk = createAsyncThunk(
