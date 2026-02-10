@@ -4,11 +4,18 @@ import { matchPathname } from '../util/routes';
 describe('routeConfiguration', () => {
   const routes = routeConfiguration({}, {});
 
-  test('matches legacy CMS page route without locale prefix (/p/:pageId)', () => {
+  test('redirects legacy /p/terms-of-service-es to canonical localized Terms route', () => {
     const matches = matchPathname('/p/terms-of-service-es', routes);
     expect(matches).toHaveLength(1);
+    expect(matches[0].route.name).toBe('LegacyTermsOfServiceEsRedirect');
+    expect(matches[0].params).toEqual({});
+  });
+
+  test('matches legacy CMS page route without locale prefix (/p/:pageId) for non-permanent pages', () => {
+    const matches = matchPathname('/p/about-es', routes);
+    expect(matches).toHaveLength(1);
     expect(matches[0].route.name).toBe('CMSPageLegacy');
-    expect(matches[0].params).toEqual({ pageId: 'terms-of-service-es' });
+    expect(matches[0].params).toEqual({ pageId: 'about-es' });
   });
 
   test('still matches localized CMS page route (/:locale/p/:pageId)', () => {
@@ -25,4 +32,3 @@ describe('routeConfiguration', () => {
     expect(matches[0].params).toEqual({ locale: 'en' });
   });
 });
-

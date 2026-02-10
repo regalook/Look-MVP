@@ -110,6 +110,32 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       name: 'LocaleRedirect',
       component: LocaleRedirect,
     },
+    // Legacy permanent-page aliases (kept for existing links/SEO).
+    //
+    // Terms of service and privacy policy are built-in pages in this template and have
+    // fixed canonical routes under `/:locale/...`. Some hosted content still links to
+    // legacy CMS-style paths under `/p/...` (often as absolute URLs), so we redirect those
+    // to the canonical routes.
+    {
+      path: '/p/terms-of-service-es',
+      name: 'LegacyTermsOfServiceEsRedirect',
+      component: () => <NamedRedirect name="TermsOfServicePage" params={{ locale: 'es' }} />,
+    },
+    {
+      path: '/p/terms-of-service',
+      name: 'LegacyTermsOfServiceEnRedirect',
+      component: () => <NamedRedirect name="TermsOfServicePage" params={{ locale: 'en' }} />,
+    },
+    {
+      path: '/p/privacy-policy-es',
+      name: 'LegacyPrivacyPolicyEsRedirect',
+      component: () => <NamedRedirect name="PrivacyPolicyPage" params={{ locale: 'es' }} />,
+    },
+    {
+      path: '/p/privacy-policy',
+      name: 'LegacyPrivacyPolicyEnRedirect',
+      component: () => <NamedRedirect name="PrivacyPolicyPage" params={{ locale: 'en' }} />,
+    },
     // Legacy/non-localized CMS page route.
     //
     // Some hosted content (e.g. footer markdown) may link to `/p/:pageId` without a locale prefix.
