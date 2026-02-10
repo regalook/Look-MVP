@@ -28,6 +28,21 @@ const createFilterOptions = (options, labelForOption) =>
     label: labelForOption ? labelForOption(o) : o.label,
   }));
 
+const getEnumOptionLabel = (fieldKey, option, intl) => {
+  const defaultLabel = option?.label;
+  const optionId = option?.option;
+  if (!intl || !fieldKey || !optionId) return defaultLabel;
+
+  // Convention: allow translating hosted user-field enum option labels via i18n.
+  // This keeps hosted configuration readable while making the UI localizable.
+  const messageIds = [`UserFieldOptions.${fieldKey}.${optionId}`, `UserFieldOptions.${optionId}`];
+  const foundId = messageIds.find(
+    id => intl?.messages && Object.prototype.hasOwnProperty.call(intl.messages, id)
+  );
+
+  return foundId ? intl.formatMessage({ id: foundId }) : defaultLabel;
+};
+
 const getLabel = (fieldConfig, intl) => {
   const label = fieldConfig?.saveConfig?.label || fieldConfig?.label;
   const key = fieldConfig?.key;
@@ -63,7 +78,7 @@ const CustomFieldEnum = props => {
     if (fieldKey === 'allowedAdTypes' || fieldKey === 'allowed_ad_types') {
       return getAllowedAdTypeLabel(option.option, option.label, intl);
     }
-    return option.label;
+    return getEnumOptionLabel(fieldKey, option, intl);
   });
 
   const label = getLabel(fieldConfig, intl);
@@ -113,7 +128,7 @@ const CustomFieldMultiEnum = props => {
         if (fieldKey === 'allowedAdTypes' || fieldKey === 'allowed_ad_types') {
           return getAllowedAdTypeLabel(option.option, option.label, intl);
         }
-        return option.label;
+        return getEnumOptionLabel(fieldKey, option, intl);
       })}
       {...validateMaybe}
     />
