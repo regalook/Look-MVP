@@ -77,6 +77,7 @@ import {
   setOverlayCorners,
   setOverlayOpacity,
   resetOverlayEditor,
+  uploadOverlayImage,
 } from './ListingPage.duck';
 
 import {
@@ -144,6 +145,7 @@ export const ListingPageComponent = props => {
     onOverlayCornersChange,
     onOverlayOpacityChange,
     onOverlayReset,
+    onOverlayUpload,
     config,
     routeConfiguration,
     showOwnListingsOnly,
@@ -312,15 +314,32 @@ export const ListingPageComponent = props => {
   });
 
   const handleOrderSubmit = values => {
+    const overlays = overlayEditor?.overlays || [];
+    const hasPendingMockupUpload = overlays.some(o => o?.image?.uploadPending);
+    if (hasPendingMockupUpload) {
+      window.alert('Please wait for image upload to finish before booking.');
+      return;
+    }
+
+    const activeOverlay =
+      overlays.find(item => item.id === overlayEditor?.activeOverlayId) || overlays[0];
+    const mockupImageUrl = activeOverlay?.image?.uploadedImageUrl;
+    const mockupImageId = activeOverlay?.image?.uploadedImageId;
+    const mockupImageName = activeOverlay?.image?.name;
+    const valuesWithMockup =
+      mockupImageUrl && mockupImageId
+        ? { ...values, mockupImageUrl, mockupImageId, mockupImageName }
+        : values;
+
     const isCurrentlyClosed = currentListing.attributes.state === LISTING_STATE_CLOSED;
     if (isOwnListing || isCurrentlyClosed) {
       window.scrollTo(0, 0);
     } else if (isNegotiation && unitType === REQUEST) {
-      onNavigateToMakeOfferPage(values);
+      onNavigateToMakeOfferPage(valuesWithMockup);
     } else if (isNegotiation && unitType === OFFER) {
-      onNavigateToRequestQuotePage(values);
+      onNavigateToRequestQuotePage(valuesWithMockup);
     } else {
-      onSubmit(values);
+      onSubmit(valuesWithMockup);
     }
   };
 
@@ -431,6 +450,7 @@ export const ListingPageComponent = props => {
                 onOverlayCornersChange={onOverlayCornersChange}
                 onOverlayOpacityChange={onOverlayOpacityChange}
                 onOverlayReset={onOverlayReset}
+                onOverlayUpload={onOverlayUpload}
               />
             ) : null}
 
@@ -666,6 +686,7 @@ const mapDispatchToProps = dispatch => ({
   onOverlayCornersChange: payload => dispatch(setOverlayCorners(payload)),
   onOverlayOpacityChange: value => dispatch(setOverlayOpacity(value)),
   onOverlayReset: payload => dispatch(resetOverlayEditor(payload)),
+  onOverlayUpload: payload => dispatch(uploadOverlayImage(payload)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the

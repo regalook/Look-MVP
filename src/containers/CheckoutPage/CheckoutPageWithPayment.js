@@ -115,6 +115,13 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
   const priceVariantNameMaybe = priceVariantName ? { priceVariantName } : {};
   const priceVariant = priceVariants?.find(pv => pv.name === priceVariantName);
   const priceVariantMaybe = priceVariant ? prefixPriceVariantProperties(priceVariant) : {};
+  const mockupImageMaybe = pageData?.orderData?.mockupImageUrl
+    ? {
+        mockupImageId: pageData.orderData?.mockupImageId,
+        mockupImageUrl: pageData.orderData?.mockupImageUrl,
+        mockupImageName: pageData.orderData?.mockupImageName,
+      }
+    : {};
 
   const protectedDataMaybe = {
     protectedData: {
@@ -122,6 +129,7 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
       ...deliveryMethodMaybe,
       ...shippingDetails,
       ...priceVariantMaybe,
+      ...mockupImageMaybe,
     },
   };
 
@@ -266,6 +274,16 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   // confirmCardPayment has been called previously.
   const hasPaymentIntentUserActionsDone =
     paymentIntent && STRIPE_PI_USER_ACTIONS_DONE_STATUSES.includes(paymentIntent.status);
+  const mockupImageUrl = pageData?.orderData?.mockupImageUrl;
+  const mockupImageName = pageData?.orderData?.mockupImageName;
+  const mockupLine = mockupImageUrl
+    ? `Design image: ${mockupImageName ? `${mockupImageName} - ` : ''}${mockupImageUrl}`
+    : null;
+  const messageWithMockup = mockupLine
+    ? message
+      ? `${message}\n\n${mockupLine}`
+      : mockupLine
+    : message;
 
   const requestPaymentParams = {
     pageData,
@@ -273,7 +291,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     stripe,
     card,
     billingDetails: getBillingDetails(formValues, currentUser),
-    message,
+    message: messageWithMockup,
     paymentIntent,
     hasPaymentIntentUserActionsDone,
     stripePaymentMethodId,

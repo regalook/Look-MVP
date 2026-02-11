@@ -347,6 +347,37 @@ export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }
   return dispatch(fetchTransactionLineItemsThunk({ orderData, listingId, isOwnListing })).unwrap();
 };
 
+//////////////////////////
+// Upload Overlay Image //
+//////////////////////////
+export const uploadOverlayImageThunk = createAsyncThunk(
+  'ListingPage/uploadOverlayImage',
+  ({ id, file }, { rejectWithValue, extra: sdk }) => {
+    const bodyParams = { image: file };
+    const queryParams = {
+      expand: true,
+      'fields.image': ['variants.scaled-small', 'variants.scaled-medium', 'variants.scaled-large'],
+    };
+
+    return sdk.images
+      .upload(bodyParams, queryParams)
+      .then(resp => {
+        const uploadedImage = resp.data.data;
+        const variants = uploadedImage?.attributes?.variants || {};
+        const firstVariantWithURL = Object.values(variants).find(v => v?.url);
+        const uploadedImageUrl = firstVariantWithURL?.url || null;
+        return { id, uploadedImageId: uploadedImage.id, uploadedImageUrl };
+      })
+      .catch(e => {
+        return rejectWithValue({ id, error: storableError(e) });
+      });
+  }
+);
+
+export const uploadOverlayImage = actionPayload => dispatch => {
+  return dispatch(uploadOverlayImageThunk(actionPayload)).unwrap();
+};
+
 // ================ Slice ================ //
 
 const initialState = {
@@ -410,7 +441,7 @@ const listingPageSlice = createSlice({
       const { id, image } = action.payload || {};
       const overlay = state.overlayEditor.overlays.find(item => item.id === id);
       if (overlay) {
-        overlay.image = image;
+        overlay.image = { ...(overlay.image || {}), ...(image || {}) };
       }
     },
     toggleOverlayVisibility: (state, action) => {
@@ -547,6 +578,33 @@ const listingPageSlice = createSlice({
       .addCase(fetchTransactionLineItemsThunk.rejected, (state, action) => {
         state.fetchLineItemsInProgress = false;
         state.fetchLineItemsError = action.payload;
+      })
+      .addCase(uploadOverlayImageThunk.fulfilled, (state, action) => {
+        const { id, uploadedImageId, uploadedImageUrl } = action.payload || {};
+        const overlay = state.overlayEditor.overlays.find(item => item.id === id);
+        if (overlay) {
+          overlay.image = {
+            ...(overlay.image || {}),
+            uploadedImageId,
+            uploadedImageUrl,
+            uploadPending: false,
+            uploadError: null,
+          };
+        }
+      })
+      .addCase(uploadOverlayImageThunk.rejected, (state, action) => {
+        const { id, error } = action.payload || {};
+        if (!id) {
+          return;
+        }
+        const overlay = state.overlayEditor.overlays.find(item => item.id === id);
+        if (overlay) {
+          overlay.image = {
+            ...(overlay.image || {}),
+            uploadPending: false,
+            uploadError: error || true,
+          };
+        }
       });
   },
 });

@@ -26,6 +26,7 @@ const OverlayEditor = props => {
     baseImageUrl,
     overlayState,
     onOverlayAdd,
+    onOverlayUpload,
     onOverlaySetActive,
     onOverlayDelete,
     onOverlayReplace,
@@ -53,6 +54,10 @@ const OverlayEditor = props => {
   const overlays = overlayState?.overlays || [];
   const activeOverlayId = overlayState?.activeOverlayId || overlays[0]?.id || null;
   const activeOverlay = overlays.find(item => item.id === activeOverlayId) || overlays[0] || null;
+  const activeOverlayImage = activeOverlay?.image;
+  const isAttachPending = !!activeOverlayImage?.uploadPending;
+  const hasAttachError = !!activeOverlayImage?.uploadError;
+  const isAttachReady = !!activeOverlayImage?.uploadedImageUrl;
   const activeCorners = activeOverlay?.corners || DEFAULT_CORNERS;
   const opacity = typeof overlayState?.opacity === 'number' ? overlayState.opacity : DEFAULT_OPACITY;
 
@@ -123,22 +128,21 @@ const OverlayEditor = props => {
   const createOverlayId = () =>
     `overlay-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 
-  const handleFileChange = event => {
-    const file = event.target.files && event.target.files[0];
-    if (!file) return;
-
+  const addOverlayFromFile = (overlayId, file, onLoaded) => {
     const reader = new FileReader();
     reader.onload = e => {
       const url = e.target.result;
       const img = new Image();
       img.onload = () => {
-        onOverlayAdd({
-          id: createOverlayId(),
+        onLoaded({
+          id: overlayId,
           image: {
             url,
             name: file.name,
             naturalWidth: img.naturalWidth,
             naturalHeight: img.naturalHeight,
+            uploadPending: true,
+            uploadError: null,
           },
           corners: DEFAULT_CORNERS,
         });
@@ -146,6 +150,17 @@ const OverlayEditor = props => {
       img.src = url;
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleFileChange = event => {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    const overlayId = createOverlayId();
+    addOverlayFromFile(overlayId, file, payload => onOverlayAdd(payload));
+    if (typeof onOverlayUpload === 'function') {
+      onOverlayUpload({ id: overlayId, file }).catch(() => {});
+    }
     event.target.value = '';
   };
 
@@ -154,24 +169,15 @@ const OverlayEditor = props => {
     const targetId = replaceTargetRef.current;
     if (!file || !targetId) return;
 
-    const reader = new FileReader();
-    reader.onload = e => {
-      const url = e.target.result;
-      const img = new Image();
-      img.onload = () => {
-        onOverlayReplace({
-          id: targetId,
-          image: {
-            url,
-            name: file.name,
-            naturalWidth: img.naturalWidth,
-            naturalHeight: img.naturalHeight,
-          },
-        });
-      };
-      img.src = url;
-    };
-    reader.readAsDataURL(file);
+    addOverlayFromFile(targetId, file, payload =>
+      onOverlayReplace({
+        id: targetId,
+        image: payload.image,
+      })
+    );
+    if (typeof onOverlayUpload === 'function') {
+      onOverlayUpload({ id: targetId, file }).catch(() => {});
+    }
     event.target.value = '';
     replaceTargetRef.current = null;
   };
@@ -437,6 +443,13 @@ const OverlayEditor = props => {
           </SecondaryButton>
         </div>
       </div>
+      {isAttachPending ? <div className={css.attachStatus}>Attaching image to order...</div> : null}
+      {hasAttachError ? (
+        <div className={classNames(css.attachStatus, css.attachStatusError)}>
+          Image upload failed. Please upload again.
+        </div>
+      ) : null}
+      {isAttachReady ? <div className={css.attachStatus}>Image attached to this order.</div> : null}
 
       <div className={css.controlsRow}>
         <div className={css.sliderRow}>

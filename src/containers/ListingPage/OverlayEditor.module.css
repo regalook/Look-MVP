@@ -29,6 +29,16 @@
   flex-wrap: wrap;
 }
 
+.attachStatus {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--colorGrey700);
+}
+
+.attachStatusError {
+  color: #d92d20;
+}
+
 .uploadButton {
   display: inline-flex;
   align-items: center;
