@@ -30,6 +30,7 @@ import {
   NO_ACCESS_PAGE_USER_PENDING_APPROVAL,
   NO_ACCESS_PAGE_VIEW_LISTINGS,
   parse,
+  stringify,
 } from '../../util/urlHelpers';
 import {
   hasPermissionToViewData,
@@ -69,6 +70,7 @@ import css from './SearchPage.module.css';
 
 const MODAL_BREAKPOINT = 768; // Search is in modal on mobile layout
 const SEARCH_WITH_MAP_DEBOUNCE = 300; // Little bit of debounce before search is initiated.
+const MOBILE_MAP_STATE_PARAM = 'mobilemap';
 
 // Primary filters have their content in dropdown-popup.
 // With this offset we move the dropdown to the left a few pixels on desktop layout.
@@ -100,7 +102,7 @@ export class SearchPageComponent extends Component {
     super(props);
 
     this.state = {
-      isSearchMapOpenOnMobile: false,
+      isSearchMapOpenOnMobile: this.isSearchMapOpenOnMobileInURL(props.location.search),
       isMobileModalOpen: false,
       currentQueryParams: validUrlQueryParamsFromProps(props),
       isSecondaryFiltersOpen: false,
@@ -109,6 +111,9 @@ export class SearchPageComponent extends Component {
     this.onMapMoveEnd = debounce(this.onMapMoveEnd.bind(this), SEARCH_WITH_MAP_DEBOUNCE);
     this.onOpenMobileModal = this.onOpenMobileModal.bind(this);
     this.onCloseMobileModal = this.onCloseMobileModal.bind(this);
+    this.openSearchMapMobile = this.openSearchMapMobile.bind(this);
+    this.closeSearchMapMobile = this.closeSearchMapMobile.bind(this);
+    this.updateSearchMapStateInURL = this.updateSearchMapStateInURL.bind(this);
 
     // Filter functions
     this.applyFilters = this.applyFilters.bind(this);
@@ -118,6 +123,50 @@ export class SearchPageComponent extends Component {
 
     // SortBy
     this.handleSortBy = this.handleSortBy.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.location.search !== this.props.location.search) {
+      const isSearchMapOpenOnMobile = this.isSearchMapOpenOnMobileInURL(this.props.location.search);
+
+      if (this.state.isSearchMapOpenOnMobile !== isSearchMapOpenOnMobile) {
+        this.setState({ isSearchMapOpenOnMobile });
+      }
+    }
+  }
+
+  isSearchMapOpenOnMobileInURL(searchString) {
+    const queryParams = parse(searchString);
+    return queryParams?.[MOBILE_MAP_STATE_PARAM] === 'open';
+  }
+
+  updateSearchMapStateInURL(isOpen) {
+    const { history, location } = this.props;
+    const { pathname, search, state } = location;
+    const queryParams = parse(search);
+    const isOpenInURL = queryParams?.[MOBILE_MAP_STATE_PARAM] === 'open';
+
+    if (isOpenInURL === isOpen) {
+      return;
+    }
+
+    const nextQueryParams = isOpen
+      ? { ...queryParams, [MOBILE_MAP_STATE_PARAM]: 'open' }
+      : omit(queryParams, MOBILE_MAP_STATE_PARAM);
+    const nextSearch = stringify(nextQueryParams);
+    const nextURL = nextSearch ? `${pathname}?${nextSearch}` : pathname;
+
+    history.push(nextURL, state);
+  }
+
+  openSearchMapMobile() {
+    this.setState({ isSearchMapOpenOnMobile: true });
+    this.updateSearchMapStateInURL(true);
+  }
+
+  closeSearchMapMobile() {
+    this.setState({ isSearchMapOpenOnMobile: false });
+    this.updateSearchMapStateInURL(false);
   }
 
   // Callback to determine if new search is needed
@@ -544,7 +593,7 @@ export class SearchPageComponent extends Component {
               searchInProgress={searchInProgress}
               searchListingsError={searchListingsError}
               showAsModalMaxWidth={MODAL_BREAKPOINT}
-              onMapIconClick={() => this.setState({ isSearchMapOpenOnMobile: true })}
+              onMapIconClick={this.openSearchMapMobile}
               onManageDisableScrolling={onManageDisableScrolling}
               onOpenModal={this.onOpenMobileModal}
               onCloseModal={this.onCloseMobileModal}
@@ -675,7 +724,7 @@ export class SearchPageComponent extends Component {
             className={css.mapPanel}
             id="SearchPage_map"
             isModalOpenOnMobile={this.state.isSearchMapOpenOnMobile}
-            onClose={() => this.setState({ isSearchMapOpenOnMobile: false })}
+            onClose={this.closeSearchMapMobile}
             showAsModalMaxWidth={MODAL_BREAKPOINT}
             onManageDisableScrolling={onManageDisableScrolling}
           >
