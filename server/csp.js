@@ -164,6 +164,7 @@ exports.csp = (reportUri, reportOnly) => {
     connectSrc: [
       ...(defaultDirectives.connectSrc || [self]),
       ...[toOrigin(mockupUploadSignerUrl)].filter(Boolean),
+      ...[toOrigin(mockupS3PublicBaseUrl)].filter(Boolean),
     ],
     imgSrc: [
       ...(defaultDirectives.imgSrc || [self]),
