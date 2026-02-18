@@ -13,6 +13,19 @@ const baseUrl = process.env.REACT_APP_SHARETRIBE_SDK_BASE_URL || 'https://flex-a
 // cdn.st-api.com
 // If assetCdnBaseUrl is used to initialize SDK (for proxy purposes), then that URL needs to be in CSP
 const assetCdnBaseUrl = process.env.REACT_APP_SHARETRIBE_SDK_ASSET_CDN_BASE_URL;
+const mockupUploadSignerUrl = process.env.REACT_APP_MOCKUP_UPLOAD_SIGNER_URL;
+const mockupS3PublicBaseUrl = process.env.REACT_APP_MOCKUP_S3_PUBLIC_BASE_URL;
+
+const toOrigin = value => {
+  if (!value) {
+    return null;
+  }
+  try {
+    return new URL(value).origin;
+  } catch (e) {
+    return null;
+  }
+};
 
 exports.generateCSPNonce = (req, res, next) => {
   // Asynchronously generate a unique nonce for each request.
@@ -39,7 +52,7 @@ const defaultDirectives = {
   connectSrc: [
     self,
     baseUrl,
-    assetCdnBaseUrl,
+    ...(assetCdnBaseUrl ? [assetCdnBaseUrl] : []),
     '*.st-api.com',
     'maps.googleapis.com',
     'places.googleapis.com',
@@ -148,8 +161,14 @@ exports.csp = (reportUri, reportOnly) => {
   // const exampleImgSrc = imgSrc.concat('my-custom-domain.example.com');
 
   const customDirectives = {
-    // Example: Add custom directive override
-    // imgSrc: exampleImgSrc,
+    connectSrc: [
+      ...(defaultDirectives.connectSrc || [self]),
+      ...[toOrigin(mockupUploadSignerUrl)].filter(Boolean),
+    ],
+    imgSrc: [
+      ...(defaultDirectives.imgSrc || [self]),
+      ...[toOrigin(mockupS3PublicBaseUrl)].filter(Boolean),
+    ],
   };
 
   // ================ END CUSTOM CSP URLs ================ //
