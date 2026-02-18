@@ -201,6 +201,13 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
   const processAlias = pageData?.listing?.attributes?.publicData?.transactionProcessAlias;
 
   let createdPaymentIntent = null;
+  const mockupProtectedDataMaybe = pageData?.orderData?.mockupImageUrl
+    ? {
+        mockupImageId: pageData.orderData?.mockupImageId,
+        mockupImageUrl: pageData.orderData?.mockupImageUrl,
+        mockupImageName: pageData.orderData?.mockupImageName,
+      }
+    : null;
 
   ////////////////////////////////////////////////
   // Step 1: initiate order                     //
@@ -291,9 +298,12 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     const transactionId = fnParams.transactionId;
     const transitionName = process.transitions.CONFIRM_PAYMENT;
     const isTransitionedAlready = storedTx?.attributes?.lastTransition === transitionName;
+    const transitionParams = mockupProtectedDataMaybe
+      ? { protectedData: mockupProtectedDataMaybe }
+      : {};
     const orderPromise = isTransitionedAlready
       ? Promise.resolve(storedTx)
-      : onConfirmPayment(transactionId, transitionName, {});
+      : onConfirmPayment(transactionId, transitionName, transitionParams);
 
     orderPromise.then(order => {
       // Store the returned transaction (order)

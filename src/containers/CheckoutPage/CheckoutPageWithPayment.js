@@ -115,21 +115,12 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
   const priceVariantNameMaybe = priceVariantName ? { priceVariantName } : {};
   const priceVariant = priceVariants?.find(pv => pv.name === priceVariantName);
   const priceVariantMaybe = priceVariant ? prefixPriceVariantProperties(priceVariant) : {};
-  const mockupImageMaybe = pageData?.orderData?.mockupImageUrl
-    ? {
-        mockupImageId: pageData.orderData?.mockupImageId,
-        mockupImageUrl: pageData.orderData?.mockupImageUrl,
-        mockupImageName: pageData.orderData?.mockupImageName,
-      }
-    : {};
-
   const protectedDataMaybe = {
     protectedData: {
       ...getTransactionTypeData(listingType, unitType, config),
       ...deliveryMethodMaybe,
       ...shippingDetails,
       ...priceVariantMaybe,
-      ...mockupImageMaybe,
     },
   };
 

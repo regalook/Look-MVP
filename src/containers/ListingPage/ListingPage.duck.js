@@ -24,6 +24,7 @@ import {
 } from '../../util/urlHelpers';
 import { getProcess, isBookingProcessAlias } from '../../transactions/transaction';
 import { fetchCurrentUser, setCurrentUserHasOrders } from '../../ducks/user.duck';
+import { uploadMockupImage } from '../../util/mockupUpload';
 
 const { UUID } = sdkTypes;
 const MINUTE_IN_MS = 1000 * 60;
@@ -352,21 +353,10 @@ export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }
 //////////////////////////
 export const uploadOverlayImageThunk = createAsyncThunk(
   'ListingPage/uploadOverlayImage',
-  ({ id, file }, { rejectWithValue, extra: sdk }) => {
-    const bodyParams = { image: file };
-    const queryParams = {
-      expand: true,
-      'fields.image': ['variants.scaled-small', 'variants.scaled-medium', 'variants.scaled-large'],
-    };
-
-    return sdk.images
-      .upload(bodyParams, queryParams)
-      .then(resp => {
-        const uploadedImage = resp.data.data;
-        const variants = uploadedImage?.attributes?.variants || {};
-        const firstVariantWithURL = Object.values(variants).find(v => v?.url);
-        const uploadedImageUrl = firstVariantWithURL?.url || null;
-        return { id, uploadedImageId: uploadedImage.id, uploadedImageUrl };
+  ({ id, file }, { rejectWithValue }) => {
+    return uploadMockupImage(file)
+      .then(({ uploadedImageId, uploadedImageUrl }) => {
+        return { id, uploadedImageId, uploadedImageUrl };
       })
       .catch(e => {
         return rejectWithValue({ id, error: storableError(e) });
