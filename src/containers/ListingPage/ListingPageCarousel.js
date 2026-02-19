@@ -321,14 +321,25 @@ export const ListingPageComponent = props => {
       return;
     }
 
-    const activeOverlay =
-      overlays.find(item => item.id === overlayEditor?.activeOverlayId) || overlays[0];
-    const mockupImageUrl = activeOverlay?.image?.uploadedImageUrl;
-    const mockupImageId = activeOverlay?.image?.uploadedImageId;
-    const mockupImageName = activeOverlay?.image?.name;
+    const mockupImages = overlays
+      .map(overlay => ({
+        id: overlay?.image?.uploadedImageId,
+        url: overlay?.image?.uploadedImageUrl,
+        name: overlay?.image?.name,
+      }))
+      .filter(img => !!(img.id && img.url));
+
+    const primaryMockupImage = mockupImages[0];
     const valuesWithMockup =
-      mockupImageUrl && mockupImageId
-        ? { ...values, mockupImageUrl, mockupImageId, mockupImageName }
+      mockupImages.length > 0
+        ? {
+            ...values,
+            mockupImages,
+            // Backward compatibility for existing template usage.
+            mockupImageId: primaryMockupImage.id,
+            mockupImageUrl: primaryMockupImage.url,
+            mockupImageName: primaryMockupImage.name,
+          }
         : values;
 
     const isCurrentlyClosed = currentListing.attributes.state === LISTING_STATE_CLOSED;

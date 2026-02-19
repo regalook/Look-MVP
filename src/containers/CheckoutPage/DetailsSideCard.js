@@ -46,8 +46,7 @@ const DetailsSideCard = props => {
     processName,
     breakdown,
     showListingImage,
-    mockupImageUrl,
-    mockupImageName,
+    mockupImages = [],
     intl,
   } = props;
 
@@ -105,22 +104,30 @@ const DetailsSideCard = props => {
         </div>
         {speculateTransactionErrorMessage}
       </div>
-      {mockupImageUrl ? (
+      {mockupImages.length > 0 ? (
         <section className={css.mockupPreviewDesktop}>
-          <h4 className={css.mockupPreviewTitle}>Attached image</h4>
-          <a
-            href={mockupImageUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={css.mockupPreviewLink}
-          >
-            {mockupImageName || 'Open uploaded image'}
-          </a>
-          <img
-            className={css.mockupPreviewImage}
-            src={mockupImageUrl}
-            alt={mockupImageName || 'Attached image'}
-          />
+          <h4 className={css.mockupPreviewTitle}>
+            {mockupImages.length > 1 ? 'Attached images' : 'Attached image'}
+          </h4>
+          <div className={css.mockupPreviewList}>
+            {mockupImages.map((img, index) => (
+              <div key={img.id || `desktop-mockup-${index}`} className={css.mockupPreviewItem}>
+                <a
+                  href={img.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={css.mockupPreviewLink}
+                >
+                  {img.name || `Open uploaded image ${index + 1}`}
+                </a>
+                <img
+                  className={css.mockupPreviewImage}
+                  src={img.url}
+                  alt={img.name || `Attached image ${index + 1}`}
+                />
+              </div>
+            ))}
+          </div>
         </section>
       ) : null}
 

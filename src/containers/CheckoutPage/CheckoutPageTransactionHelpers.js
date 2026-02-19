@@ -159,6 +159,27 @@ export const hasTransactionPassedPendingPayment = (tx, process) => {
   return process.hasPassedState(process.states.PENDING_PAYMENT, tx);
 };
 
+const getMockupImagesFromOrderData = orderData => {
+  const mockupImagesFromArray = Array.isArray(orderData?.mockupImages)
+    ? orderData.mockupImages
+        .map(img => ({
+          id: img?.id || img?.mockupImageId || null,
+          url: img?.url || img?.mockupImageUrl || null,
+          name: img?.name || img?.mockupImageName || null,
+        }))
+        .filter(img => !!(img.id && img.url))
+    : [];
+
+  if (mockupImagesFromArray.length > 0) {
+    return mockupImagesFromArray;
+  }
+
+  const singleId = orderData?.mockupImageId;
+  const singleUrl = orderData?.mockupImageUrl;
+  const singleName = orderData?.mockupImageName;
+  return singleId && singleUrl ? [{ id: singleId, url: singleUrl, name: singleName || null }] : [];
+};
+
 const persistTransaction = (order, pageData, storeData, setPageData, sessionStorageKey) => {
   // Store the returned transaction (order)
   if (order?.id) {
@@ -201,13 +222,18 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
   const processAlias = pageData?.listing?.attributes?.publicData?.transactionProcessAlias;
 
   let createdPaymentIntent = null;
-  const mockupProtectedDataMaybe = pageData?.orderData?.mockupImageUrl
-    ? {
-        mockupImageId: pageData.orderData?.mockupImageId,
-        mockupImageUrl: pageData.orderData?.mockupImageUrl,
-        mockupImageName: pageData.orderData?.mockupImageName,
-      }
-    : null;
+  const mockupImages = getMockupImagesFromOrderData(pageData?.orderData);
+  const primaryMockupImage = mockupImages[0];
+  const mockupProtectedDataMaybe =
+    mockupImages.length > 0
+      ? {
+          mockupImages,
+          // Keep legacy keys for existing email/template usage.
+          mockupImageId: primaryMockupImage.id,
+          mockupImageUrl: primaryMockupImage.url,
+          mockupImageName: primaryMockupImage.name,
+        }
+      : null;
 
   ////////////////////////////////////////////////
   // Step 1: initiate order                     //

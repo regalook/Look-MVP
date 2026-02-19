@@ -283,11 +283,19 @@
   margin-bottom: 12px;
 }
 
+.mockupPreviewList {
+  display: block;
+}
+
 .mockupPreviewImage {
   width: 100%;
   display: block;
   border-radius: 8px;
   border: 1px solid var(--colorGrey100);
+}
+
+.mockupPreviewItem + .mockupPreviewItem {
+  margin-top: 16px;
 }
 
 /* Details column is visible only on desktop */

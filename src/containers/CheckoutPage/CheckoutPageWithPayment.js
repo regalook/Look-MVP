@@ -89,6 +89,35 @@ const prefixPriceVariantProperties = priceVariant => {
   return Object.fromEntries(entries);
 };
 
+const normalizeMockupImage = img => ({
+  id: img?.id || img?.mockupImageId || null,
+  url: img?.url || img?.mockupImageUrl || null,
+  name: img?.name || img?.mockupImageName || null,
+});
+
+const getMockupImages = (orderData, protectedData) => {
+  const orderDataImages = Array.isArray(orderData?.mockupImages)
+    ? orderData.mockupImages.map(normalizeMockupImage).filter(img => !!(img.id && img.url))
+    : [];
+  if (orderDataImages.length > 0) {
+    return orderDataImages;
+  }
+
+  const protectedDataImages = Array.isArray(protectedData?.mockupImages)
+    ? protectedData.mockupImages.map(normalizeMockupImage).filter(img => !!(img.id && img.url))
+    : [];
+  if (protectedDataImages.length > 0) {
+    return protectedDataImages;
+  }
+
+  const singleImage = normalizeMockupImage({
+    mockupImageId: orderData?.mockupImageId || protectedData?.mockupImageId,
+    mockupImageUrl: orderData?.mockupImageUrl || protectedData?.mockupImageUrl,
+    mockupImageName: orderData?.mockupImageName || protectedData?.mockupImageName,
+  });
+  return singleImage.id && singleImage.url ? [singleImage] : [];
+};
+
 /**
  * Construct orderParams object using pageData from session storage, shipping details, and optional payment params.
  * Note: This is used for both speculate transition and real transition
@@ -265,17 +294,21 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
   // confirmCardPayment has been called previously.
   const hasPaymentIntentUserActionsDone =
     paymentIntent && STRIPE_PI_USER_ACTIONS_DONE_STATUSES.includes(paymentIntent.status);
-  const mockupImageUrl = pageData?.orderData?.mockupImageUrl;
-  const mockupImageName = pageData?.orderData?.mockupImageName;
+  const mockupImages = getMockupImages(pageData?.orderData, pageData?.transaction?.attributes?.protectedData);
   const locale = config?.localization?.locale || 'en';
   const imageLabel = locale.toLowerCase().startsWith('es') ? 'Imagen' : 'Image';
-  const mockupLine = mockupImageUrl
-    ? `${imageLabel}: ${mockupImageName ? `${mockupImageName} - ` : ''}${mockupImageUrl}`
-    : null;
-  const messageWithMockup = mockupLine
+  const mockupLines =
+    mockupImages.length > 0
+      ? mockupImages.map((img, index) => {
+          const indexSuffix = mockupImages.length > 1 ? ` ${index + 1}` : '';
+          return `${imageLabel}${indexSuffix}: ${img.name ? `${img.name} - ` : ''}${img.url}`;
+        })
+      : [];
+  const mockupMessageBlock = mockupLines.length > 0 ? mockupLines.join('\n') : null;
+  const messageWithMockup = mockupMessageBlock
     ? message
-      ? `${message}\n\n${mockupLine}`
-      : mockupLine
+      ? `${message}\n\n${mockupMessageBlock}`
+      : mockupMessageBlock
     : message;
 
   const requestPaymentParams = {
@@ -540,10 +573,7 @@ export const CheckoutPageWithPayment = props => {
   const providerDisplayName = isNegotiation
     ? existingTransaction?.provider?.attributes?.profile?.displayName
     : listing?.author?.attributes?.profile?.displayName;
-  const mockupImageUrl =
-    orderData?.mockupImageUrl || tx?.attributes?.protectedData?.mockupImageUrl || null;
-  const mockupImageName =
-    orderData?.mockupImageName || tx?.attributes?.protectedData?.mockupImageName || null;
+  const mockupImages = getMockupImages(orderData, tx?.attributes?.protectedData);
 
   // Check if the listing currency is compatible with Stripe for the specified transaction process.
   // This function validates the currency against the transaction process requirements and
@@ -599,22 +629,30 @@ export const CheckoutPageWithPayment = props => {
             breakdown={breakdown}
             priceVariantName={priceVariantName}
           />
-          {mockupImageUrl ? (
+          {mockupImages.length > 0 ? (
             <section className={css.mockupPreviewMobile}>
-              <h4 className={css.mockupPreviewTitle}>Attached image</h4>
-              <a
-                href={mockupImageUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={css.mockupPreviewLink}
-              >
-                {mockupImageName || 'Open uploaded image'}
-              </a>
-              <img
-                className={css.mockupPreviewImage}
-                src={mockupImageUrl}
-                alt={mockupImageName || 'Attached image'}
-              />
+              <h4 className={css.mockupPreviewTitle}>
+                {mockupImages.length > 1 ? 'Attached images' : 'Attached image'}
+              </h4>
+              <div className={css.mockupPreviewList}>
+                {mockupImages.map((img, index) => (
+                  <div key={img.id || `mobile-mockup-${index}`} className={css.mockupPreviewItem}>
+                    <a
+                      href={img.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={css.mockupPreviewLink}
+                    >
+                      {img.name || `Open uploaded image ${index + 1}`}
+                    </a>
+                    <img
+                      className={css.mockupPreviewImage}
+                      src={img.url}
+                      alt={img.name || `Attached image ${index + 1}`}
+                    />
+                  </div>
+                ))}
+              </div>
             </section>
           ) : null}
           <section className={css.paymentContainer}>
@@ -677,8 +715,7 @@ export const CheckoutPageWithPayment = props => {
           processName={processName}
           breakdown={breakdown}
           showListingImage={showListingImage}
-          mockupImageUrl={mockupImageUrl}
-          mockupImageName={mockupImageName}
+          mockupImages={mockupImages}
           intl={intl}
         />
       </div>
