@@ -46,6 +46,8 @@ const DetailsSideCard = props => {
     processName,
     breakdown,
     showListingImage,
+    mockupImageUrl,
+    mockupImageName,
     intl,
   } = props;
 
@@ -103,6 +105,24 @@ const DetailsSideCard = props => {
         </div>
         {speculateTransactionErrorMessage}
       </div>
+      {mockupImageUrl ? (
+        <section className={css.mockupPreviewDesktop}>
+          <h4 className={css.mockupPreviewTitle}>Attached image</h4>
+          <a
+            href={mockupImageUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={css.mockupPreviewLink}
+          >
+            {mockupImageName || 'Open uploaded image'}
+          </a>
+          <img
+            className={css.mockupPreviewImage}
+            src={mockupImageUrl}
+            alt={mockupImageName || 'Attached image'}
+          />
+        </section>
+      ) : null}
 
       {!!breakdown ? (
         <div className={css.orderBreakdownHeader}>

@@ -538,6 +538,10 @@ export const CheckoutPageWithPayment = props => {
   const providerDisplayName = isNegotiation
     ? existingTransaction?.provider?.attributes?.profile?.displayName
     : listing?.author?.attributes?.profile?.displayName;
+  const mockupImageUrl =
+    orderData?.mockupImageUrl || tx?.attributes?.protectedData?.mockupImageUrl || null;
+  const mockupImageName =
+    orderData?.mockupImageName || tx?.attributes?.protectedData?.mockupImageName || null;
 
   // Check if the listing currency is compatible with Stripe for the specified transaction process.
   // This function validates the currency against the transaction process requirements and
@@ -593,6 +597,24 @@ export const CheckoutPageWithPayment = props => {
             breakdown={breakdown}
             priceVariantName={priceVariantName}
           />
+          {mockupImageUrl ? (
+            <section className={css.mockupPreviewMobile}>
+              <h4 className={css.mockupPreviewTitle}>Attached image</h4>
+              <a
+                href={mockupImageUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={css.mockupPreviewLink}
+              >
+                {mockupImageName || 'Open uploaded image'}
+              </a>
+              <img
+                className={css.mockupPreviewImage}
+                src={mockupImageUrl}
+                alt={mockupImageName || 'Attached image'}
+              />
+            </section>
+          ) : null}
           <section className={css.paymentContainer}>
             {errorMessages.initiateOrderErrorMessage}
             {errorMessages.listingNotFoundErrorMessage}
@@ -653,6 +675,8 @@ export const CheckoutPageWithPayment = props => {
           processName={processName}
           breakdown={breakdown}
           showListingImage={showListingImage}
+          mockupImageUrl={mockupImageUrl}
+          mockupImageName={mockupImageName}
           intl={intl}
         />
       </div>

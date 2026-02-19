@@ -259,6 +259,37 @@
   flex-grow: 1;
 }
 
+.mockupPreviewMobile {
+  padding: 0 24px;
+  margin-bottom: 24px;
+
+  @media (--viewportLarge) {
+    display: none;
+  }
+}
+
+.mockupPreviewDesktop {
+  margin: 16px 48px 24px 48px;
+}
+
+.mockupPreviewTitle {
+  composes: p from global;
+  font-weight: var(--fontWeightSemiBold);
+  margin: 0 0 8px 0;
+}
+
+.mockupPreviewLink {
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.mockupPreviewImage {
+  width: 100%;
+  display: block;
+  border-radius: 8px;
+  border: 1px solid var(--colorGrey100);
+}
+
 /* Details column is visible only on desktop */
 .detailsContainerDesktop {
   display: none;
