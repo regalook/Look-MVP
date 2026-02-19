@@ -80,6 +80,8 @@
   "CheckoutPage.initiateOrderStripeError": "El sistema de pago dio el siguiente error: {stripeErrors}",
   "CheckoutPage.listingNotFoundError": "Desafortunadamente, este anuncio ya no está disponible.",
   "CheckoutPage.listingTitle": "{listingTitle}",
+  "CheckoutPage.mockupPreviewTitleMultiple": "Imágenes adjuntas",
+  "CheckoutPage.mockupPreviewTitleSingle": "Imagen adjunta",
   "CheckoutPage.notEnoughStockMessage": "Desafortunadamente, no puedes completar tu pedido. No queda suficiente inventario.",
   "CheckoutPage.paymentExpiredMessage": "El pago no se completó en 15 minutos. Por favor regresa a {listingLink} e inténtalo de nuevo.",
   "CheckoutPage.providerCommissionBiggerThanMinPrice": "Este anuncio no está disponible actualmente. Por favor contacta al equipo de soporte.",

@@ -58,6 +58,16 @@ const DetailsSideCard = props => {
   const variants = firstImage
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
+  const mockupPreviewTitle =
+    mockupImages.length > 1
+      ? intl.formatMessage(
+          { id: 'CheckoutPage.mockupPreviewTitleMultiple', defaultMessage: 'Attached images' },
+          {}
+        )
+      : intl.formatMessage(
+          { id: 'CheckoutPage.mockupPreviewTitleSingle', defaultMessage: 'Attached image' },
+          {}
+        );
 
   return (
     <div className={css.detailsContainerDesktop} role="complementary">
@@ -106,9 +116,7 @@ const DetailsSideCard = props => {
       </div>
       {mockupImages.length > 0 ? (
         <section className={css.mockupPreviewDesktop}>
-          <h4 className={css.mockupPreviewTitle}>
-            {mockupImages.length > 1 ? 'Attached images' : 'Attached image'}
-          </h4>
+          <h4 className={css.mockupPreviewTitle}>{mockupPreviewTitle}</h4>
           <div className={css.mockupPreviewList}>
             {mockupImages.map((img, index) => (
               <div key={img.id || `desktop-mockup-${index}`} className={css.mockupPreviewItem}>

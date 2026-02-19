@@ -574,6 +574,16 @@ export const CheckoutPageWithPayment = props => {
     ? existingTransaction?.provider?.attributes?.profile?.displayName
     : listing?.author?.attributes?.profile?.displayName;
   const mockupImages = getMockupImages(orderData, tx?.attributes?.protectedData);
+  const mockupPreviewTitle =
+    mockupImages.length > 1
+      ? intl.formatMessage(
+          { id: 'CheckoutPage.mockupPreviewTitleMultiple', defaultMessage: 'Attached images' },
+          {}
+        )
+      : intl.formatMessage(
+          { id: 'CheckoutPage.mockupPreviewTitleSingle', defaultMessage: 'Attached image' },
+          {}
+        );
 
   // Check if the listing currency is compatible with Stripe for the specified transaction process.
   // This function validates the currency against the transaction process requirements and
@@ -631,9 +641,7 @@ export const CheckoutPageWithPayment = props => {
           />
           {mockupImages.length > 0 ? (
             <section className={css.mockupPreviewMobile}>
-              <h4 className={css.mockupPreviewTitle}>
-                {mockupImages.length > 1 ? 'Attached images' : 'Attached image'}
-              </h4>
+              <h4 className={css.mockupPreviewTitle}>{mockupPreviewTitle}</h4>
               <div className={css.mockupPreviewList}>
                 {mockupImages.map((img, index) => (
                   <div key={img.id || `mobile-mockup-${index}`} className={css.mockupPreviewItem}>
