@@ -267,8 +267,10 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     paymentIntent && STRIPE_PI_USER_ACTIONS_DONE_STATUSES.includes(paymentIntent.status);
   const mockupImageUrl = pageData?.orderData?.mockupImageUrl;
   const mockupImageName = pageData?.orderData?.mockupImageName;
+  const locale = config?.localization?.locale || 'en';
+  const imageLabel = locale.toLowerCase().startsWith('es') ? 'Imagen' : 'Image';
   const mockupLine = mockupImageUrl
-    ? `Design image: ${mockupImageName ? `${mockupImageName} - ` : ''}${mockupImageUrl}`
+    ? `${imageLabel}: ${mockupImageName ? `${mockupImageName} - ` : ''}${mockupImageUrl}`
     : null;
   const messageWithMockup = mockupLine
     ? message
