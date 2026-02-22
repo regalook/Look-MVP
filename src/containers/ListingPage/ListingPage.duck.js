@@ -686,6 +686,15 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     currentListingPageId?.uuid && listingId?.uuid
       ? currentListingPageId.uuid === listingId.uuid
       : false;
+
+  // Reset cached mockup images when navigating to a different listing.
+  if (!isSameListing && typeof window !== 'undefined' && window.sessionStorage) {
+    try {
+      window.sessionStorage.removeItem(CHECKOUT_MOCKUP_SESSION_KEY);
+    } catch (e) {
+      // Ignore storage failures on restricted browsers.
+    }
+  }
   const inquiryModalOpenForListingId =
     isUserAuthorized(currentUser) && hasPermissionToInitiateTransactions(currentUser)
       ? state.ListingPage.inquiryModalOpenForListingId

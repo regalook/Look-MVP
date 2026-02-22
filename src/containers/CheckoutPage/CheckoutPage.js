@@ -77,6 +77,18 @@ const EnhancedCheckoutPage = props => {
   const history = useHistory();
 
   useEffect(() => {
+    return () => {
+      if (typeof window !== 'undefined' && window.sessionStorage) {
+        try {
+          window.sessionStorage.removeItem(CHECKOUT_MOCKUP_SESSION_KEY);
+        } catch (e) {
+          // Ignore storage failures on restricted browsers.
+        }
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     const {
       currentUser,
       orderData,

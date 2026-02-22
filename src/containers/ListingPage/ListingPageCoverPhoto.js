@@ -350,17 +350,6 @@ export const ListingPageComponent = props => {
       }
     });
     const mockupImages = Object.values(dedupeMap);
-    // eslint-disable-next-line no-console
-    console.log('[mockup-debug][listing-submit][cover-photo]', {
-      overlaysCount: overlays.length,
-      hasPendingMockupUpload,
-      hasFailedMockupUpload,
-      uploadResultsCount: Object.keys(uploadResultsById).length,
-      overlayImagesCount: overlayImages.length,
-      bufferedUploadImagesCount: bufferedUploadImages.length,
-      mockupImagesCount: mockupImages.length,
-      mockupImages,
-    });
 
     const primaryMockupImage = mockupImages[0];
     const valuesWithMockup =
