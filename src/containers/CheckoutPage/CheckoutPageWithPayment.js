@@ -127,7 +127,9 @@ const getMockupImages = (orderData, protectedData) => {
       const fallbackImages = Array.isArray(parsed)
         ? parsed.map(normalizeMockupImage).filter(img => !!img.url)
         : [];
-      return fallbackImages;
+      if (fallbackImages.length > 0) {
+        return fallbackImages;
+      }
     } catch (e) {
       return [];
     }
@@ -592,6 +594,17 @@ export const CheckoutPageWithPayment = props => {
     ? existingTransaction?.provider?.attributes?.profile?.displayName
     : listing?.author?.attributes?.profile?.displayName;
   const mockupImages = getMockupImages(orderData, tx?.attributes?.protectedData);
+  // eslint-disable-next-line no-console
+  console.log('[mockup-debug][checkout-render]', {
+    orderDataMockupImagesCount: Array.isArray(orderData?.mockupImages) ? orderData.mockupImages.length : 0,
+    orderDataMockupImageUrl: orderData?.mockupImageUrl || null,
+    txProtectedMockupImagesCount: Array.isArray(tx?.attributes?.protectedData?.mockupImages)
+      ? tx.attributes.protectedData.mockupImages.length
+      : 0,
+    txProtectedMockupImageUrl: tx?.attributes?.protectedData?.mockupImageUrl || null,
+    renderMockupImagesCount: mockupImages.length,
+    renderMockupImages: mockupImages,
+  });
   const mockupPreviewTitle =
     mockupImages.length > 1
       ? intl.formatMessage(

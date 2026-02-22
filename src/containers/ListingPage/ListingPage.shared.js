@@ -305,6 +305,15 @@ export const handleSubmit = parameters => values => {
     } else {
       window.sessionStorage.removeItem(CHECKOUT_MOCKUP_SESSION_KEY);
     }
+    // eslint-disable-next-line no-console
+    console.log('[mockup-debug][checkout-init]', {
+      orderDataMockupImagesCount: Array.isArray(initialValues?.orderData?.mockupImages)
+        ? initialValues.orderData.mockupImages.length
+        : 0,
+      orderDataMockupImageUrl: initialValues?.orderData?.mockupImageUrl || null,
+      payloadCount: payload.length,
+      payload,
+    });
   }
 
   // Always persist checkout init data. Mobile browsers may reload the SPA during navigation
