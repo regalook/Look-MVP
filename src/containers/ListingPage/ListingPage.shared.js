@@ -302,8 +302,6 @@ export const handleSubmit = parameters => values => {
 
     if (payload.length > 0) {
       window.sessionStorage.setItem(CHECKOUT_MOCKUP_SESSION_KEY, JSON.stringify(payload));
-    } else {
-      window.sessionStorage.removeItem(CHECKOUT_MOCKUP_SESSION_KEY);
     }
     // eslint-disable-next-line no-console
     console.log('[mockup-debug][checkout-init]', {

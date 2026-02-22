@@ -28,6 +28,25 @@ import { uploadMockupImage } from '../../util/mockupUpload';
 
 const { UUID } = sdkTypes;
 const MINUTE_IN_MS = 1000 * 60;
+const CHECKOUT_MOCKUP_SESSION_KEY = 'CheckoutPageMockupImages';
+
+const appendMockupImageToSessionCache = image => {
+  if (typeof window === 'undefined' || !window.sessionStorage || !image?.url) {
+    return;
+  }
+
+  try {
+    const raw = window.sessionStorage.getItem(CHECKOUT_MOCKUP_SESSION_KEY);
+    const current = raw ? JSON.parse(raw) : [];
+    const currentArray = Array.isArray(current) ? current : [];
+    const dedupeKey = image.id || image.url;
+    const exists = currentArray.some(item => (item?.id || item?.url) === dedupeKey);
+    const next = exists ? currentArray : [...currentArray, image];
+    window.sessionStorage.setItem(CHECKOUT_MOCKUP_SESSION_KEY, JSON.stringify(next));
+  } catch (e) {
+    // Ignore storage failures on restricted browsers.
+  }
+};
 
 // Day-based time slots queries are cached for 1 minute.
 const removeOutdatedDateData = timeSlotsForDate => {
@@ -356,6 +375,11 @@ export const uploadOverlayImageThunk = createAsyncThunk(
   ({ id, file }, { rejectWithValue }) => {
     return uploadMockupImage(file)
       .then(({ uploadedImageId, uploadedImageUrl }) => {
+        appendMockupImageToSessionCache({
+          id: uploadedImageId || id,
+          url: uploadedImageUrl,
+          name: file?.name || null,
+        });
         return { id, uploadedImageId, uploadedImageUrl };
       })
       .catch(e => {

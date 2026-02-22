@@ -1,4 +1,5 @@
 const S3_PRESIGNED_PROVIDER = 's3-presigned';
+const CHECKOUT_MOCKUP_SESSION_KEY = 'CheckoutPageMockupImages';
 
 const getRequiredEnv = (name, value) => {
   if (!value) {
@@ -19,6 +20,33 @@ const resolvePublicURL = ({ fileUrl, fileKey }) => {
   }
 
   return null;
+};
+
+const appendUploadedMockupToSessionCache = ({ uploadedImageId, uploadedImageUrl, fileName }) => {
+  if (typeof window === 'undefined' || !window.sessionStorage || !uploadedImageUrl) {
+    return;
+  }
+
+  try {
+    const raw = window.sessionStorage.getItem(CHECKOUT_MOCKUP_SESSION_KEY);
+    const current = raw ? JSON.parse(raw) : [];
+    const currentArray = Array.isArray(current) ? current : [];
+    const dedupeKey = uploadedImageId || uploadedImageUrl;
+    const exists = currentArray.some(item => (item?.id || item?.url) === dedupeKey);
+    const next = exists
+      ? currentArray
+      : [
+          ...currentArray,
+          {
+            id: uploadedImageId || null,
+            url: uploadedImageUrl,
+            name: fileName || null,
+          },
+        ];
+    window.sessionStorage.setItem(CHECKOUT_MOCKUP_SESSION_KEY, JSON.stringify(next));
+  } catch (e) {
+    // Ignore storage failures in restricted browser modes.
+  }
 };
 
 /**
@@ -95,6 +123,12 @@ export const uploadMockupImage = async file => {
       'Missing uploaded image URL. Return fileUrl from signer or set REACT_APP_MOCKUP_S3_PUBLIC_BASE_URL.'
     );
   }
+
+  appendUploadedMockupToSessionCache({
+    uploadedImageId: fileKey,
+    uploadedImageUrl,
+    fileName: file?.name,
+  });
 
   return {
     uploadedImageId: fileKey,
