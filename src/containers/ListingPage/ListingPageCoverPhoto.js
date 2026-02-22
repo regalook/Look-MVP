@@ -316,6 +316,7 @@ export const ListingPageComponent = props => {
 
   const handleOrderSubmit = values => {
     const overlays = overlayEditor?.overlays || [];
+    const uploadResultsById = overlayEditor?.uploadResultsById || {};
     const hasPendingMockupUpload = overlays.some(o => o?.image?.uploadPending);
     const hasFailedMockupUpload = overlays.some(o => o?.image && !o?.image?.uploadedImageUrl);
     if (hasPendingMockupUpload) {
@@ -327,18 +328,36 @@ export const ListingPageComponent = props => {
       return;
     }
 
-    const mockupImages = overlays
+    const overlayImages = overlays
       .map(overlay => ({
         id: overlay?.image?.uploadedImageId,
         url: overlay?.image?.uploadedImageUrl,
         name: overlay?.image?.name,
       }))
       .filter(img => !!img.url);
+    const bufferedUploadImages = Object.entries(uploadResultsById)
+      .map(([id, upload]) => ({
+        id: upload?.uploadedImageId || id,
+        url: upload?.uploadedImageUrl,
+        name: null,
+      }))
+      .filter(img => !!img.url);
+    const dedupeMap = {};
+    [...overlayImages, ...bufferedUploadImages].forEach(img => {
+      const key = img.id || img.url;
+      if (!dedupeMap[key]) {
+        dedupeMap[key] = img;
+      }
+    });
+    const mockupImages = Object.values(dedupeMap);
     // eslint-disable-next-line no-console
     console.log('[mockup-debug][listing-submit][cover-photo]', {
       overlaysCount: overlays.length,
       hasPendingMockupUpload,
       hasFailedMockupUpload,
+      uploadResultsCount: Object.keys(uploadResultsById).length,
+      overlayImagesCount: overlayImages.length,
+      bufferedUploadImagesCount: bufferedUploadImages.length,
       mockupImagesCount: mockupImages.length,
       mockupImages,
     });
