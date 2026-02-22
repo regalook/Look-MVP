@@ -482,9 +482,15 @@ const listingPageSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(showListingThunk.pending, (state, action) => {
-        state.id = action.meta.arg.listingId;
+        const nextListingId = action.meta.arg.listingId;
+        const isSameListing =
+          state.id?.uuid && nextListingId?.uuid ? state.id.uuid === nextListingId.uuid : false;
+
+        state.id = nextListingId;
         state.showListingError = null;
-        state.overlayEditor = { ...initialState.overlayEditor };
+        if (!isSameListing) {
+          state.overlayEditor = { ...initialState.overlayEditor };
+        }
       })
       .addCase(showListingThunk.fulfilled, (state, action) => {
         // Data is handled by addMarketplaceEntities in the thunk
@@ -651,13 +657,24 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   const listingId = new UUID(params.id);
   const state = getState();
   const currentUser = state.user?.currentUser;
+  const currentListingPageId = state.ListingPage?.id;
+  const isSameListing =
+    currentListingPageId?.uuid && listingId?.uuid
+      ? currentListingPageId.uuid === listingId.uuid
+      : false;
   const inquiryModalOpenForListingId =
     isUserAuthorized(currentUser) && hasPermissionToInitiateTransactions(currentUser)
       ? state.ListingPage.inquiryModalOpenForListingId
       : null;
 
   // Clear old line-items
-  dispatch(setInitialValues({ lineItems: null, inquiryModalOpenForListingId }));
+  dispatch(
+    setInitialValues({
+      lineItems: null,
+      inquiryModalOpenForListingId,
+      ...(isSameListing ? { overlayEditor: state.ListingPage?.overlayEditor } : {}),
+    })
+  );
 
   const ownListingVariants = [LISTING_PAGE_DRAFT_VARIANT, LISTING_PAGE_PENDING_APPROVAL_VARIANT];
   if (ownListingVariants.includes(params.variant)) {
