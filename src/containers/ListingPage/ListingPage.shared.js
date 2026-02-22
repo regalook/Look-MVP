@@ -22,6 +22,7 @@ import css from './ListingPage.module.css';
  */
 
 const { UUID } = sdkTypes;
+const CHECKOUT_MOCKUP_SESSION_KEY = 'CheckoutPageMockupImages';
 
 /**
  * Helper to get formattedPrice and priceTitle for SectionHeading component.
@@ -282,6 +283,29 @@ export const handleSubmit = parameters => values => {
     },
     confirmPaymentError: null,
   };
+
+  if (typeof window !== 'undefined' && window.sessionStorage) {
+    const mockupImages = initialValues?.orderData?.mockupImages;
+    const legacyMockupUrl = initialValues?.orderData?.mockupImageUrl;
+    const payload =
+      Array.isArray(mockupImages) && mockupImages.length > 0
+        ? mockupImages
+        : legacyMockupUrl
+        ? [
+            {
+              id: initialValues?.orderData?.mockupImageId || null,
+              url: legacyMockupUrl,
+              name: initialValues?.orderData?.mockupImageName || null,
+            },
+          ]
+        : [];
+
+    if (payload.length > 0) {
+      window.sessionStorage.setItem(CHECKOUT_MOCKUP_SESSION_KEY, JSON.stringify(payload));
+    } else {
+      window.sessionStorage.removeItem(CHECKOUT_MOCKUP_SESSION_KEY);
+    }
+  }
 
   // Always persist checkout init data. Mobile browsers may reload the SPA during navigation
   // and we need mockup image data available after reload as well.

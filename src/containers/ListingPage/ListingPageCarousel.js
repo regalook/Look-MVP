@@ -316,8 +316,13 @@ export const ListingPageComponent = props => {
   const handleOrderSubmit = values => {
     const overlays = overlayEditor?.overlays || [];
     const hasPendingMockupUpload = overlays.some(o => o?.image?.uploadPending);
+    const hasFailedMockupUpload = overlays.some(o => o?.image && !o?.image?.uploadedImageUrl);
     if (hasPendingMockupUpload) {
       window.alert('Please wait for image upload to finish before booking.');
+      return;
+    }
+    if (hasFailedMockupUpload) {
+      window.alert('Some images are not uploaded yet. Please re-upload and try again.');
       return;
     }
 
@@ -327,7 +332,7 @@ export const ListingPageComponent = props => {
         url: overlay?.image?.uploadedImageUrl,
         name: overlay?.image?.name,
       }))
-      .filter(img => !!(img.id && img.url));
+      .filter(img => !!img.url);
 
     const primaryMockupImage = mockupImages[0];
     const valuesWithMockup =

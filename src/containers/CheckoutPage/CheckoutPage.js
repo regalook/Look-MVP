@@ -49,9 +49,13 @@ import CheckoutPageWithPayment, {
 import CheckoutPageWithInquiryProcess from './CheckoutPageWithInquiryProcess';
 
 const STORAGE_KEY = 'CheckoutPage';
+const CHECKOUT_MOCKUP_SESSION_KEY = 'CheckoutPageMockupImages';
 
 const onSubmitCallback = () => {
   clearData(STORAGE_KEY);
+  if (typeof window !== 'undefined' && window.sessionStorage) {
+    window.sessionStorage.removeItem(CHECKOUT_MOCKUP_SESSION_KEY);
+  }
 };
 
 const getProcessName = pageData => {

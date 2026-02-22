@@ -49,6 +49,7 @@ const STRIPE_PI_USER_ACTIONS_DONE_STATUSES = ['processing', 'requires_capture', 
 const ONETIME_PAYMENT = 'ONETIME_PAYMENT';
 const PAY_AND_SAVE_FOR_LATER_USE = 'PAY_AND_SAVE_FOR_LATER_USE';
 const USE_SAVED_CARD = 'USE_SAVED_CARD';
+const CHECKOUT_MOCKUP_SESSION_KEY = 'CheckoutPageMockupImages';
 
 const paymentFlow = (selectedPaymentMethod, saveAfterOnetimePayment) => {
   // Payment mode could be 'replaceCard', but without explicit saveAfterOnetimePayment flag,
@@ -97,14 +98,14 @@ const normalizeMockupImage = img => ({
 
 const getMockupImages = (orderData, protectedData) => {
   const orderDataImages = Array.isArray(orderData?.mockupImages)
-    ? orderData.mockupImages.map(normalizeMockupImage).filter(img => !!(img.id && img.url))
+    ? orderData.mockupImages.map(normalizeMockupImage).filter(img => !!img.url)
     : [];
   if (orderDataImages.length > 0) {
     return orderDataImages;
   }
 
   const protectedDataImages = Array.isArray(protectedData?.mockupImages)
-    ? protectedData.mockupImages.map(normalizeMockupImage).filter(img => !!(img.id && img.url))
+    ? protectedData.mockupImages.map(normalizeMockupImage).filter(img => !!img.url)
     : [];
   if (protectedDataImages.length > 0) {
     return protectedDataImages;
@@ -115,7 +116,24 @@ const getMockupImages = (orderData, protectedData) => {
     mockupImageUrl: orderData?.mockupImageUrl || protectedData?.mockupImageUrl,
     mockupImageName: orderData?.mockupImageName || protectedData?.mockupImageName,
   });
-  return singleImage.id && singleImage.url ? [singleImage] : [];
+  if (singleImage.url) {
+    return [singleImage];
+  }
+
+  if (typeof window !== 'undefined' && window.sessionStorage) {
+    try {
+      const raw = window.sessionStorage.getItem(CHECKOUT_MOCKUP_SESSION_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      const fallbackImages = Array.isArray(parsed)
+        ? parsed.map(normalizeMockupImage).filter(img => !!img.url)
+        : [];
+      return fallbackImages;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  return [];
 };
 
 /**

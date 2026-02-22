@@ -167,7 +167,7 @@ const getMockupImagesFromOrderData = orderData => {
           url: img?.url || img?.mockupImageUrl || null,
           name: img?.name || img?.mockupImageName || null,
         }))
-        .filter(img => !!(img.id && img.url))
+        .filter(img => !!img.url)
     : [];
 
   if (mockupImagesFromArray.length > 0) {
@@ -177,7 +177,7 @@ const getMockupImagesFromOrderData = orderData => {
   const singleId = orderData?.mockupImageId;
   const singleUrl = orderData?.mockupImageUrl;
   const singleName = orderData?.mockupImageName;
-  return singleId && singleUrl ? [{ id: singleId, url: singleUrl, name: singleName || null }] : [];
+  return singleUrl ? [{ id: singleId || null, url: singleUrl, name: singleName || null }] : [];
 };
 
 const persistTransaction = (order, pageData, storeData, setPageData, sessionStorageKey) => {
