@@ -402,6 +402,7 @@ const initialState = {
     overlays: [],
     activeOverlayId: null,
     opacity: 0.8,
+    uploadResultsById: {},
   },
 };
 
@@ -413,8 +414,26 @@ const listingPageSlice = createSlice({
       return { ...initialState, ...action.payload };
     },
     addOverlay: (state, action) => {
-      state.overlayEditor.overlays.push(action.payload);
-      state.overlayEditor.activeOverlayId = action.payload.id;
+      const overlay = action.payload;
+      const uploadResult = state.overlayEditor.uploadResultsById?.[overlay.id];
+      const mergedOverlay = uploadResult
+        ? {
+            ...overlay,
+            image: {
+              ...(overlay.image || {}),
+              uploadedImageId: uploadResult.uploadedImageId || overlay?.image?.uploadedImageId,
+              uploadedImageUrl: uploadResult.uploadedImageUrl || overlay?.image?.uploadedImageUrl,
+              uploadPending: false,
+              uploadError: uploadResult.error || null,
+            },
+          }
+        : overlay;
+
+      state.overlayEditor.overlays.push(mergedOverlay);
+      state.overlayEditor.activeOverlayId = mergedOverlay.id;
+      if (uploadResult) {
+        delete state.overlayEditor.uploadResultsById[mergedOverlay.id];
+      }
     },
     setActiveOverlay: (state, action) => {
       state.overlayEditor.activeOverlayId = action.payload;
@@ -423,6 +442,7 @@ const listingPageSlice = createSlice({
       const id = action.payload;
       const nextOverlays = state.overlayEditor.overlays.filter(item => item.id !== id);
       state.overlayEditor.overlays = nextOverlays;
+      delete state.overlayEditor.uploadResultsById[id];
       if (state.overlayEditor.activeOverlayId === id) {
         state.overlayEditor.activeOverlayId = nextOverlays[0]?.id || null;
       }
@@ -580,6 +600,12 @@ const listingPageSlice = createSlice({
             uploadPending: false,
             uploadError: null,
           };
+        } else if (id) {
+          state.overlayEditor.uploadResultsById[id] = {
+            uploadedImageId,
+            uploadedImageUrl,
+            error: null,
+          };
         }
       })
       .addCase(uploadOverlayImageThunk.rejected, (state, action) => {
@@ -593,6 +619,12 @@ const listingPageSlice = createSlice({
             ...(overlay.image || {}),
             uploadPending: false,
             uploadError: error || true,
+          };
+        } else {
+          state.overlayEditor.uploadResultsById[id] = {
+            uploadedImageId: null,
+            uploadedImageUrl: null,
+            error: error || true,
           };
         }
       });

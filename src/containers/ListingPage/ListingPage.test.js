@@ -358,7 +358,7 @@ describe('Duck', () => {
         sendInquiryInProgress: false,
         sendInquiryError: null,
         inquiryModalOpenForListingId: null,
-        overlayEditor: { overlays: [], activeOverlayId: null, opacity: 0.8 },
+        overlayEditor: { overlays: [], activeOverlayId: null, opacity: 0.8, uploadResultsById: {} },
       });
     });
 
