@@ -283,7 +283,9 @@ export const handleSubmit = parameters => values => {
     confirmPaymentError: null,
   };
 
-  const saveToSessionStorage = !currentUser;
+  // Always persist checkout init data. Mobile browsers may reload the SPA during navigation
+  // and we need mockup image data available after reload as well.
+  const saveToSessionStorage = true;
 
   // Customize checkout page state with current listing and selected orderData
   const { setInitialValues } = findRouteByRouteName('CheckoutPage', routes);
